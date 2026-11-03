@@ -480,11 +480,9 @@
         }
       });
       setStatus("");
-      if (!currentUser && sessionStorage.getItem(guestSessionKey) !== "continue") openAccount();
     } catch (error) {
       console.error("Не удалось подключить Supabase.", error);
       setStatus(`${error.message} Проверьте конфигурацию проекта и повторите попытку.`, true);
-      if (sessionStorage.getItem(guestSessionKey) !== "continue") openAccount();
     }
   };
 

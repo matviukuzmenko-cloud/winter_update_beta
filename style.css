@@ -790,6 +790,77 @@ body[data-season="winter"] #page-guide .page-title-row .gradient-text {
 body.dark-theme[data-season="winter"] #page-guide .page-title-row .gradient-text {
   color: #dceefa;
 }
+html.silva-language-pending { overflow: hidden; }
+html.silva-language-pending body > :not(.language-choice-overlay) {
+  visibility: hidden;
+  pointer-events: none;
+}
+.language-choice-overlay {
+  position: fixed;
+  z-index: 10000;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(23, 37, 29, .72);
+  backdrop-filter: blur(12px);
+}
+.language-choice-card {
+  width: min(420px, 100%);
+  padding: clamp(24px, 7vw, 36px);
+  border: 1px solid var(--line);
+  border-radius: 26px;
+  color: var(--ink);
+  background: var(--surface);
+  box-shadow: 0 28px 90px rgba(15, 26, 19, .32);
+  text-align: center;
+}
+.language-choice-mark {
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  margin: 0 auto 16px;
+  border-radius: 18px;
+  color: white;
+  background: var(--gradient);
+  font-size: 26px;
+}
+.language-choice-card h1 {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: clamp(24px, 6vw, 30px);
+  line-height: 1.2;
+}
+.language-choice-translation {
+  margin: 9px 0 24px;
+  color: var(--muted);
+  font-size: 14px;
+}
+.language-choice-options { display: grid; gap: 10px; }
+.language-choice-button {
+  min-height: 48px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  color: var(--ink);
+  background: var(--surface-raised);
+  font-size: 14px;
+  font-weight: 750;
+  transition: transform .18s, border-color .18s, background .18s;
+}
+.language-choice-button:hover {
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--blue) 55%, var(--line));
+  background: color-mix(in srgb, var(--blue) 10%, var(--surface-raised));
+}
+.language-choice-note {
+  display: grid;
+  gap: 3px;
+  margin: 18px 0 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.5;
+}
 .account-dialog {
   width: min(440px, calc(100% - 28px));
   max-height: min(90vh, 700px);

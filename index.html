@@ -3,9 +3,33 @@
 <head>
   <meta charset="utf-8">
   <script>
-    window.FLORA_LOCALE = new URLSearchParams(location.search).get("locale") ||
-      (location.hostname.startsWith("uk.") ? "uk" : location.hostname.startsWith("en.") ? "en" : "ru");
-    if (!["ru", "uk", "en"].includes(window.FLORA_LOCALE)) window.FLORA_LOCALE = "ru";
+    const supportedLocales = ["ru", "uk", "en"];
+    const requestedLocale = new URLSearchParams(location.search).get("locale");
+    const hostnameLocale = location.hostname.startsWith("uk.")
+      ? "uk"
+      : location.hostname.startsWith("en.")
+        ? "en"
+        : null;
+    let savedLocale = null;
+    try {
+      savedLocale = localStorage.getItem("silva-locale-preference");
+      if (supportedLocales.includes(requestedLocale)) {
+        localStorage.setItem("silva-locale-preference", requestedLocale);
+      }
+    } catch (error) {
+      console.error("Could not read or save the language preference.", error);
+    }
+    window.FLORA_LOCALE = supportedLocales.includes(requestedLocale)
+      ? requestedLocale
+      : supportedLocales.includes(savedLocale)
+        ? savedLocale
+        : hostnameLocale || "ru";
+    window.SILVA_LANGUAGE_PICKER_REQUIRED = !supportedLocales.includes(requestedLocale)
+      && !supportedLocales.includes(savedLocale)
+      && !hostnameLocale;
+    if (window.SILVA_LANGUAGE_PICKER_REQUIRED) {
+      document.documentElement.classList.add("silva-language-pending");
+    }
     document.documentElement.lang = window.FLORA_LOCALE;
     if (window.FLORA_LOCALE !== "ru") {
       const catalogPreload = document.createElement("link");
@@ -56,9 +80,73 @@
   <link rel="preconnect" href="https://inaturalist-open-data.s3.amazonaws.com">
   <link rel="preconnect" href="https://images.unsplash.com">
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./style.css?v=211">
+  <link rel="stylesheet" href="./style.css?v=212">
 </head>
-<body data-season="winter">
+<body data-season="winter" data-design="herbarium">
+  <script>
+    (() => {
+      try {
+        const designAliases = { green: "herbarium", lavender: "editorial", rose: "glasshouse", sand: "glasshouse" };
+        const designs = new Set(["herbarium", "glasshouse", "editorial"]);
+        const savedDesign = localStorage.getItem("flora-design");
+        const design = designs.has(savedDesign) ? savedDesign : designAliases[savedDesign] || "herbarium";
+        document.body.dataset.design = design;
+        const savedTheme = localStorage.getItem("flora-theme");
+        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        document.body.classList.toggle("dark-theme", savedTheme === "dark" || (savedTheme === null && prefersDark));
+        const hour = new Date().getHours();
+        document.body.classList.toggle("eye-comfort", hour >= 21 || hour < 7);
+      } catch (error) {
+        console.error("Could not restore the saved appearance before first render.", error);
+      }
+    })();
+  </script>
+  <section class="language-choice-overlay" id="language-choice" role="dialog" aria-modal="true" aria-labelledby="language-choice-title" hidden>
+    <div class="language-choice-card">
+      <div class="language-choice-mark" aria-hidden="true">🌲</div>
+      <h1 id="language-choice-title" lang="ru">Выберите язык сайта</h1>
+      <p class="language-choice-translation" lang="en">Choose your language</p>
+      <div class="language-choice-options" role="group" aria-labelledby="language-choice-title">
+        <button class="language-choice-button" type="button" data-locale-choice="en" lang="en">English</button>
+        <button class="language-choice-button" type="button" data-locale-choice="ru" lang="ru">Русский</button>
+        <button class="language-choice-button" type="button" data-locale-choice="uk" lang="uk">Українська</button>
+      </div>
+      <p class="language-choice-note"><span lang="ru">Выбор сохранится для следующих посещений.</span><span lang="en">Your choice will be saved for future visits.</span></p>
+    </div>
+  </section>
+  <script>
+    if (window.SILVA_LANGUAGE_PICKER_REQUIRED) {
+      const languageChoice = document.querySelector("#language-choice");
+      const languageButtons = [...languageChoice.querySelectorAll("[data-locale-choice]")];
+      languageChoice.hidden = false;
+      languageChoice.querySelector('[data-locale-choice="ru"]').focus();
+      languageButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          const selectedLocale = button.dataset.localeChoice;
+          try {
+            localStorage.setItem("silva-locale-preference", selectedLocale);
+          } catch (error) {
+            console.error("Could not save the selected language.", error);
+          }
+          const target = new URL(location.href);
+          target.searchParams.set("locale", selectedLocale);
+          location.assign(target.href);
+        });
+      });
+      languageChoice.addEventListener("keydown", (event) => {
+        if (event.key !== "Tab" || languageButtons.length === 0) return;
+        const firstButton = languageButtons[0];
+        const lastButton = languageButtons[languageButtons.length - 1];
+        if (event.shiftKey && document.activeElement === firstButton) {
+          event.preventDefault();
+          lastButton.focus();
+        } else if (!event.shiftKey && document.activeElement === lastButton) {
+          event.preventDefault();
+          firstButton.focus();
+        }
+      });
+    }
+  </script>
   <svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
     <symbol id="icon-flower" viewBox="0 0 24 24"><path d="M12 12c-3-1-4-4-2-6 1.5-1.5 3.5-.5 4 2 2-2 4-1 4 1 0 2-2 3-6 3Zm0 0c1-3 4-4 6-2 1.5 1.5.5 3.5-2 4 2 2 1 4-1 4-2 0-3-2-3-6Zm0 0c3 1 4 4 2 6-1.5 1.5-3.5.5-4-2-2 2-4 1-4-1 0-2 2-3 6-3Zm0 0c-1 3-4 4-6 2-1.5-1.5-.5-3.5 2-4-2-2-1-4 1-4 2 0 3 2 3 6Z"/><circle cx="12" cy="12" r="1.4"/></symbol>
     <symbol id="icon-plant" viewBox="0 0 24 24"><path d="M12 21v-9m0 3c-5 0-8-2-8-7 5 0 8 2 8 7Zm0-3c0-5 3-8 8-8 0 5-3 8-8 8Z"/></symbol>
@@ -813,9 +901,9 @@
         <div class="about-updates-list">
           <article class="about-release about-release-featured surface-card">
             <span class="about-release-date">Ноябрь 2026</span>
-            <h3>Языковые версии, каталог и собственный домен</h3>
-            <p>Подготовлены полноценные версии сайта на украинском и английском языках. Перепроверены переводы всех 1 571 карточки растений: названия, описания и рекомендации по уходу.</p>
-            <p>Ускорена работа локализованных версий атласа: карточки и описания открываются без прежнего долгого ожидания. Сайт переходит на silvaquieta.com; для украинской и английской версий подключаются отдельные поддомены.</p>
+            <h3>Языки, каталог и запуск silvaquieta.com</h3>
+            <p>Добавлены украинская и английская версии. При первом посещении можно выбрать русский, English или українську; выбор сохраняется для следующих визитов.</p>
+            <p>Перепроверены переводы всех 1 571 карточек растений, включая названия, описания и рекомендации по уходу. Ускорена загрузка локализованного атласа. Сайт опубликован на silvaquieta.com через GitHub Pages; украинская и английская версии открываются по адресам silvaquieta.com/?locale=uk и silvaquieta.com/?locale=en.</p>
             <p>Для зимнего сезона подготовлена новая ёлочная иконка приложения. Она основана на иллюстрации OpenMoji «Christmas Tree» (<a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a>; <a href="https://github.com/hfg-gmuend/openmoji/blob/master/color/svg/1F384.svg" target="_blank" rel="noopener noreferrer">источник</a>).</p>
           </article>
           <article class="about-release surface-card">
@@ -1053,11 +1141,11 @@
   <script>window.FLORA_AI_ENDPOINT = "https://flora-anotomy-ai.ukrainman21012.workers.dev";</script>
   <script src="./ai-chat.js?v=119"></script>
   <script src="./supabase-config.js?v=2"></script>
-  <script src="./supabase-auth.js?v=24"></script>
+  <script src="./supabase-auth.js?v=25"></script>
   <script>window.FLORA_VAPID_PUBLIC_KEY = "BF7JygE9293jwgMccpvZbxBHqwhx4RhfTUHWLTldz_1BvklqB-403ReZqNOnSdqYnLvSxW_6X-TNOBvJClfjORw";</script>
   <script src="./garden.js?v=25"></script>
   <script src="./expeditions.js?v=16"></script>
-  <script src="./localization/locale-runtime.js?v=18"></script>
+  <script src="./localization/locale-runtime.js?v=20"></script>
   <script>
     (() => {
     document.querySelector("#observations-empty-action").addEventListener("click", () => {

@@ -8982,19 +8982,19 @@
       "en": "November 2026"
     },
     {
-      "source": "Языковые версии, каталог и собственный домен",
-      "uk": "Мовні версії, каталог і власний домен",
-      "en": "Language versions, catalog, and custom domain"
+      "source": "Языки, каталог и запуск silvaquieta.com",
+      "uk": "Мови, каталог і запуск silvaquieta.com",
+      "en": "Languages, catalog, and the launch of silvaquieta.com"
     },
     {
-      "source": "Подготовлены полноценные версии сайта на украинском и английском языках. Перепроверены переводы всех 1 571 карточки растений: названия, описания и рекомендации по уходу.",
-      "uk": "Підготовлено повноцінні версії сайту українською та англійською мовами. Перевірено переклади всіх 1 571 картки рослин: назви, описи та рекомендації з догляду.",
-      "en": "Full Ukrainian and English versions of the site are ready. Translations of all 1,571 plant cards have been reviewed, including names, descriptions, and care recommendations."
+      "source": "Добавлены украинская и английская версии. При первом посещении можно выбрать русский, English или українську; выбор сохраняется для следующих визитов.",
+      "uk": "Додано українську та англійську версії. Під час першого відвідування можна вибрати українську, English або російську; вибір зберігається для наступних візитів.",
+      "en": "Ukrainian and English versions are now available. On your first visit, choose Русский, English, or Українська; your choice is saved for future visits."
     },
     {
-      "source": "Ускорена работа локализованных версий атласа: карточки и описания открываются без прежнего долгого ожидания. Сайт переходит на silvaquieta.com; для украинской и английской версий подключаются отдельные поддомены.",
-      "uk": "Роботу локалізованих версій атласу прискорено: картки й описи відкриваються без колишнього тривалого очікування. Сайт переходить на silvaquieta.com; для української та англійської версій підключаються окремі піддомени.",
-      "en": "The localized atlas now loads faster: plant cards and descriptions open without the previous long wait. The site is moving to silvaquieta.com, with separate subdomains being set up for Ukrainian and English."
+      "source": "Перепроверены переводы всех 1 571 карточек растений, включая названия, описания и рекомендации по уходу. Ускорена загрузка локализованного атласа. Сайт опубликован на silvaquieta.com через GitHub Pages; украинская и английская версии открываются по адресам silvaquieta.com/?locale=uk и silvaquieta.com/?locale=en.",
+      "uk": "Перевірено переклади всіх 1 571 картки рослин, зокрема назви, описи й рекомендації з догляду. Завантаження локалізованого атласу прискорено. Сайт опубліковано на silvaquieta.com через GitHub Pages; українська й англійська версії доступні за адресами silvaquieta.com/?locale=uk і silvaquieta.com/?locale=en.",
+      "en": "Translations of all 1,571 plant cards—including names, descriptions, and care recommendations—have been reviewed. The localized atlas loads faster. The site is published on silvaquieta.com via GitHub Pages; the Ukrainian and English versions are available at silvaquieta.com/?locale=uk and silvaquieta.com/?locale=en."
     },
     {
       "source": "Для зимнего сезона подготовлена новая ёлочная иконка приложения. Она основана на иллюстрации OpenMoji «Christmas Tree» (",

@@ -11,41 +11,6 @@
     alternate.href = `https://${hostname}/`;
   }
   if (locale === "ru") {
-    const preferredLocale = navigator.languages
-      .map((language) => language.toLowerCase().split("-")[0])
-      .find((language) => language === "uk" || language === "en");
-    if (preferredLocale && location.hostname === "silvaquieta.com") {
-      try {
-        if (localStorage.getItem("silva-locale-suggestion-dismissed") !== "true") {
-          const region = document.querySelector("#flora-toast-region");
-          if (region) {
-            const toast = document.createElement("div");
-            toast.className = "flora-toast flora-toast-locale is-visible";
-            toast.setAttribute("role", "status");
-            const message = document.createElement("p");
-            message.textContent = preferredLocale === "uk"
-              ? "Возможно, вам удобнее читать сайт на украинском?"
-              : "Возможно, вам удобнее читать сайт на английском?";
-            const link = document.createElement("a");
-            link.className = "flora-toast-action";
-            link.href = `https://${preferredLocale}.silvaquieta.com/`;
-            link.textContent = preferredLocale === "uk" ? "Українська" : "English";
-            const dismiss = document.createElement("button");
-            dismiss.className = "flora-toast-action";
-            dismiss.type = "button";
-            dismiss.textContent = "Не сейчас";
-            dismiss.addEventListener("click", () => {
-              localStorage.setItem("silva-locale-suggestion-dismissed", "true");
-              toast.remove();
-            }, { once: true });
-            toast.append(message, link, dismiss);
-            region.append(toast);
-          }
-        }
-      } catch (error) {
-        console.error("Could not save the language suggestion preference.", error);
-      }
-    }
     return;
   }
 
@@ -358,7 +323,7 @@
     if (ogUrl) ogUrl.content = `https://${location.host}/`;
   };
 
-  fetch(`./localization/ui-${locale}.json?v=3`)
+  fetch(`./localization/ui-${locale}.json?v=4`)
     .then((response) => {
       if (!response.ok) throw new Error(`Could not load ${locale} interface translations: HTTP ${response.status}`);
       return response.json();
