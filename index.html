@@ -2,6 +2,19 @@
 <html lang="ru">
 <head>
   <meta charset="utf-8">
+  <script>
+    window.FLORA_LOCALE = new URLSearchParams(location.search).get("locale") ||
+      (location.hostname.startsWith("uk.") ? "uk" : location.hostname.startsWith("en.") ? "en" : "ru");
+    if (!["ru", "uk", "en"].includes(window.FLORA_LOCALE)) window.FLORA_LOCALE = "ru";
+    document.documentElement.lang = window.FLORA_LOCALE;
+    if (window.FLORA_LOCALE !== "ru") {
+      const catalogPreload = document.createElement("link");
+      catalogPreload.rel = "preload";
+      catalogPreload.as = "script";
+      catalogPreload.href = `./localization/catalog-${window.FLORA_LOCALE}.js?v=3`;
+      document.head.append(catalogPreload);
+    }
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#eaf2f5">
   <meta name="description" content="Silva Quieta — ботанический атлас на 1 500 растений, с персональным садом, дневником и сезонным зимним оформлением.">
@@ -43,7 +56,7 @@
   <link rel="preconnect" href="https://inaturalist-open-data.s3.amazonaws.com">
   <link rel="preconnect" href="https://images.unsplash.com">
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./style.css?v=209">
+  <link rel="stylesheet" href="./style.css?v=210">
 </head>
 <body data-season="winter">
   <svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -1024,14 +1037,20 @@
   <script src="./flora-1111.js"></script>
   <script src="./flora-1500.js"></script>
   <script src="./flora-ranges.js"></script>
-  <script src="./script.js?v=151"></script>
+  <script>
+    if (window.FLORA_LOCALE !== "ru") {
+      document.write(`<script src="./localization/catalog-${window.FLORA_LOCALE}.js?v=3"><\/script>`);
+    }
+  </script>
+  <script src="./script.js?v=153"></script>
   <script>window.FLORA_AI_ENDPOINT = "https://flora-anotomy-ai.ukrainman21012.workers.dev";</script>
-  <script src="./ai-chat.js?v=118"></script>
+  <script src="./ai-chat.js?v=119"></script>
   <script src="./supabase-config.js?v=2"></script>
   <script src="./supabase-auth.js?v=24"></script>
   <script>window.FLORA_VAPID_PUBLIC_KEY = "BF7JygE9293jwgMccpvZbxBHqwhx4RhfTUHWLTldz_1BvklqB-403ReZqNOnSdqYnLvSxW_6X-TNOBvJClfjORw";</script>
-  <script src="./garden.js?v=23"></script>
+  <script src="./garden.js?v=25"></script>
   <script src="./expeditions.js?v=16"></script>
+  <script src="./localization/locale-runtime.js?v=18"></script>
   <script>
     (() => {
     document.querySelector("#observations-empty-action").addEventListener("click", () => {

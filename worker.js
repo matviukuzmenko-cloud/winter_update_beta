@@ -449,8 +449,13 @@ async function readBoundedBody(request, maximumBytes) {
   return new TextDecoder("utf-8", { fatal: true }).decode(bytes);
 }
 
-async function requestPlantDiagnosis(apiKey, image, model, question, history, analysis, fieldIdentification = false) {
-  const prompt = fieldIdentification
+async function requestPlantDiagnosis(apiKey, image, model, question, history, analysis, fieldIdentification = false, locale = "ru") {
+  const languageInstruction = locale === "uk"
+    ? "Відповідай природною українською мовою. Латинські наукові назви залишай без змін."
+    : locale === "en"
+      ? "Reply in natural English. Keep Latin scientific names unchanged."
+      : "";
+  const prompt = (fieldIdentification
     ? "Ты — Silva, ботанический помощник Silva Quieta. Осторожно определи растение на фотографии для зимнего полевого маршрута. " +
       "Смотри на различимые морфологические признаки: форму и расположение хвои или листьев, шишки, кору и ветви. " +
       "Не придумывай отсутствующие детали. Назови вид и научное имя только если изображение позволяет обоснованное предположение; " +
@@ -476,7 +481,8 @@ async function requestPlantDiagnosis(apiKey, image, model, question, history, an
       ? "Ответь прямо на вопрос по фото и предыдущему разговору в 1–3 коротких предложениях; не повторяй первоначальный анализ."
       : "Ответь естественно, без заголовков, меток «Что видно/Что проверить/Уверенность», маркированных списков и Markdown, " +
         "в 2–3 коротких предложениях. Не добавляй отдельное заключение.") +
-    " Верни только JSON-объект без Markdown: {\"reply\":\"короткий ответ по-русски\",\"markers\":[{\"x\":0,\"y\":0,\"label\":\"видимый признак\"}]}.";
+    " Верни только JSON-объект без Markdown: {\"reply\":\"короткий ответ по-русски\",\"markers\":[{\"x\":0,\"y\":0,\"label\":\"видимый признак\"}]}."
+  ) + (languageInstruction ? `\n\n${languageInstruction}` : "");
   let response;
   try {
     response = await fetch(
@@ -595,7 +601,7 @@ async function requestPlantDiagnosis(apiKey, image, model, question, history, an
   return { reply: cleanedText, markers, ...(fieldIdentification ? { identification } : {}) };
 }
 
-async function diagnosePlantImage(apiKey, image, question = "", history = [], analysis = "", fieldIdentification = false) {
+async function diagnosePlantImage(apiKey, image, question = "", history = [], analysis = "", fieldIdentification = false, locale = "ru") {
   const models = [...new Set([MODEL, FALLBACK_MODEL, "gemini-2.5-flash"])];
   const retryableErrors = new Set([
     "gemini_model_unavailable",
@@ -606,7 +612,7 @@ async function diagnosePlantImage(apiKey, image, question = "", history = [], an
   let lastError = null;
   for (const [index, model] of models.entries()) {
     try {
-      return await requestPlantDiagnosis(apiKey, image, model, question, history, analysis, fieldIdentification);
+      return await requestPlantDiagnosis(apiKey, image, model, question, history, analysis, fieldIdentification, locale);
     } catch (error) {
       lastError = error;
       if (!retryableErrors.has(error.message) || index === models.length - 1) throw error;
@@ -618,7 +624,7 @@ async function diagnosePlantImage(apiKey, image, question = "", history = [], an
 function isAllowedOrigin(origin, configuredOrigin) {
   if (!origin) return true;
   const configuredSiteOrigin = configuredOrigin ? new URL(configuredOrigin).origin : "";
-  if ([configuredSiteOrigin, "https://silvaquieta.com", "https://www.silvaquieta.com", "https://matviukuzmenko-cloud.github.io"].includes(origin)) return true;
+  if ([configuredSiteOrigin, "https://silvaquieta.com", "https://www.silvaquieta.com", "https://uk.silvaquieta.com", "https://en.silvaquieta.com", "https://matviukuzmenko-cloud.github.io"].includes(origin)) return true;
   return /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin);
 }
 
@@ -886,7 +892,10 @@ function passkeyOrigin(origin, configuredOrigin) {
   try {
     const url = new URL(origin);
     if (!["https:", "http:"].includes(url.protocol)) throw new Error("Unsupported origin");
-    return { origin: url.origin, rpID: url.hostname };
+    const rpID = ["silvaquieta.com", "www.silvaquieta.com", "uk.silvaquieta.com", "en.silvaquieta.com"].includes(url.hostname)
+      ? "silvaquieta.com"
+      : url.hostname;
+    return { origin: url.origin, rpID };
   } catch {
     throw new PasskeyRequestError("Не удалось проверить адрес сайта.", 403);
   }
@@ -1255,6 +1264,10 @@ export default {
         }
         return jsonResponse({ error: "Не удалось прочитать фото." }, 400, origin, configuredOrigin);
       }
+      const locale = payload?.locale ?? "ru";
+      if (!["ru", "uk", "en"].includes(locale)) {
+        return jsonResponse({ error: "Не удалось определить язык ответа." }, 400, origin, configuredOrigin);
+      }
       const image = payload?.image;
       if (!image || !["image/jpeg", "image/png", "image/webp"].includes(image.mimeType) ||
           typeof image.data !== "string" || !/^[A-Za-z0-9+/]+={0,2}$/.test(image.data)) {
@@ -1307,6 +1320,7 @@ export default {
           history,
           analysis,
           payload.fieldIdentification === true,
+          locale,
         );
         return jsonResponse({ ...diagnosis, stored: false }, 200, origin, configuredOrigin);
       } catch (error) {
@@ -1360,6 +1374,10 @@ export default {
       payload = JSON.parse(body);
     } catch {
       return jsonResponse({ error: "Не удалось прочитать сообщение." }, 400, origin, configuredOrigin);
+    }
+    const locale = payload?.locale ?? "ru";
+    if (!["ru", "uk", "en"].includes(locale)) {
+      return jsonResponse({ error: "Не удалось определить язык ответа." }, 400, origin, configuredOrigin);
     }
     const messages = payload?.messages;
     if (!Array.isArray(messages) || messages.length < 1 || messages.length > MAX_MESSAGES) {
@@ -1434,8 +1452,25 @@ export default {
           error: "Поиск не нашёл подходящих источников. Уточните город, страну или название растения.",
         }, 502, origin, configuredOrigin);
       }
+      const languageInstruction = locale === "uk"
+        ? "Відповідай природною українською мовою. Не змішуй її з російською чи англійською; латинські наукові назви рослин залишай без змін."
+        : locale === "en"
+          ? "Reply in natural English. Do not mix in Russian or Ukrainian; keep Latin scientific plant names unchanged."
+          : "";
+      const originalLanguageRule = "Всегда отвечай грамотным, естественным русским языком. Не вставляй английские фразы, кроме своего имени Silva; латинские ";
+      const localizedLanguageRule = locale === "uk"
+        ? "Завжди відповідай грамотною, природною українською мовою. Не додавай російських чи англійських фраз, окрім імені Silva; латинські "
+        : locale === "en"
+          ? "Always reply in fluent, natural English. Do not include Russian or Ukrainian phrases, except the name Silva; Latin "
+          : "";
+      const localizedSystemMessage = localizedLanguageRule
+        ? { ...systemMessage, content: systemMessage.content.replace(originalLanguageRule, localizedLanguageRule) }
+        : systemMessage;
+      const responseSystemMessage = languageInstruction
+        ? { ...localizedSystemMessage, content: `${localizedSystemMessage.content}\n\n${languageInstruction}` }
+        : localizedSystemMessage;
       const baseMessages = [
-        systemMessage,
+        responseSystemMessage,
         ...referenceMessages,
         ...webReferenceMessages,
         ...modelMessages,
@@ -1445,12 +1480,12 @@ export default {
         console.error("Gemini API returned an empty response");
         return jsonResponse({ error: "Модель вернула пустой ответ. Попробуйте задать вопрос иначе." }, 502, origin, configuredOrigin);
       }
-      if (containsUnexpectedLatinWords(reply)) {
+      if (locale === "ru" && containsUnexpectedLatinWords(reply)) {
         const usableContext = modelMessages.filter((message) =>
           message.role === "user" || !containsUnexpectedLatinWords(message.content)
         );
         reply = await generateAnswerWithFallback(env.GEMINI_API_KEY, [
-          systemMessage,
+          responseSystemMessage,
           ...referenceMessages,
           ...webReferenceMessages,
           {

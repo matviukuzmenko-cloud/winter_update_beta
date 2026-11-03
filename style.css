@@ -2552,6 +2552,9 @@ dialog#flower-dialog {
 .flora-toast-success { border-color: color-mix(in srgb, #57a46b 45%, var(--line)); }
 .flora-toast-error { border-color: color-mix(in srgb, #d46d63 48%, var(--line)); }
 .flora-toast-action { min-height: 34px; padding: 7px 10px; border: 1px solid var(--line); border-radius: 10px; color: var(--blue); background: var(--surface-raised); font-size: 11px; font-weight: 750; }
+.flora-toast-locale { flex-wrap: wrap; }
+.flora-toast-locale p { flex: 1 1 100%; }
+.flora-toast-locale a { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
 
 .favorite-button .ui-icon,
 .favorite-detail-button .ui-icon { transform-origin: center; }

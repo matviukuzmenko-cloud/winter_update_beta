@@ -905,6 +905,7 @@
     const timeout = window.setTimeout(() => controller.abort(), 300000);
     try {
       const requestBody = JSON.stringify({
+          locale: window.FLORA_LOCALE || "ru",
           plantContext: requestedPlant
             ? [requestedPlant]
             : typeof window.floraGetPlantContext === "function"

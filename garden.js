@@ -1043,11 +1043,20 @@
       setStatus(diagnosisStatus, "Сервис фото-помощника пока не настроен.", true);
       return;
     }
+    const locale = window.FLORA_LOCALE || "ru";
     const isInitialRequest = diagnosisHistory.length === 0;
     const message = question || (isInitialRequest
       ? fieldRouteMode
-        ? "Определи хвойное или вечнозелёное растение по видимым морфологическим признакам. Рассмотри форму и расположение хвои или листьев, ветви, кору и шишки. Назови вероятный вид только если это видно на фото."
-        : "Посмотри, пожалуйста, это растение."
+        ? locale === "uk"
+          ? "Визнач хвойну або вічнозелену рослину за видимими морфологічними ознаками. Зверни увагу на форму й розташування хвої або листя, гілки, кору та шишки. Назви ймовірний вид лише тоді, коли це можна визначити за фото."
+          : locale === "en"
+            ? "Identify the conifer or evergreen plant from visible features. Consider the shape and arrangement of its needles or leaves, branches, bark, and cones. Name a likely species only if the photo supports it."
+            : "Определи хвойное или вечнозелёное растение по видимым морфологическим признакам. Рассмотри форму и расположение хвои или листьев, ветви, кору и шишки. Назови вероятный вид только если это видно на фото."
+        : locale === "uk"
+          ? "Будь ласка, подивись на цю рослину."
+          : locale === "en"
+            ? "Please take a look at this plant."
+            : "Посмотри, пожалуйста, это растение."
       : "");
     if (!message) return;
     photoChatInput.disabled = true;
@@ -1062,6 +1071,7 @@
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          locale,
           image: { mimeType: image.type, data: await blobToBase64(image) },
           question: message,
           analysis: diagnosisContext,

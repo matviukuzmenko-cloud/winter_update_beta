@@ -321,7 +321,6 @@
       return "Цветы";
     };
     const mappedCatalogFlowers = catalogItems.map((item, index) => {
-      const familyLabel = familyLabels[item.family] || familyAliases[item.family] || item.family;
       const verifiedRange = catalogRangeFor(item.latin);
       const taxonomy = familyTaxonomy[item.family] || { classKey: item.classKey, order: item.order };
       if (!taxonomy.classKey || !taxonomy.order || !classLabels[taxonomy.classKey]) throw new Error(`Не найдена классификация семейства ${item.family}.`);
@@ -356,12 +355,17 @@
         photoNote: expansionPhoto.photoNote
       } : null);
       const plantGroup = plantGroupOf(item);
-      const name = item.native || item.nameSource ? item.name : transcribeScientificName(item.latin);
+      const localized = window.FLORA_LOCALE !== "ru"
+        ? window.FLORA_CATALOG_LOCALIZATION?.[canonicalLatin(item.latin)]
+        : null;
+      const familyLabel = localized?.family || familyLabels[item.family] || familyAliases[item.family] || item.family;
+      const name = localized?.name || (item.native || item.nameSource ? item.name : transcribeScientificName(item.latin));
       const careLabels = { watering: "Полив", lighting: "Освещение", humidity: "Влажность" };
       const defaults = plantGroupCare[plantGroup] || plantGroupCare["Цветы"];
       const care = Object.fromEntries(Object.keys(careLabels).map((key) => [
         key,
-        typeof item.care?.[key] === "string" && item.care[key].trim() ? item.care[key].trim() : defaults[key]
+        localized?.care?.[key] ||
+          (typeof item.care?.[key] === "string" && item.care[key].trim() ? item.care[key].trim() : defaults[key])
       ]));
       const careSummary = care
         ? Object.entries(care)
@@ -377,18 +381,18 @@
         englishName: item.native || item.nameSource ? "" : item.name, latin: item.latin, family: item.family,
         familyLabel, classKey: taxonomy.classKey, classLabel: classLabels[taxonomy.classKey],
         order: taxonomy.order, kind: "botanical", kindLabel: familyLabel,
-        plantGroup, category: item.category && item.category !== "Комнатные растения" ? item.category : plantGroup, care,
+        plantGroup, category: localized?.category || (item.category && item.category !== "Комнатные растения" ? item.category : plantGroup), care,
         nameLanguage: item.nameSource || (item.native ? "Русское название из GBIF" :
           "Русская транслитерация научного названия; бытовое название не найдено в GBIF"),
         season: item.season || [], color: item.color || "", mood: item.mood || [], emoji: item.emoji || "✿", time: item.time || "",
-        description: careSummary ? `${description} Уход: ${careSummary}` : description,
-        distribution: typeof item.distribution === "string" && item.distribution.trim() &&
+        description: localized?.description || (careSummary ? `${description} Уход: ${careSummary}` : description),
+        distribution: localized?.distribution || (typeof item.distribution === "string" && item.distribution.trim() &&
           typeof item.distributionSource === "string" && safeExternalURL(item.distributionSource) !== "#"
           ? item.distribution.trim()
           : typeof verifiedRange?.distribution === "string" && verifiedRange.distribution.trim() &&
             typeof verifiedRange.distributionSource === "string" && safeExternalURL(verifiedRange.distributionSource) !== "#"
             ? verifiedRange.distribution.trim()
-          : "",
+          : ""),
         distributionSource: typeof item.distributionSource === "string" && safeExternalURL(item.distributionSource) !== "#"
           ? safeExternalURL(item.distributionSource)
           : typeof verifiedRange?.distributionSource === "string" && safeExternalURL(verifiedRange.distributionSource) !== "#"
