@@ -1,4 +1,4 @@
-const CACHE_NAME = "flora-anotomy-shell-v271";
+const CACHE_NAME = "flora-anotomy-shell-v272";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -15,8 +15,8 @@ const APP_SHELL = [
   "./localization/catalog-en.js?v=3",
   "./localization/ui-uk.json?v=2",
   "./localization/ui-en.json?v=2",
-  "./manifest-uk.webmanifest.json",
-  "./manifest-en.webmanifest.json",
+  "./manifest-uk.webmanifest.json?v=95",
+  "./manifest-en.webmanifest.json?v=95",
   "./flora-extra.js",
   "./flora-additional.js",
   "./flora-houseplants.js",
@@ -31,11 +31,11 @@ const APP_SHELL = [
   "./flora-1111.js",
   "./flora-1500.js",
   "./flora-ranges.js",
-  "./manifest.webmanifest.json?v=94",
-  "./icon.svg?v=92",
-  "./icon-192.png?v=92",
-  "./icon-512.png?v=92",
-  "./apple-touch-icon.png?v=92"
+  "./manifest.webmanifest.json?v=95",
+  "./icon.svg?v=93",
+  "./icon-192.png?v=93",
+  "./icon-512.png?v=93",
+  "./apple-touch-icon.png?v=93"
 ];
 
 self.addEventListener("install", (event) => {

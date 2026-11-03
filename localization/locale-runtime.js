@@ -338,7 +338,7 @@
     const ogLocale = document.querySelector('meta[property="og:locale"]');
     if (ogLocale) ogLocale.content = locale === "uk" ? "uk_UA" : "en_US";
     const manifest = document.querySelector('link[rel="manifest"]');
-    if (manifest) manifest.href = `./manifest-${locale}.webmanifest.json`;
+    if (manifest) manifest.href = `./manifest-${locale}.webmanifest.json?v=95`;
     for (const structuredData of document.querySelectorAll('script[type="application/ld+json"]')) {
       try {
         const data = JSON.parse(structuredData.textContent);
