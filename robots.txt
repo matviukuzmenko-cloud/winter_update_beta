@@ -1,0 +1,5 @@
+# Silva Quieta uses one public URL; in-app sections are hash-based fragments.
+User-agent: *
+Allow: /
+
+Sitemap: https://silvaquieta.com/sitemap.xml
