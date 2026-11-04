@@ -35,7 +35,7 @@
       const catalogPreload = document.createElement("link");
       catalogPreload.rel = "preload";
       catalogPreload.as = "script";
-      catalogPreload.href = `./localization/catalog-${window.FLORA_LOCALE}.js?v=3`;
+      catalogPreload.href = `./localization/catalog-${window.FLORA_LOCALE}.js?v=7`;
       document.head.append(catalogPreload);
     }
   </script>
@@ -55,6 +55,10 @@
   <meta property="og:url" content="https://silvaquieta.com/">
   <meta name="twitter:card" content="summary">
   <link rel="canonical" href="https://silvaquieta.com/">
+  <link rel="alternate" hreflang="ru" href="https://silvaquieta.com/">
+  <link rel="alternate" hreflang="uk" href="https://silvaquieta.com/?locale=uk">
+  <link rel="alternate" hreflang="en" href="https://silvaquieta.com/?locale=en">
+  <link rel="alternate" hreflang="x-default" href="https://silvaquieta.com/">
   <link rel="sitemap" type="application/xml" href="https://silvaquieta.com/sitemap.xml">
   <title>Silva Quieta — зимний ботанический атлас</title>
   <script type="application/ld+json">
@@ -73,6 +77,8 @@
     }
   </script>
   <link rel="manifest" href="./manifest.webmanifest.json?v=95">
+  <link rel="icon" href="./favicon-48.png?v=1" type="image/png" sizes="48x48">
+  <link rel="icon" href="./icon-192.png" type="image/png" sizes="192x192">
   <link rel="icon" href="./icon.svg?v=93" type="image/svg+xml">
   <link rel="apple-touch-icon" href="./apple-touch-icon.png?v=93">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -80,7 +86,7 @@
   <link rel="preconnect" href="https://inaturalist-open-data.s3.amazonaws.com">
   <link rel="preconnect" href="https://images.unsplash.com">
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./style.css?v=212">
+  <link rel="stylesheet" href="./style.css?v=218">
 </head>
 <body data-season="winter" data-design="herbarium">
   <script>
@@ -223,6 +229,11 @@
       </nav>
       <div class="header-actions">
         <button class="icon-button command-open" id="command-open" type="button" aria-label="Быстрый поиск и команды" title="Быстрый поиск и команды (Ctrl/⌘ K)"><svg class="ui-icon" aria-hidden="true"><use href="#icon-search"></use></svg></button>
+        <select class="locale-select" id="locale-select" aria-label="Сменить язык" title="Сменить язык">
+          <option value="ru" lang="ru">RU · Русский</option>
+          <option value="uk" lang="uk">UK · Українська</option>
+          <option value="en" lang="en">EN · English</option>
+        </select>
         <select class="design-select" id="design-select" aria-label="Зимний стиль оформления" title="Выбрать зимний стиль оформления">
           <option value="herbarium">Снежная оранжерея</option>
           <option value="glasshouse">Северное сияние</option>
@@ -414,10 +425,18 @@
         </svg>
       </section>
 
-      <div class="home-facts" aria-label="Атлас в цифрах">
+      <div class="home-facts home-facts-community" aria-label="Атлас в цифрах">
         <div class="home-fact"><svg class="ui-icon"><use href="#icon-book"></use></svg><span><strong id="flower-total">1500 растений</strong><small>в каталоге</small></span></div>
         <div class="home-fact"><svg class="ui-icon"><use href="#icon-plant"></use></svg><span><strong id="group-total">6 групп</strong><small>для изучения</small></span></div>
         <div class="home-fact"><svg class="ui-icon"><use href="#icon-heart"></use></svg><span><strong id="favorite-total">0 растений</strong><small>в коллекции</small></span></div>
+        <div class="home-fact visitor-fact" aria-label="Анонимная статистика посетителей">
+          <svg class="ui-icon" aria-hidden="true"><use href="#icon-user"></use></svg>
+          <span class="visitor-stat-pair">
+            <span><strong id="visitor-yesterday" aria-live="polite">—</strong><small id="visitor-yesterday-label">вчера</small></span>
+            <span><strong id="visitor-online" aria-live="polite">—</strong><small id="visitor-online-label">сейчас</small></span>
+          </span>
+          <span class="visitors-note" id="visitors-note">Случайный ID; IP-адреса не сохраняются</span>
+        </div>
       </div>
     </section>
 
@@ -566,8 +585,12 @@
               <h2 id="garden-today-title">Сегодня в саду</h2>
               <p id="garden-today-message">Собираем ваш личный ритм ухода…</p>
             </div>
-            <div class="garden-today-stat"><strong id="garden-today-count">—</strong><span id="garden-today-count-label">проверок сегодня</span></div>
+            <div class="garden-today-stat"><strong id="garden-today-count">—</strong><span id="garden-today-count-label">дел выполнено сегодня</span></div>
           </div>
+          <div class="garden-today-progress" role="progressbar" aria-label="Прогресс ухода за сегодня" aria-valuemin="0" aria-valuemax="0" aria-valuenow="0">
+            <span id="garden-today-progress-fill"></span>
+          </div>
+          <p class="garden-today-progress-label" id="garden-today-progress-label"></p>
           <div class="garden-today-items" id="garden-today-items"></div>
         </section>
       </header>
@@ -661,12 +684,22 @@
             <div><div class="eyebrow">МЯГКИЕ НАПОМИНАНИЯ <button class="winter-mini-charm" type="button" data-winter-easter="care" aria-label="Найти зимний сюрприз в ритме ухода">❄</button></div><h2 id="garden-care-title">Ритм ухода</h2></div>
             <button class="button secondary small garden-checklist-export" id="garden-checklist-export" type="button">Чек-лист на месяц · PDF</button>
           </div>
-          <p>Выберите удобный интервал и отмечайте полив. Напоминание — повод проверить почву, а не призыв поливать вслепую.</p>
+          <p>Выберите, как часто проверять почву, и отдельно отмечайте полив. Напоминание — повод проверить грунт, а не призыв поливать вслепую.</p>
           <aside class="winter-care-tip" aria-label="Зимний совет по уходу"><strong>Зимой меняются условия дома</strong><span>Отопление сушит воздух: проверьте влажность и отодвиньте растения от горячей батареи. Перед поливом проверяйте грунт: некоторым кактусам и суккулентам зимой нужно меньше воды, но точный ритм зависит от вида и условий. <button class="winter-hidden-pinecone" type="button" data-pinecone-hideout="garden-winter-tip" aria-label="Найти тайную шишку в зимней памятке сада">🌰</button></span></aside>
           <label class="heating-season-switch" for="heating-season-toggle">
             <input id="heating-season-toggle" type="checkbox">
             <span><strong>Отопительный сезон</strong><small>Учитывать сухой воздух и напоминать об увлажнении каждые 5 дней.</small></span>
           </label>
+          <div class="garden-care-import">
+            <div>
+              <label for="garden-care-collection-plant">Добавить растение из моей коллекции</label>
+              <select id="garden-care-collection-plant">
+                <option value="">Выберите растение…</option>
+              </select>
+            </div>
+            <button class="button secondary small" id="garden-care-import" type="button">Подставить данные</button>
+            <p id="garden-care-import-status" role="status" aria-live="polite">Подсказки по уходу берутся из карточки вида. Интервал — частота проверки почвы, а не график полива.</p>
+          </div>
           <form id="garden-care-form">
             <label for="garden-care-plant">Название растения</label>
             <input id="garden-care-plant" maxlength="80" placeholder="Например, фикус" required>
@@ -1117,7 +1150,7 @@
     </section>
   </dialog>
 
-  <script src="./ui-enhancements.js?v=6"></script>
+  <script src="./ui-enhancements.js?v=7"></script>
   <script src="./flora-extra.js"></script>
   <script src="./flora-additional.js"></script>
   <script src="./flora-houseplants.js"></script>
@@ -1134,18 +1167,20 @@
   <script src="./flora-ranges.js"></script>
   <script>
     if (window.FLORA_LOCALE !== "ru") {
-      document.write(`<script src="./localization/catalog-${window.FLORA_LOCALE}.js?v=3"><\/script>`);
+      document.write(`<script src="./localization/catalog-${window.FLORA_LOCALE}.js?v=7"><\/script>`);
     }
   </script>
-  <script src="./script.js?v=153"></script>
+  <script src="./script.js?v=155"></script>
   <script>window.FLORA_AI_ENDPOINT = "https://flora-anotomy-ai.ukrainman21012.workers.dev";</script>
-  <script src="./ai-chat.js?v=119"></script>
+  <script>window.FLORA_VISITOR_STATS_ENDPOINT = "https://flora-anotomy-ai.ukrainman21012.workers.dev/api/visitors";</script>
+  <script src="./visitor-counter.js?v=1"></script>
+  <script src="./ai-chat.js?v=120"></script>
   <script src="./supabase-config.js?v=2"></script>
   <script src="./supabase-auth.js?v=25"></script>
   <script>window.FLORA_VAPID_PUBLIC_KEY = "BF7JygE9293jwgMccpvZbxBHqwhx4RhfTUHWLTldz_1BvklqB-403ReZqNOnSdqYnLvSxW_6X-TNOBvJClfjORw";</script>
-  <script src="./garden.js?v=25"></script>
-  <script src="./expeditions.js?v=16"></script>
-  <script src="./localization/locale-runtime.js?v=20"></script>
+  <script src="./garden.js?v=28"></script>
+  <script src="./expeditions.js?v=17"></script>
+  <script src="./localization/locale-runtime.js?v=25"></script>
   <script>
     (() => {
     document.querySelector("#observations-empty-action").addEventListener("click", () => {

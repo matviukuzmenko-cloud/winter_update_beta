@@ -1,5 +1,7 @@
 (() => {
   const progressKey = "flora-expedition-progress";
+  const locale = ["ru", "uk", "en"].includes(window.FLORA_LOCALE) ? window.FLORA_LOCALE : "ru";
+  const localizedText = (translations) => translations[locale] || translations.ru;
   const grid = document.querySelector("#expedition-grid");
   const status = document.querySelector("#expedition-status");
   if (!grid) throw new Error("Не удалось инициализировать ботанические экспедиции.");
@@ -457,13 +459,39 @@
     render(true);
     const foundRelic = winterRelics.find((relic) => relic.key === key);
     const count = progress.winterFinds.length;
+    const relicNames = {
+      home: { ru: "Лесной фонарик", uk: "Лісовий ліхтарик", en: "Forest lantern" },
+      catalog: { ru: "Снежинка-гербарий", uk: "Сніжинка-гербарій", en: "Herbarium snowflake" },
+      season: { ru: "Звезда календаря", uk: "Зірка календаря", en: "Calendar star" },
+      collection: { ru: "Звёздное семечко", uk: "Зоряне зернятко", en: "Starry seed" },
+      care: { ru: "Ледяной колокольчик", uk: "Крижаний дзвіночок", en: "Icy bell" },
+      games: { ru: "Праздничный жетон", uk: "Святковий жетон", en: "Festive token" },
+      snowman: { ru: "Секрет снеговика", uk: "Секрет сніговика", en: "Snowman secret" },
+    };
+    const remaining = 7 - count;
     const message = count === 7
-      ? "Все семь секретов найдены! Открыта тайная открытка Silva и получено 100 очков."
+      ? localizedText({
+        ru: "Все семь секретов найдены! Открыта тайная открытка Silva и получено 100 очков.",
+        uk: "Усі сім секретів знайдено! Таємну листівку Silva відкрито, ви отримали 100 балів.",
+        en: "All seven secrets found! Silva's secret postcard is unlocked, and you earned 100 points.",
+      })
       : count === 5
-        ? "Сюрприз! Открылась карта тайных троп — осталось найти два секрета."
+        ? localizedText({
+          ru: "Сюрприз! Открылась карта тайных троп — осталось найти два секрета.",
+          uk: "Сюрприз! Відкрито мапу таємних стежок — залишилося знайти два секрети.",
+          en: "Surprise! The secret trail map is unlocked — two secrets left.",
+        })
         : count === 3
-          ? "Ты нашёл искру леса! Первый секретный подарок открыт."
-          : `Найдено: ${foundRelic?.name || "зимняя находка"}. Осталось ${7 - count} секретов.`;
+          ? localizedText({
+            ru: "Ты нашёл искру леса! Первый секретный подарок открыт.",
+            uk: "Ти знайшов іскру лісу! Перший таємний подарунок відкрито.",
+            en: "You found a spark in the forest! Your first secret gift is unlocked.",
+          })
+          : locale === "en"
+            ? `Found: ${relicNames[key]?.en || "Winter find"}. ${remaining} ${remaining === 1 ? "secret" : "secrets"} left.`
+            : locale === "uk"
+              ? `Знайдено: ${relicNames[key]?.uk || "зимова знахідка"}. Залишилося ${remaining} ${remaining === 1 ? "секрет" : remaining < 5 ? "секрети" : "секретів"}.`
+              : `Найдено: ${foundRelic?.name || "зимняя находка"}. Осталось ${remaining} секретов.`;
     window.dispatchEvent(new CustomEvent("flora:toast", {
       detail: { message, type: "success", duration: 5400 },
     }));
@@ -474,11 +502,25 @@
     progress.pineconeFinds.push(hideout);
     render(true);
     const count = progress.pineconeFinds.length;
+    const remaining = 7 - count;
+    const pineconeCount = locale === "en"
+      ? `${remaining} ${remaining === 1 ? "pinecone" : "pinecones"}`
+      : locale === "uk"
+        ? `${remaining} ${remaining === 1 ? "шишку" : remaining < 5 ? "шишки" : "шишок"}`
+        : String(remaining);
     window.dispatchEvent(new CustomEvent("flora:toast", {
       detail: {
         message: count === 7
-          ? "Все семь шишек найдены! В саду вас ждёт зимний набор садовода."
-          : `Тайная шишка найдена! Осталось найти ${7 - count}.`,
+          ? localizedText({
+            ru: "Все семь шишек найдены! В саду вас ждёт зимний набор садовода.",
+            uk: "Усі сім таємних шишок знайдено! У саду на вас чекає зимовий набір садівника.",
+            en: "All seven secret pinecones found! A winter gardening kit is waiting for you in My Garden.",
+          })
+          : localizedText({
+            ru: `Тайная шишка найдена! Осталось найти ${remaining}.`,
+            uk: `Таємну шишку знайдено! Залишилося знайти ${pineconeCount}.`,
+            en: `Secret pinecone found! ${pineconeCount} left.`,
+          }),
         type: "success",
         duration: 5400,
       },

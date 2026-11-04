@@ -5,6 +5,8 @@ import { fileURLToPath } from "node:url";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const catalogPath = path.join(root, "localization", "catalog-source.json");
 const catalog = JSON.parse(await readFile(catalogPath, "utf8"));
+const overridesPath = path.join(root, "localization", "manual-translation-overrides.json");
+const manualOverrides = JSON.parse(await readFile(overridesPath, "utf8"));
 const locales = ["uk", "en"];
 const maxChunkLength = 3200;
 const concurrency = 4;
@@ -12,6 +14,7 @@ const concurrency = 4;
 for (const record of catalog.records) {
   const sourceEnglishName = record.sourceEnglishName?.trim();
   if (
+    !["wikidata-common-name", "manual-review"].includes(record.en?.nameBasis) &&
     !record.russianCommonNameAvailable &&
     sourceEnglishName &&
     sourceEnglishName.toLocaleLowerCase("en") !== record.latin.toLocaleLowerCase("en") &&
@@ -19,6 +22,7 @@ for (const record of catalog.records) {
   ) {
     record.en ||= { care: {} };
     record.en.name = sourceEnglishName;
+    record.en.nameBasis = "source-common-name";
   }
 }
 
@@ -56,9 +60,10 @@ function chunksFor(records, locale) {
   for (let index = 0; index < records.length; index += 1) {
     const translated = records[index][locale];
     const fields = Object.fromEntries(Object.entries(localizedFields(records[index])).filter(([field]) =>
-      field === "watering" || field === "lighting" || field === "humidity"
+      !(field === "name" && records[index].nameWasTranscribed) &&
+      (field === "watering" || field === "lighting" || field === "humidity"
         ? !translated?.care?.[field]
-        : !translated?.[field]
+        : !translated?.[field])
     ));
     if (!Object.keys(fields).length) continue;
     const text = Object.entries(fields).map(([field, value]) => `${token(index, field)}\n${value}\n`).join("");
@@ -77,10 +82,10 @@ function chunksFor(records, locale) {
   return chunks;
 }
 
-async function translateText(text, locale) {
+async function translateText(text, locale, sourceLanguage = "ru") {
   const url = new URL("https://translate.googleapis.com/translate_a/single");
   url.searchParams.set("client", "gtx");
-  url.searchParams.set("sl", "ru");
+  url.searchParams.set("sl", sourceLanguage);
   url.searchParams.set("tl", locale);
   url.searchParams.set("dt", "t");
   url.searchParams.set("q", text);
@@ -112,6 +117,26 @@ async function runPool(items, worker) {
 }
 
 for (const locale of locales) {
+  if (!manualOverrides[locale] || typeof manualOverrides[locale] !== "object" || Array.isArray(manualOverrides[locale])) {
+    throw new Error(`Manual ${locale} translation overrides must be an object.`);
+  }
+
+  for (const record of catalog.records) {
+    const key = record.latin.toLocaleLowerCase("en");
+    const override = manualOverrides[locale][key];
+    if (override !== undefined) {
+      if (typeof override !== "string" || !override.trim()) {
+        throw new Error(`Invalid manual ${locale} name override for ${record.latin}.`);
+      }
+      record[locale] ||= { care: {} };
+      record[locale].name = override.trim();
+      record[locale].nameBasis = "manual-review";
+    } else if (locale === "uk" && record.uk?.nameBasis === "translated-common-name") {
+      record.uk.name = record.latin;
+      record.uk.nameBasis = "scientific-name";
+    }
+  }
+
   const localeRecords = chunksFor(catalog.records, locale);
   let completedChunks = 0;
   await runPool(localeRecords, async (chunk) => {
@@ -150,7 +175,9 @@ for (const locale of locales) {
   });
 
   for (const record of catalog.records) {
-    if (record.nameWasTranscribed) record[locale].nameBasis = "scientific-name";
+    if (!record.nameWasTranscribed) continue;
+    if (record[locale]?.nameBasis && record[locale].nameBasis !== "scientific-name") continue;
+    record[locale].nameBasis = "scientific-name";
   }
 }
 
@@ -160,7 +187,7 @@ catalog.translationMetadata = {
   translatedAt: new Date().toISOString(),
   reviewRequired: true,
   scientificNamesPreserved: true,
-  note: "Machine-translated draft. Review botanical common names, descriptions, care, and distribution before publication.",
+  note: "Plant names use source-provided English common names, manually reviewed Ukrainian overrides, or the scientific Latin name. Other catalog text remains a machine-translated draft.",
 };
 await writeFile(catalogPath, `${JSON.stringify(catalog, null, 2)}\n`, "utf8");
 const translationDirectory = path.join(root, "localization");

@@ -18,7 +18,255 @@
   const historyLimit = 12;
   const messageLimit = 1200;
   const conversation = [];
-  const defaultSuggestions = [...suggestions.querySelectorAll(".flora-ai-suggestion")].map((button) => button.textContent);
+  const locale = ["ru", "uk", "en"].includes(window.FLORA_LOCALE) ? window.FLORA_LOCALE : "ru";
+  const chatCopy = {
+    ru: {
+      greeting: (nickname) => `Привет, ${nickname}! Я — Silva, ботанический помощник Silva Quieta. Что хотите узнать о растениях?`,
+      intro: "Привет! Я Silva, ботанический помощник Silva Quieta. Помогу с уходом, выбором растения и вопросами о природе.",
+      suggestions: ["Как часто поливать монстеру?", "Как понять, что орхидею пора поливать?", "Какое растение подойдёт для тени?", "Почему желтеют листья?"],
+      followUps: ["А если его перелили?", "Как понять, что ему нужна вода?", "Какую почву выбрать?"],
+      genericFollowUps: ["Как поливать растение?", "Какая почва ему подойдёт?", "Куда его лучше поставить?"],
+      plantHint: (name) => `Вижу, ты смотришь карточку растения «${name}» 🌿. Могу рассказать об уходе или помочь разобраться с листьями.`,
+      plantQuestion: (name) => `Расскажи о растении «${name}»: как часто его поливать и на что обратить внимание?`,
+      opening: "Закрыть Silva",
+      closed: "Спросить Silva",
+      clear: "Начать новый диалог",
+      close: "Закрыть чат",
+      introLabel: "БОТАНИЧЕСКИЙ ПОМОЩНИК",
+      inputLabel: "Ваш вопрос ботаническому помощнику",
+      placeholder: "Напишите свой вопрос…",
+      send: "Отправить сообщение",
+      footnote: "История чата хранится отдельно для каждого ника на этом устройстве. Ответы ИИ могут быть неточными; не отправляйте личные данные.",
+      checking: "Проверяем связь…",
+      localReady: "Silva работает локально",
+      ready: "Silva готова помочь",
+      startOllama: "Запусти Ollama",
+      downloadModel: (model) => `Скачай ${model || "локальную модель"}`,
+      notConfigured: "ИИ не настроен на сервере",
+      unavailable: "ИИ-сервер недоступен",
+      sourceLabel: "Источники",
+      openSearch: "Открыть поиск Google",
+      assistantLabel: "Загружается ответ Silva",
+      slowLocal: "Локальная модель отвечает дольше обычного. Попробуйте ещё раз.",
+      slowCloud: "Облачная модель отвечает дольше обычного. Попробуйте ещё раз.",
+      localConnection: "Не удалось связаться с сервером. Запустите локальный сервер проекта.",
+      cloudConnection: "Не удалось связаться с облачным ИИ-сервером.",
+      localProvider: "Silva работает локально",
+      cloudProvider: "Silva готова помочь",
+      checkOllama: "Проверь Ollama и модель",
+      temporary: "ИИ временно недоступен",
+      checkConnection: "Проверьте связь",
+    },
+    uk: {
+      greeting: (nickname) => `Привіт, ${nickname}! Я — Silva, ботанічна помічниця Silva Quieta. Що хочете дізнатися про рослини?`,
+      intro: "Привіт! Я Silva, ботанічна помічниця Silva Quieta. Допоможу з доглядом, вибором рослин і питаннями про природу.",
+      suggestions: ["Як часто поливати монстеру?", "Як зрозуміти, що орхідею час поливати?", "Яка рослина підійде для затінку?", "Чому жовтіє листя?"],
+      followUps: ["А якщо її перелили?", "Як зрозуміти, що їй потрібна вода?", "Який ґрунт обрати?"],
+      genericFollowUps: ["Як поливати рослину?", "Який ґрунт їй підійде?", "Де її краще поставити?"],
+      plantHint: (name) => `Бачу, ти переглядаєш картку рослини «${name}» 🌿. Можу розповісти про догляд або допомогти розібратися з листям.`,
+      plantQuestion: (name) => `Розкажи про рослину «${name}»: як часто її поливати та на що звернути увагу?`,
+      opening: "Закрити Silva",
+      closed: "Запитати Silva",
+      clear: "Почати нову розмову",
+      close: "Закрити чат",
+      introLabel: "БОТАНІЧНА ПОМІЧНИЦЯ",
+      inputLabel: "Ваше запитання до ботанічної помічниці",
+      placeholder: "Напишіть своє запитання…",
+      send: "Надіслати повідомлення",
+      footnote: "Історія чату зберігається окремо для кожного ніку на цьому пристрої. Відповіді ШІ можуть бути неточними; не надсилайте особисті дані.",
+      checking: "Перевіряємо зв’язок…",
+      localReady: "Silva працює локально",
+      ready: "Silva готова допомогти",
+      startOllama: "Запустіть Ollama",
+      downloadModel: (model) => `Завантажте ${model || "локальну модель"}`,
+      notConfigured: "ШІ не налаштований на сервері",
+      unavailable: "Сервер ШІ недоступний",
+      sourceLabel: "Джерела",
+      openSearch: "Відкрити пошук Google",
+      assistantLabel: "Завантажується відповідь Silva",
+      slowLocal: "Локальна модель відповідає довше, ніж зазвичай. Спробуйте ще раз.",
+      slowCloud: "Хмарна модель відповідає довше, ніж зазвичай. Спробуйте ще раз.",
+      localConnection: "Не вдалося зв’язатися із сервером. Запустіть локальний сервер проєкту.",
+      cloudConnection: "Не вдалося зв’язатися з хмарним сервером ШІ.",
+      localProvider: "Silva працює локально",
+      cloudProvider: "Silva готова допомогти",
+      checkOllama: "Перевірте Ollama та модель",
+      temporary: "ШІ тимчасово недоступний",
+      checkConnection: "Перевірте зв’язок",
+    },
+    en: {
+      greeting: (nickname) => `Hi, ${nickname}! I'm Silva, the botanical assistant for Silva Quieta. What would you like to know about plants?`,
+      intro: "Hi! I'm Silva, the botanical assistant for Silva Quieta. I can help with plant care, choosing plants, and questions about nature.",
+      suggestions: ["How often should I water a Monstera?", "How can I tell when an orchid needs water?", "Which plant is suitable for shade?", "Why are the leaves turning yellow?"],
+      followUps: ["What if it was overwatered?", "How can I tell when it needs water?", "Which soil should I choose?"],
+      genericFollowUps: ["How should I water this plant?", "What soil would suit it?", "Where should I place it?"],
+      plantHint: (name) => `I see you're viewing the profile for “${name}” 🌿. I can share care tips or help you understand its leaves.`,
+      plantQuestion: (name) => `Tell me about “${name}”: how often should I water it, and what should I watch for?`,
+      opening: "Close Silva",
+      closed: "Ask Silva",
+      clear: "Start a new conversation",
+      close: "Close chat",
+      introLabel: "BOTANICAL ASSISTANT",
+      inputLabel: "Ask your botanical assistant",
+      placeholder: "Write your question…",
+      send: "Send message",
+      footnote: "Chat history is stored separately for each nickname on this device. AI answers may be inaccurate; don't share personal information.",
+      checking: "Checking connection…",
+      localReady: "Silva is running locally",
+      ready: "Silva is ready to help",
+      startOllama: "Start Ollama",
+      downloadModel: (model) => `Download ${model || "the local model"}`,
+      notConfigured: "AI isn't configured on the server",
+      unavailable: "AI server is unavailable",
+      sourceLabel: "Sources",
+      openSearch: "Open Google Search",
+      assistantLabel: "Silva is preparing a reply",
+      slowLocal: "The local model is taking longer than usual. Please try again.",
+      slowCloud: "The cloud model is taking longer than usual. Please try again.",
+      localConnection: "Couldn't reach the server. Start the project's local server.",
+      cloudConnection: "Couldn't reach the cloud AI server.",
+      localProvider: "Silva is running locally",
+      cloudProvider: "Silva is ready to help",
+      checkOllama: "Check Ollama and the model",
+      temporary: "AI is temporarily unavailable",
+      checkConnection: "Check your connection",
+    },
+  }[locale];
+  const localCopy = {
+    ru: {
+      creator: "Silva Quieta создал Кузьменко Матвей.",
+      theme: (name) => `Переключаю ${name} оформление.`,
+      palette: (name) => `Устанавливаю зимний стиль «${name}».`,
+      search: (query) => `Ищу «${query}» в ботаническом атласе.`,
+      filter: "Применяю фильтр ухода в каталоге.",
+      sort: (mode) => `Сортирую растения ${mode === "alphabetical" ? "по алфавиту" : "по популярности"}.`,
+      openSection: (name) => `Открываю раздел «${name}».`,
+      showGroup: (name) => `Показываю в атласе группу «${name}».`,
+      explainSection: (description) => description,
+      sectionAction: (name) => `Открыть: ${name}`,
+      features: [
+        "Каталог из 1500 растений с поиском, фильтрами, ареалами и подробными карточками.",
+        "Личная коллекция: сохраняйте растения, делайте заметки и отмечайте полив.",
+        "Раздел «Мой сад»: фото-помощник Silva, дневник растений и план ухода.",
+        "Сезонный трекер для собственных наблюдений за цветением.",
+        "Случайное растение и игра-викторина «Угадай растение».",
+        "Silva помогает с вопросами об уходе и может открыть нужный раздел или карточку растения.",
+        "Сайтом можно пользоваться без аккаунта; аккаунт Supabase позволяет синхронизировать личные данные.",
+      ],
+      about: "Silva Quieta — интерактивный ботанический атлас. На сайте доступны:",
+      actionLabels: ["Открыть каталог", "Моя коллекция", "Сезонный трекер", "Инструкция"],
+      saved: (name) => `Добавила «${name}» в вашу коллекцию.`,
+      removed: (name) => `Убрала «${name}» из вашей коллекции.`,
+      found: (name, latin, action) => `Нашла в атласе «${name}» (${latin}). ${action === "open" ? "Открываю карточку растения." : "Показываю в каталоге."}`,
+      sections: {
+        catalog: "Каталог растений", collection: "Моя коллекция", garden: "Мой сад",
+        season: "Сезонный трекер", botanist: "Игра «Угадай растение»", luck: "Случайное растение",
+        guide: "О проекте и инструкция", home: "Главная",
+      },
+      descriptions: {
+        catalog: "В атласе можно искать растения по русскому или латинскому названию, фильтровать по группе, освещению и поливу, а также открывать подробные карточки.",
+        collection: "В коллекции собраны сохранённые растения. В карточке можно вести заметки, а для сохранённых растений отмечать полив.",
+        garden: "В разделе «Мой сад» находятся фото-помощник Silva, дневник растений и личный план ухода с напоминаниями.",
+        season: "Сезонный трекер помогает отмечать собственные наблюдения за цветением растений по месяцам и годам.",
+        botanist: "В игре «Угадай растение» нужно определить растение по фотографии и выбрать правильный вариант.",
+        luck: "Раздел случайного растения знакомит со случайным видом из каталога и позволяет выбрать другой.",
+        guide: "В разделе «О проекте» рассказано о Silva Quieta, возможностях сайта, помощнике Silva и работе с каталогом.",
+        home: "На главной странице находятся краткое описание Silva Quieta, быстрый переход в каталог и карточка Silva.",
+      },
+    },
+    uk: {
+      creator: "Silva Quieta створив Кузьменко Матвій.",
+      theme: (name) => `Перемикаю ${name} оформлення.`,
+      palette: (name) => `Встановлюю зимовий стиль «${name}».`,
+      search: (query) => `Шукаю «${query}» у ботанічному атласі.`,
+      filter: "Застосовую фільтр догляду в каталозі.",
+      sort: (mode) => `Сортую рослини ${mode === "alphabetical" ? "за абеткою" : "за популярністю"}.`,
+      openSection: (name) => `Відкриваю розділ «${name}».`,
+      showGroup: (name) => `Показую в атласі групу «${name}».`,
+      explainSection: (description) => description,
+      sectionAction: (name) => `Відкрити: ${name}`,
+      features: [
+        "Каталог із 1 500 рослин із пошуком, фільтрами, ареалами та докладними картками.",
+        "Особиста колекція: зберігайте рослини, нотатки та позначайте полив.",
+        "Розділ «Мій сад»: фото-помічниця Silva, щоденник рослин і план догляду.",
+        "Сезонний трекер для власних спостережень за цвітінням.",
+        "Випадкова рослина та гра-вікторина «Вгадай рослину».",
+        "Silva допомагає з доглядом і може відкрити потрібний розділ або картку рослини.",
+        "Сайтом можна користуватися без облікового запису; акаунт Supabase синхронізує особисті дані.",
+      ],
+      about: "Silva Quieta — інтерактивний ботанічний атлас. На сайті доступні:",
+      actionLabels: ["Відкрити каталог", "Моя колекція", "Сезонний трекер", "Інструкція"],
+      saved: (name) => `Додала «${name}» до вашої колекції.`,
+      removed: (name) => `Прибрала «${name}» з вашої колекції.`,
+      found: (name, latin, action) => `Знайшла в атласі «${name}» (${latin}). ${action === "open" ? "Відкриваю картку рослини." : "Показую в каталозі."}`,
+      sections: {
+        catalog: "Каталог рослин", collection: "Моя колекція", garden: "Мій сад",
+        season: "Сезонний трекер", botanist: "Гра «Вгадай рослину»", luck: "Випадкова рослина",
+        guide: "Про проєкт та інструкція", home: "Головна",
+      },
+      descriptions: {
+        catalog: "В атласі можна шукати рослини за українською, російською або латинською назвою, фільтрувати за групою, освітленням і поливом та відкривати докладні картки.",
+        collection: "У колекції зібрані збережені рослини. У картках можна вести нотатки та позначати полив.",
+        garden: "У розділі «Мій сад» є фото-помічниця Silva, щоденник рослин і особистий план догляду з нагадуваннями.",
+        season: "Сезонний трекер допомагає позначати власні спостереження за цвітінням рослин за місяцями й роками.",
+        botanist: "У грі «Вгадай рослину» потрібно визначити рослину за фото та обрати правильну відповідь.",
+        luck: "Розділ випадкової рослини знайомить із випадковим видом із каталогу та дає змогу обрати інший.",
+        guide: "У розділі «Про проєкт» розповідається про Silva Quieta, можливості сайту, помічницю Silva та роботу з каталогом.",
+        home: "На головній сторінці є короткий опис Silva Quieta, швидкий перехід до каталогу та картка Silva.",
+      },
+    },
+    en: {
+      creator: "Silva Quieta was created by Matvey Kuzmenko.",
+      theme: (name) => `Switching to the ${name} theme.`,
+      palette: (name) => `Setting the “${name}” winter style.`,
+      search: (query) => `Searching the botanical atlas for “${query}”.`,
+      filter: "Applying the care filter in the atlas.",
+      sort: (mode) => `Sorting plants ${mode === "alphabetical" ? "alphabetically" : "by popularity"}.`,
+      openSection: (name) => `Opening “${name}”.`,
+      showGroup: (name) => `Showing the “${name}” group in the atlas.`,
+      explainSection: (description) => description,
+      sectionAction: (name) => `Open: ${name}`,
+      features: [
+        "A 1,500-plant catalog with search, filters, ranges, and detailed profiles.",
+        "A personal collection for saving plants, taking notes, and tracking watering.",
+        "My Garden includes Silva's photo helper, a plant journal, and a care plan.",
+        "A seasonal tracker for recording personal flowering observations.",
+        "A random plant feature and the “Guess the Plant” quiz.",
+        "Silva can answer care questions and open the right section or plant profile.",
+        "The site works without an account; a Supabase account syncs personal data.",
+      ],
+      about: "Silva Quieta is an interactive botanical atlas. The site includes:",
+      actionLabels: ["Open the atlas", "My collection", "Seasonal tracker", "Instructions"],
+      saved: (name) => `Added “${name}” to your collection.`,
+      removed: (name) => `Removed “${name}” from your collection.`,
+      found: (name, latin, action) => `Found “${name}” (${latin}) in the atlas. ${action === "open" ? "Opening its profile." : "Showing it in the catalog."}`,
+      sections: {
+        catalog: "Plant atlas", collection: "My collection", garden: "My garden",
+        season: "Seasonal tracker", botanist: "Guess the Plant game", luck: "Random plant",
+        guide: "About and instructions", home: "Home",
+      },
+      descriptions: {
+        catalog: "Search the atlas by Russian or Latin plant name, filter by group, light, and watering, and open detailed profiles.",
+        collection: "Your collection holds saved plants. Add notes to profiles and track watering for saved plants.",
+        garden: "My Garden includes Silva's photo helper, a plant journal, and a personal care plan with reminders.",
+        season: "The seasonal tracker lets you record your own flowering observations by month and year.",
+        botanist: "In the Guess the Plant game, identify a plant from its photo and choose the correct answer.",
+        luck: "The random plant section introduces a species from the atlas and lets you pick another.",
+        guide: "About the project explains Silva Quieta, the site's features, Silva, and how to use the atlas.",
+        home: "The home page has a short introduction to Silva Quieta, a quick link to the atlas, and Silva's profile.",
+      },
+    },
+  }[locale];
+  const localizedSectionName = (section) => localCopy.sections[section.page] || section.name;
+  const localizedGroupName = (group) => ({
+    "Деревья и кустарники": { ru: "Деревья и кустарники", uk: "Дерева і кущі", en: "Trees and shrubs" },
+    "Суккуленты": { ru: "Суккуленты", uk: "Сукуленти", en: "Succulents" },
+    "Папоротники": { ru: "Папоротники", uk: "Папороті", en: "Ferns" },
+    "Хвойные": { ru: "Хвойные", uk: "Хвойні", en: "Conifers" },
+    "Цветы": { ru: "Цветы", uk: "Квіти", en: "Flowers" },
+    "Кактусы": { ru: "Кактусы", uk: "Кактуси", en: "Cacti" },
+  }[group]?.[locale] || group);
+  const defaultSuggestions = chatCopy.suggestions;
   let busy = false;
   let activeNickname = readNickname();
   let activeProfileKey = normalizeNickname(activeNickname);
@@ -28,6 +276,20 @@
   let draftSaveTimer = 0;
   let scrollSaveTimer = 0;
   let screenContextHint = null;
+
+  document.querySelector(".flora-ai-intro > p").textContent = chatCopy.intro;
+  document.querySelector(".flora-ai-eyebrow").textContent = chatCopy.introLabel;
+  document.querySelector("#flora-ai-input").placeholder = chatCopy.placeholder;
+  document.querySelector('label[for="flora-ai-input"]').textContent = chatCopy.inputLabel;
+  document.querySelector("#flora-ai-send").setAttribute("aria-label", chatCopy.send);
+  document.querySelector("#flora-ai-clear").setAttribute("aria-label", chatCopy.clear);
+  document.querySelector("#flora-ai-clear").title = chatCopy.clear;
+  document.querySelector("#flora-ai-close").setAttribute("aria-label", chatCopy.close);
+  document.querySelector(".flora-ai-footnote").textContent = chatCopy.footnote;
+  document.querySelector("#flora-ai-panel").setAttribute("aria-label", locale === "en" ? "Chat with Silva" : locale === "uk" ? "Чат із помічницею Silva" : "Чат с помощником Silva");
+  toggle.setAttribute("aria-label", chatCopy.closed);
+  toggle.querySelector(".flora-ai-toggle-text").textContent = chatCopy.closed;
+  presence.lastChild.textContent = ` ${chatCopy.checking}`;
 
   function normalizeNickname(nickname) {
     return nickname.normalize("NFKC").trim().toLocaleLowerCase("ru-RU") || "гость";
@@ -43,9 +305,9 @@
     }
   }
 
-  const getHistoryKey = () => `flora-ai-chat-history:${encodeURIComponent(activeProfileKey)}`;
-  const getDraftKey = () => `flora-ai-chat-draft:${encodeURIComponent(activeProfileKey)}`;
-  const getScrollKey = () => `flora-ai-chat-scroll:${encodeURIComponent(activeProfileKey)}`;
+  const getHistoryKey = () => `flora-ai-chat-history:${encodeURIComponent(activeProfileKey)}${locale === "ru" ? "" : `:${locale}`}`;
+  const getDraftKey = () => `flora-ai-chat-draft:${encodeURIComponent(activeProfileKey)}${locale === "ru" ? "" : `:${locale}`}`;
+  const getScrollKey = () => `flora-ai-chat-scroll:${encodeURIComponent(activeProfileKey)}${locale === "ru" ? "" : `:${locale}`}`;
 
   const saveSyncedValue = (key, value) => {
     try {
@@ -69,6 +331,7 @@
     }));
     suggestions.hidden = items.length === 0;
   };
+  setSuggestions(defaultSuggestions);
 
   const refreshFollowUpSuggestions = () => {
     if (conversation.length < 2) {
@@ -80,13 +343,16 @@
       ? window.floraGetPlantContext(lastUserMessage, activeScreenContext)
       : [];
     const plant = activeScreenContext?.name || context[0]?.name;
-    const followUps = /полив|поливать|перелил|перелив|вода/i.test(lastUserMessage)
-      ? ["А если его перелили?", "Как понять, что ему нужна вода?", "Какую почву выбрать?"]
-      : [
-        plant ? `Как поливать растение «${plant}»?` : "Как поливать растение?",
-        "Какая почва ему подойдёт?",
-        "Куда его лучше поставить?",
-      ];
+    const waterQuery = locale === "ru"
+      ? /полив|поливать|перелил|перелив|вода/i.test(lastUserMessage)
+      : locale === "uk"
+        ? /полив|перелил|вода|ґрунт/i.test(lastUserMessage)
+        : /water|overwater|soil/i.test(lastUserMessage);
+    const followUps = waterQuery
+      ? chatCopy.followUps
+      : plant
+        ? [chatCopy.plantQuestion(plant), ...chatCopy.genericFollowUps.slice(1)]
+        : chatCopy.genericFollowUps;
     setSuggestions(followUps);
   };
 
@@ -101,14 +367,14 @@
     };
     const hint = document.createElement("div");
     hint.className = "flora-ai-context-hint";
-    hint.textContent = `Вижу, ты смотришь карточку растения «${activeScreenContext.name}» 🌿. Могу рассказать об уходе или помочь разобраться с листьями.`;
+    hint.textContent = chatCopy.plantHint(activeScreenContext.name);
     screenContextHint?.remove();
     messagesElement.append(hint);
     screenContextHint = hint;
 
     const previousContextPlant = input.dataset.contextPlant || "";
     if (!input.value.trim() || previousContextPlant) {
-      input.value = `Расскажи о растении «${activeScreenContext.name}»: как часто его поливать и на что обратить внимание?`;
+      input.value = chatCopy.plantQuestion(activeScreenContext.name);
       input.dataset.contextPlant = activeScreenContext.name;
       input.dataset.contextDraft = input.value;
       input.style.height = "auto";
@@ -250,15 +516,6 @@
     { page: "guide", name: "О проекте и инструкция", terms: /о проекте|инструкци|помощь|как пользоваться/u, description: "В разделе «О проекте» рассказано о Silva Quieta, возможностях сайта, помощнике Silva и работе с каталогом." },
     { page: "home", name: "Главная", terms: /главн/u, description: "На главной странице находятся краткое описание Silva Quieta, быстрый переход в каталог и карточка Silva." },
   ];
-  const siteFeatures = [
-    "Каталог из 1500 растений с поиском, фильтрами, ареалами и подробными карточками.",
-    "Личная коллекция: сохраняйте растения, делайте заметки и отмечайте полив.",
-    "Раздел «Мой сад»: фото-помощник Silva, дневник растений и план ухода.",
-    "Сезонный трекер для собственных наблюдений за цветением.",
-    "Случайное растение и игра-викторина «Угадай растение».",
-    "Silva помогает с вопросами об уходе и может открыть нужный раздел или карточку растения.",
-    "Сайтом можно пользоваться без аккаунта; аккаунт Supabase позволяет синхронизировать личные данные.",
-  ];
   const commandWords = [
     "открой", "открыть", "открывай", "перейди", "перейти", "покажи", "показать", "показывай",
     "зайди", "зайти", "переключи", "переключить", "перенеси", "посмотреть", "посмотрим",
@@ -342,7 +599,7 @@
     if (themeToggle && /(?:темн|светл).{0,30}(?:тем|оформлен)|(?:тем|оформлен).{0,30}(?:темн|светл)/u.test(text)) {
       const wantsDark = /темн/u.test(text);
       return {
-        reply: `Переключаю ${wantsDark ? "тёмное" : "светлое"} оформление.`,
+        reply: localCopy.theme(locale === "en" ? (wantsDark ? "dark" : "light") : wantsDark ? (locale === "uk" ? "темне" : "тёмное") : (locale === "uk" ? "світле" : "светлое")),
         run: () => {
           const isDark = document.body.classList.contains("dark-theme");
           if (isDark !== wantsDark) themeToggle.click();
@@ -358,17 +615,24 @@
     ];
     const palette = palettes.find(({ terms }) => terms.test(text));
     if (palette && /(?:тем|цвет|палитр|оформлен|стил|зимн|северн|тих)/u.test(text)) {
-      if (document.querySelector("#design-select")) return {
-        reply: `Устанавливаю зимний стиль «${palette.name}».`,
+      if (document.querySelector("#design-select")) {
+        const paletteNames = {
+          herbarium: { ru: "Снежная оранжерея", uk: "Сніжна оранжерея", en: "Snow greenhouse" },
+          editorial: { ru: "Зимний лес", uk: "Зимовий ліс", en: "Winter forest" },
+          glasshouse: { ru: "Северное сияние", uk: "Північне сяйво", en: "Northern lights" },
+        };
+        return {
+        reply: localCopy.palette(paletteNames[palette.value][locale]),
         run: () => typeof window.floraSetPalette === "function" && window.floraSetPalette(palette.value),
       };
+      }
     }
 
     const catalogSearch = text.match(/(?:найди|поищи|открой|покажи)\s+(?:растение\s+)?(?:в\s+)?(?:каталоге|атласе)\s+["«]?(.+?)["»]?$/u);
     if (catalogSearch?.[1] && typeof window.floraSearchCatalog === "function") {
       const query = catalogSearch[1].trim();
       return {
-        reply: `Ищу «${query}» в ботаническом атласе.`,
+        reply: localCopy.search(query),
         run: () => window.floraSearchCatalog(query),
       };
     }
@@ -393,7 +657,7 @@
       const lightSelect = document.querySelector("#care-light-filter");
       const waterSelect = document.querySelector("#care-water-filter");
       return {
-        reply: "Применяю фильтр ухода в каталоге.",
+        reply: localCopy.filter,
         run: () => {
           if (!lightSelect || !waterSelect) return false;
           document.querySelector(".catalog-filter-disclosure")?.setAttribute("open", "");
@@ -419,7 +683,7 @@
         : null;
     if (sortSelect && sortMode) {
       return {
-        reply: `Сортирую растения ${sortMode === "alphabetical" ? "по алфавиту" : "по популярности"}.`,
+        reply: localCopy.sort(sortMode),
         run: () => {
           sortSelect.value = sortMode;
           sortSelect.dispatchEvent(new Event("change", { bubbles: true }));
@@ -433,7 +697,7 @@
   const getLocalSiteAnswer = (text) => {
     if (/(?:кто\s+(?:создал|автор|создател)|создател|автор(?:ство)?\s+(?:сайт|проекта)|кто\s+стоит\s+за\s+(?:сайт|проект))/u.test(text)) {
       return {
-        reply: "Silva Quieta создал Кузьменко Матвей.",
+        reply: localCopy.creator,
       };
     }
     const controlAnswer = getLocalControlAnswer(text);
@@ -441,7 +705,7 @@
     const section = detectSection(text);
     if (section && isNavigationRequest(text)) {
       return {
-        reply: `Открываю раздел «${section.name}».`,
+        reply: localCopy.openSection(localizedSectionName(section)),
         action: section.page,
         navigate: true,
       };
@@ -449,7 +713,7 @@
     const catalogGroup = inferCatalogIntent(text);
     if (catalogGroup && isNavigationRequest(text)) {
       return {
-        reply: `Показываю в атласе группу «${catalogGroup}».`,
+        reply: localCopy.showGroup(localizedGroupName(catalogGroup)),
         action: "catalog",
         navigate: true,
         catalogGroup,
@@ -457,8 +721,8 @@
     }
     if (section && /(?:что такое|что за|для чего|зачем|расскаж|объясн|как работает|что можно)/u.test(text)) {
       return {
-        reply: section.description,
-        actions: [[section.page, `Открыть: ${section.name}`]],
+        reply: localCopy.explainSection(localCopy.descriptions[section.page] || section.description),
+        actions: [[section.page, localCopy.sectionAction(localizedSectionName(section))]],
       };
     }
     if (/(?:что умеет сайт|возможност|разделы сайта|какие разделы|что есть на сайте|расскажи о сайте|про сайт|о сайте|как пользоваться|можно без аккаунта|зачем аккаунт)/u.test(text)) {
@@ -469,8 +733,8 @@
         ["guide", "Инструкция"],
       ];
       return {
-        reply: `Silva Quieta — интерактивный ботанический атлас. На сайте доступны:\n${siteFeatures.map((feature) => `• ${feature}`).join("\n")}`,
-        actions,
+        reply: `${localCopy.about}\n${localCopy.features.map((feature) => `• ${feature}`).join("\n")}`,
+        actions: actions.map(([route], index) => [route, localCopy.actionLabels[index]]),
       };
     }
     return null;
@@ -623,7 +887,7 @@
     if (role === "assistant" && sources.length) {
       const sourceLabel = document.createElement("span");
       sourceLabel.className = "flora-ai-source-label";
-      sourceLabel.textContent = "Источники";
+      sourceLabel.textContent = chatCopy.sourceLabel;
       article.querySelector(".flora-ai-content")?.append(sourceLabel);
       const sourceList = document.createElement("ul");
       sourceList.className = "flora-ai-sources";
@@ -645,7 +909,7 @@
       link.href = searchUrl;
       link.target = "_blank";
       link.rel = "noopener noreferrer";
-      link.textContent = "Открыть поиск Google";
+      link.textContent = chatCopy.openSearch;
       article.querySelector(".flora-ai-content")?.append(link);
     }
     messagesElement.append(article);
@@ -669,7 +933,7 @@
   const setOpen = (open) => {
     panel.hidden = !open;
     toggle.setAttribute("aria-expanded", String(open));
-    const label = open ? "Закрыть Silva" : "Спросить Silva";
+    const label = open ? chatCopy.opening : chatCopy.closed;
     toggle.setAttribute("aria-label", label);
     toggle.querySelector(".flora-ai-toggle-text").textContent = label;
     if (open) {
@@ -702,17 +966,17 @@
       activeProvider = result.provider || "remote";
       const status = result.provider === "ollama"
         ? !result.available
-          ? "Запусти Ollama"
+          ? chatCopy.startOllama
           : result.configured
-            ? "Silva работает локально"
-            : `Скачай ${result.model || "локальную модель"}`
+            ? chatCopy.localReady
+            : chatCopy.downloadModel(result.model)
         : result.configured
-          ? "Silva готова помочь"
-          : "ИИ не настроен на сервере";
+          ? chatCopy.ready
+          : chatCopy.notConfigured;
       setPresence(result.configured ? "ready" : "offline", status);
     } catch {
       activeProvider = null;
-      setPresence("offline", "ИИ-сервер недоступен");
+      setPresence("offline", chatCopy.unavailable);
     }
   };
 
@@ -741,7 +1005,7 @@
     activeScreenContext = null;
     delete input.dataset.contextPlant;
     delete input.dataset.contextDraft;
-    appendMessage("assistant", `Привет, ${activeNickname}! Я — Silva, ботанический помощник Silva Quieta. Что хотите узнать о растениях?`);
+    appendMessage("assistant", chatCopy.greeting(activeNickname));
     suggestions.hidden = false;
     try {
       const stored = JSON.parse(localStorage.getItem(getHistoryKey()) || "[]");
@@ -827,8 +1091,8 @@
       const result = window.floraSetPlantSaved(requestedPlant.latin, savePlantIntent);
       if (result) {
         const localReply = result.saved
-          ? `Добавила «${result.name}» в вашу коллекцию.`
-          : `Убрала «${result.name}» из вашей коллекции.`;
+          ? localCopy.saved(result.name)
+          : localCopy.removed(result.name);
         conversation.push({ role: "assistant", content: localReply });
         appendMessage("assistant", localReply);
         saveConversation();
@@ -873,7 +1137,7 @@
       }
     }
     if (openPlantCard && window.floraOpenPlantByQuery(requestedPlant.latin)) {
-      const localReply = `Нашла в атласе «${requestedPlant.name}» (${requestedPlant.latin}). Открываю карточку растения.`;
+      const localReply = localCopy.found(requestedPlant.name, requestedPlant.latin, "open");
       conversation.push({ role: "assistant", content: localReply });
       appendMessage("assistant", localReply);
       saveConversation();
@@ -881,7 +1145,7 @@
       return;
     }
     if (searchForPlant && window.floraSearchCatalog(requestedPlant.latin)) {
-      const localReply = `Нашла в атласе «${requestedPlant.name}» (${requestedPlant.latin}). Показываю в каталоге.`;
+      const localReply = localCopy.found(requestedPlant.name, requestedPlant.latin, "catalog");
       conversation.push({ role: "assistant", content: localReply });
       appendMessage("assistant", localReply);
       saveConversation();
@@ -895,7 +1159,7 @@
 
     const typing = document.createElement("article");
     typing.className = "flora-ai-message flora-ai-message-assistant flora-ai-typing";
-    typing.setAttribute("aria-label", "Загружается ответ Silva");
+    typing.setAttribute("aria-label", chatCopy.assistantLabel);
     typing.innerHTML = '<span class="flora-ai-avatar" aria-hidden="true"><svg class="ui-icon"><use href="#icon-leaf"></use></svg></span><div class="flora-ai-skeleton-bubble" aria-hidden="true"><span class="skeleton skeleton-line"></span><span class="skeleton skeleton-line"></span><span class="skeleton skeleton-line skeleton-line-short"></span></div>';
     messagesElement.append(typing);
     messagesElement.scrollTop = messagesElement.scrollHeight;
@@ -951,23 +1215,23 @@
       revealActionLinks(rendered.actionContainer, rendered.actions);
       saveConversation();
       refreshFollowUpSuggestions();
-      setPresence("ready", activeProvider === "ollama" ? "Silva работает локально" : "Silva готова помочь");
+      setPresence("ready", activeProvider === "ollama" ? chatCopy.localProvider : chatCopy.cloudProvider);
     } catch (error) {
       if (requestProfileKey !== activeProfileKey) return;
       const message = error.name === "AbortError"
         ? activeProvider === "ollama"
-          ? "Локальная модель отвечает дольше обычного. Попробуйте ещё раз."
-          : "Облачная модель отвечает дольше обычного. Попробуйте ещё раз."
+          ? chatCopy.slowLocal
+          : chatCopy.slowCloud
         : error instanceof TypeError
           ? activeProvider === "ollama"
-            ? "Не удалось связаться с сервером. Запустите локальный сервер проекта."
-            : "Не удалось связаться с облачным ИИ-сервером."
+            ? chatCopy.localConnection
+            : chatCopy.cloudConnection
           : error.message;
       appendMessage("assistant", message);
       if (error.status === 503 || error instanceof TypeError || error.name === "AbortError") {
         const status = error.status === 503
-          ? activeProvider === "ollama" ? "Проверь Ollama и модель" : "ИИ временно недоступен"
-          : "Проверьте связь";
+          ? activeProvider === "ollama" ? chatCopy.checkOllama : chatCopy.temporary
+          : chatCopy.checkConnection;
         setPresence("offline", status);
       }
     } finally {
@@ -1037,7 +1301,7 @@
     conversation.length = 0;
     messagesElement.replaceChildren();
     screenContextHint = null;
-    appendMessage("assistant", `Привет, ${activeNickname}! Я — Silva, ботанический помощник Silva Quieta. Что хотите узнать о растениях?`);
+    appendMessage("assistant", chatCopy.greeting(activeNickname));
     setSuggestions(defaultSuggestions);
     suggestions.hidden = false;
     try {

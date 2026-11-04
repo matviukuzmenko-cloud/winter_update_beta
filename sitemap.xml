@@ -2,32 +2,12 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://silvaquieta.com/</loc>
-    <lastmod>2026-11-03</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://silvaquieta.com/"/>
-    <xhtml:link rel="alternate" hreflang="uk" href="https://uk.silvaquieta.com/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://en.silvaquieta.com/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://silvaquieta.com/"/>
-  </url>
-  <url>
-    <loc>https://uk.silvaquieta.com/</loc>
-    <lastmod>2026-11-03</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://silvaquieta.com/"/>
-    <xhtml:link rel="alternate" hreflang="uk" href="https://uk.silvaquieta.com/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://en.silvaquieta.com/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://silvaquieta.com/"/>
-  </url>
-  <url>
-    <loc>https://en.silvaquieta.com/</loc>
-    <lastmod>2026-11-03</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://silvaquieta.com/"/>
-    <xhtml:link rel="alternate" hreflang="uk" href="https://uk.silvaquieta.com/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://en.silvaquieta.com/"/>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://silvaquieta.com/?locale=uk"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://silvaquieta.com/?locale=en"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://silvaquieta.com/"/>
   </url>
 </urlset>

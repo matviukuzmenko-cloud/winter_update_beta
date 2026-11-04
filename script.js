@@ -377,6 +377,7 @@
       const description = sourceDescription || `${name} (${item.latin}) — представитель семейства ${familyLabel}. ${plantGroupDescriptions[plantGroup] || plantGroupDescriptions["Цветы"]}`;
       return {
         id: `flora-${index + 1}`, name,
+        nameBasis: localized?.nameBasis || "",
         descriptionProvided: description.length >= 40,
         englishName: item.native || item.nameSource ? "" : item.name, latin: item.latin, family: item.family,
         familyLabel, classKey: taxonomy.classKey, classLabel: classLabels[taxonomy.classKey],
@@ -469,7 +470,10 @@
     flowers.forEach((flower) => {
       const override = catalogOverrides[flower.id];
       if (!override || typeof override !== "object") return;
-      if (typeof override.name === "string" && override.name.trim()) flower.name = override.name.trim();
+      if (typeof override.name === "string" && override.name.trim()) {
+        flower.name = override.name.trim();
+        flower.nameBasis = "user-override";
+      }
       if (typeof override.description === "string" && override.description.trim()) {
         flower.description = override.description.trim();
         flower.descriptionProvided = flower.description.length >= 40;
@@ -959,6 +963,17 @@
         description: flower.description,
         category: flower.category,
         care: flower.microclimate,
+      } : null;
+    };
+    window.floraGetPlantById = (id) => {
+      if (typeof id !== "string") return null;
+      const flower = flowerById.get(id)?.flower;
+      return flower ? {
+        id: flower.id,
+        name: flower.name,
+        latin: flower.latin,
+        group: flower.plantGroup,
+        care: { ...flower.care },
       } : null;
     };
     const closeSearchSuggestion = () => {
@@ -1711,6 +1726,18 @@
       })[character]);
     }
 
+    function nameTranslationNoteMarkup(flower) {
+      if (flower.nameBasis !== "scientific-name") return "";
+      const notes = {
+        uk: "Переклад назви не знайдено — наведено наукову назву.",
+        en: "Common name not found — showing the scientific name."
+      };
+      const note = notes[window.FLORA_LOCALE];
+      return note
+        ? `<small class="name-translation-note" data-no-translate>${escapeHTML(note)}</small>`
+        : "";
+    }
+
     function russianPlural(value, one, few, many) {
       const lastTwo = value % 100;
       if (lastTwo >= 11 && lastTwo <= 14) return many;
@@ -2014,7 +2041,7 @@
             ${photoAttribution}
           </div>
           <div class="flower-info">
-            <div class="flower-card-name"><h3>${escapeHTML(flower.name)}</h3><div class="flower-latin">${escapeHTML(flower.latin)}</div></div>
+            <div class="flower-card-name"><h3>${escapeHTML(flower.name)}</h3><div class="flower-latin">${escapeHTML(flower.latin)}</div>${nameTranslationNoteMarkup(flower)}</div>
             <div class="plant-tags">${[flower.category, flower.lifeForm].filter(Boolean).map((tag) => `<span class="plant-tag">${escapeHTML(tag)}</span>`).join("")}</div>
             ${microclimateMarkup(flower)}
             <p class="flower-description">${escapeHTML(flower.description)}</p>
@@ -2126,7 +2153,7 @@
             ${plantNoteIndicator(flower)}
           </div>
           <div class="flower-info">
-            <div class="flower-card-name"><h3>${escapeHTML(flower.name)}</h3><div class="flower-latin">${escapeHTML(flower.latin)}</div></div>
+            <div class="flower-card-name"><h3>${escapeHTML(flower.name)}</h3><div class="flower-latin">${escapeHTML(flower.latin)}</div>${nameTranslationNoteMarkup(flower)}</div>
             ${wateringMarkup(flower)}
             <div class="flower-card-actions">
               <button class="button ghost small" type="button" data-details="${flower.id}">Открыть карточку</button>
@@ -2255,6 +2282,7 @@
         <div class="eyebrow" style="margin-top:18px">Семейство · ${escapeHTML(flower.familyLabel)}</div>
         <h2 id="detail-name" style="margin:7px 0 3px">${iconMarkup("flower", "plant-mark")} ${escapeHTML(flower.name)}</h2>
         <div class="flower-latin">${escapeHTML(flower.latin)}</div>
+        ${nameTranslationNoteMarkup(flower)}
         <section class="detail-section" aria-labelledby="detail-care-title">
           <h3 id="detail-care-title">Условия ухода</h3>
           ${microclimateMarkup(flower)}
@@ -2670,6 +2698,7 @@
             <p class="eyebrow">Ваше случайное растение</p>
             <h2>${escapeHTML(flower.name)}</h2>
             <p class="flower-latin">${escapeHTML(flower.latin)}</p>
+            ${nameTranslationNoteMarkup(flower)}
             <p class="random-pick-description">${escapeHTML(flower.description)}</p>
             ${microclimateMarkup(flower)}
             <button class="button secondary" type="button" data-open="${escapeHTML(flower.id)}">Открыть ботаническую карточку</button>

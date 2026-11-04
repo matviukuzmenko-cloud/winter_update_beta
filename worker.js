@@ -34,8 +34,9 @@ const LOCATIONS = [
 const systemMessage = {
   role: "system",
   content: "Ты — Silva, дружелюбный ботанический ИИ-помощник сайта Silva Quieta. Представляйся как Silva, не переводи и не склоняй своё имя. " +
-    "Всегда отвечай грамотным, естественным русским языком. Не вставляй английские фразы, кроме своего имени Silva; латинские " +
-    "научные названия растений допустимы. Будь живым и доброжелательным собеседником, а не справочником: " +
+    "Язык ответа определяется выбранным пользователем языком сайта и обязательной языковой инструкцией в конце системного сообщения. " +
+    "Следуй именно ей, даже если пользователь пишет на другом языке или в истории есть ответы на другом языке. " +
+    "Не смешивай языки; латинские научные названия растений оставляй без изменений. Будь живым и доброжелательным собеседником, а не справочником: " +
     "сначала прямо ответь на вопрос, затем добавь полезное объяснение или следующий шаг. Не начинай каждый " +
     "ответ одинаково и не повторяй вопрос пользователя. Подстраивай подробность под вопрос: на простой вопрос " +
     "ответь в 1–3 коротких предложениях; на сложный дай понятные рекомендации по шагам. Разбивай ответ на " +
@@ -800,9 +801,13 @@ function getDueCarePlans(value, today) {
   return parseCareSettings(value).filter((plan) => {
     if (typeof plan.name !== "string" || typeof plan.lastWatered !== "string" ||
         !Number.isInteger(plan.intervalDays) || plan.intervalDays < 1 || plan.intervalDays > 90) return false;
-    const wateredTime = Date.parse(`${plan.lastWatered}T00:00:00Z`);
-    return Number.isFinite(wateredTime) &&
-      Math.floor((todayTime - wateredTime) / 86400000) >= plan.intervalDays;
+    const checkDate = [plan.lastChecked, plan.lastWatered]
+      .filter((date) => typeof date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(date))
+      .sort()
+      .at(-1);
+    const checkedTime = Date.parse(`${checkDate || plan.lastWatered}T00:00:00Z`);
+    return Number.isFinite(checkedTime) &&
+      Math.floor((todayTime - checkedTime) / 86400000) >= plan.intervalDays;
   });
 }
 
@@ -948,6 +953,82 @@ async function supabaseServiceRequest(env, pathname, options = {}) {
     throw new PasskeyRequestError("Supabase временно недоступен. Проверьте журналы Worker и попробуйте ещё раз.", 503);
   }
   return result;
+}
+
+async function handlePublicVisitorStats(request, env, origin, configuredOrigin) {
+  try {
+    if (request.method !== "POST") {
+      return jsonResponse({ error: "Используйте POST-запрос." }, 405, origin, configuredOrigin);
+    }
+    if (!env.VISITOR_RATE_LIMITER) {
+      return jsonResponse({ error: "Лимит счётчика посетителей не настроен на сервере." }, 503, origin, configuredOrigin);
+    }
+    const clientIp = request.headers.get("CF-Connecting-IP");
+    if (!clientIp) {
+      return jsonResponse({ error: "Не удалось проверить источник запроса." }, 400, origin, configuredOrigin);
+    }
+    const rateLimit = await env.VISITOR_RATE_LIMITER.limit({ key: clientIp });
+    if (!rateLimit.success) {
+      return jsonResponse({ error: "Слишком много запросов к счётчику. Попробуйте позже." }, 429, origin, configuredOrigin);
+    }
+
+    let payload;
+    try {
+      payload = JSON.parse(await readBoundedBody(request, 256));
+    } catch (error) {
+      if (error instanceof RangeError && error.message === "request_body_too_large") throw error;
+      return jsonResponse({ error: "Не удалось прочитать идентификатор браузера." }, 400, origin, configuredOrigin);
+    }
+    if (typeof payload?.visitorId !== "string" ||
+        !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(payload.visitorId)) {
+      return jsonResponse({ error: "Некорректный идентификатор браузера." }, 400, origin, configuredOrigin);
+    }
+
+    const config = supabaseConfiguration(env);
+    const signingKey = await crypto.subtle.importKey(
+      "raw",
+      new TextEncoder().encode(config.key),
+      { name: "HMAC", hash: "SHA-256" },
+      false,
+      ["sign"],
+    );
+    const digest = new Uint8Array(await crypto.subtle.sign(
+      "HMAC",
+      signingKey,
+      new TextEncoder().encode(payload.visitorId.toLowerCase()),
+    ));
+    const visitorHash = [...digest].map((byte) => byte.toString(16).padStart(2, "0")).join("");
+    const rows = await supabaseServiceRequest(env, "/rest/v1/rpc/record_public_visitor", {
+      method: "POST",
+      body: JSON.stringify({ p_visitor_hash: visitorHash }),
+    });
+    const stats = Array.isArray(rows) && rows.length === 1 ? rows[0] : null;
+    if (!stats || !Number.isSafeInteger(Number(stats.yesterday)) || !Number.isSafeInteger(Number(stats.online)) ||
+        Number(stats.yesterday) < 0 || Number(stats.online) < 0) {
+      throw new Error("Supabase returned invalid public visitor statistics.");
+    }
+    return jsonResponse({
+      yesterday: Number(stats.yesterday),
+      online: Number(stats.online),
+    }, 200, origin, configuredOrigin);
+  } catch (error) {
+    if (error instanceof RangeError && error.message === "request_body_too_large") {
+      return jsonResponse({ error: "Запрос к счётчику слишком большой." }, 413, origin, configuredOrigin);
+    }
+    if (error instanceof PasskeyRequestError) {
+      return jsonResponse({ error: error.message }, error.status, origin, configuredOrigin);
+    }
+    console.error("Public visitor statistics request failed:", error?.name || "Error");
+    return jsonResponse({ error: "Не удалось обновить статистику посетителей. Попробуйте позже." }, 503, origin, configuredOrigin);
+  }
+}
+
+async function prunePublicVisitorStats(env) {
+  const retentionCutoff = new Date(Date.now() - 35 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+  await supabaseServiceRequest(env, `/rest/v1/public_visitor_days?visit_date=lt.${retentionCutoff}`, {
+    method: "DELETE",
+    headers: { Prefer: "return=minimal" },
+  });
 }
 
 async function passkeyUserFromRequest(request, env) {
@@ -1227,6 +1308,9 @@ export default {
       return jsonResponse({ error: "Запрос с этого сайта не разрешён." }, 403, origin, configuredOrigin);
     }
 
+    if (url.pathname === "/api/visitors") {
+      return handlePublicVisitorStats(request, env, origin, configuredOrigin);
+    }
     if (url.pathname === "/api/health" && request.method === "GET") {
       return jsonResponse({
         configured: Boolean(env.GEMINI_API_KEY),
@@ -1453,22 +1537,14 @@ export default {
         }, 502, origin, configuredOrigin);
       }
       const languageInstruction = locale === "uk"
-        ? "Відповідай природною українською мовою. Не змішуй її з російською чи англійською; латинські наукові назви рослин залишай без змін."
+        ? "ОБОВ’ЯЗКОВА МОВА ВІДПОВІДІ: природна українська. Відповідай лише українською, навіть якщо запит чи попередні повідомлення іншою мовою. Не змішуй мови; латинські наукові назви рослин залишай без змін."
         : locale === "en"
-          ? "Reply in natural English. Do not mix in Russian or Ukrainian; keep Latin scientific plant names unchanged."
-          : "";
-      const originalLanguageRule = "Всегда отвечай грамотным, естественным русским языком. Не вставляй английские фразы, кроме своего имени Silva; латинские ";
-      const localizedLanguageRule = locale === "uk"
-        ? "Завжди відповідай грамотною, природною українською мовою. Не додавай російських чи англійських фраз, окрім імені Silva; латинські "
-        : locale === "en"
-          ? "Always reply in fluent, natural English. Do not include Russian or Ukrainian phrases, except the name Silva; Latin "
-          : "";
-      const localizedSystemMessage = localizedLanguageRule
-        ? { ...systemMessage, content: systemMessage.content.replace(originalLanguageRule, localizedLanguageRule) }
-        : systemMessage;
-      const responseSystemMessage = languageInstruction
-        ? { ...localizedSystemMessage, content: `${localizedSystemMessage.content}\n\n${languageInstruction}` }
-        : localizedSystemMessage;
+          ? "REQUIRED RESPONSE LANGUAGE: natural English. Reply only in English, even if the request or previous messages use another language. Do not mix languages; keep Latin scientific plant names unchanged."
+          : "ОБЯЗАТЕЛЬНЫЙ ЯЗЫК ОТВЕТА: грамотный, естественный русский. Отвечай только по-русски, даже если запрос или предыдущие сообщения на другом языке. Не смешивай языки; латинские научные названия растений оставляй без изменений.";
+      const responseSystemMessage = {
+        ...systemMessage,
+        content: `${systemMessage.content}\n\n${languageInstruction}`,
+      };
       const baseMessages = [
         responseSystemMessage,
         ...referenceMessages,
@@ -1529,6 +1605,9 @@ export default {
   async scheduled(_controller, env, context) {
     context.waitUntil(sendCareReminders(env).catch((error) => {
       console.error("Scheduled care reminders failed:", error.message);
+    }));
+    context.waitUntil(prunePublicVisitorStats(env).catch((error) => {
+      console.error("Scheduled visitor statistics cleanup failed:", error.message);
     }));
   },
 };

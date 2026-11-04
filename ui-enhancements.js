@@ -151,7 +151,7 @@
     toast.className = `flora-toast flora-toast-${type}`;
     toast.setAttribute("role", type === "error" ? "alert" : "status");
     const text = document.createElement("p");
-    text.textContent = message;
+    text.textContent = window.floraTranslateText?.(message) || message;
     toast.append(text);
     if (actionLabel && typeof onAction === "function") {
       const action = document.createElement("button");

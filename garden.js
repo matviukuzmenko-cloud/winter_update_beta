@@ -30,6 +30,9 @@
   const careInterval = document.querySelector("#garden-care-interval");
   const careStatus = document.querySelector("#garden-care-status");
   const careList = document.querySelector("#garden-care-list");
+  const careCollectionPlant = document.querySelector("#garden-care-collection-plant");
+  const careImportButton = document.querySelector("#garden-care-import");
+  const careImportStatus = document.querySelector("#garden-care-import-status");
   const heatingSeasonToggle = document.querySelector("#heating-season-toggle");
   const winterCareConfirm = document.querySelector("#winter-care-confirm");
   const winterCareConfirmMessage = document.querySelector("#winter-care-confirm-message");
@@ -60,6 +63,144 @@
     const now = new Date();
     return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
   };
+  const locale = ["ru", "uk", "en"].includes(window.FLORA_LOCALE) ? window.FLORA_LOCALE : "ru";
+  const messages = {
+    ru: {
+      dateLocale: "ru-RU",
+      checksDone: "дел выполнено сегодня",
+      progress: (done, total) => `${done} из ${total} дел ухода выполнено`,
+      noTasks: "На сегодня проверок нет. Добавьте растения в план — и Silva соберёт ваш список заботы.",
+      dueMessage: "Сначала проверьте почву и условия. Напоминание не означает, что растение обязательно нужно поливать.",
+      allDoneMessage: "Все проверки на сегодня выполнены. Следующие ориентиры появятся по вашему графику.",
+      upcomingMessage: "Сегодня всё спокойно. Вот ближайшие проверки вашего сада.",
+      noPlan: "Добавьте первое растение в план ухода — и важное будет под рукой.",
+      addPlan: "Настроить план ухода",
+      checkSoil: "Проверить почву",
+      soilChecked: "Почва проверена сегодня",
+      checkHumidity: "Проверить влажность воздуха",
+      humidityChecked: "Влажность проверена сегодня",
+      checkNote: "Поливайте только если грунт действительно просох.",
+      relative: (days) => new Intl.RelativeTimeFormat("ru-RU", { numeric: "auto" }).format(days, "day"),
+      progressLabel: "Прогресс ухода за сегодня",
+      intervalUnset: "Интервал проверки не задан",
+      overdue: (days) => `Пора проверить · просрочено на ${days}`,
+      checkToday: "Пора проверить сегодня",
+      nextCheck: (days, interval) => `Следующая проверка через ${days} · интервал ${interval}`,
+      unknownLocation: "Место не указано",
+      dryAir: "😟 Сухой воздух (стресс)",
+      wateringStress: "😟 Стресс: проверьте полив",
+      resting: "😊 Отдыхает",
+      bothRisks: "Просрочена проверка грунта и давно не отмечалось увлажнение воздуха.",
+      noWatering: "Полив пока не отмечен",
+      lastWatering: (date) => `Последний полив: ${date}`,
+      soilNotChecked: "Проверка почвы ещё не отмечена",
+      lastSoilCheck: (date) => `Последняя проверка почвы: ${date}`,
+      wateringMarks: (count) => `${count} ${count % 100 >= 11 && count % 100 <= 14 ? "отметок полива" : count % 10 === 1 ? "отметка полива" : count % 10 >= 2 && count % 10 <= 4 ? "отметки полива" : "отметок полива"}`,
+      humidityNoted: (date) => `Увлажнение не отмечалось · отсчёт с ${date}`,
+      humidityNotMarked: "Увлажнение ещё не отмечено",
+      lastHumidity: (date) => `Последнее увлажнение: ${date}`,
+      collectionEmpty: "В коллекции пока нет растений",
+      collectionOption: "Выберите растение…",
+      collectionDone: "Все растения из коллекции уже добавлены в план",
+      collectionUnavailable: "Не удалось загрузить растения из коллекции.",
+      importAdded: "Данные растения подставлены. Проверьте интервал и добавьте его в план.",
+      importMissing: "Не удалось найти выбранное растение в атласе. Обновите страницу и попробуйте снова.",
+      checkSaved: "Проверка почвы отмечена.",
+      humiditySaved: (name) => `Проверка влажности для «${name}» отмечена.`,
+      saveFailed: (error) => `Не удалось сохранить отметку: ${error.message}`,
+      catalogGuidance: "Подсказки атласа",
+    },
+    uk: {
+      dateLocale: "uk-UA",
+      checksDone: "справ виконано сьогодні",
+      progress: (done, total) => `Виконано ${done} із ${total} справ догляду`,
+      noTasks: "На сьогодні перевірок немає. Додайте рослини до плану — і Silva збере ваш список турбот.",
+      dueMessage: "Спершу перевірте ґрунт та умови. Нагадування не означає, що рослину обов’язково потрібно поливати.",
+      allDoneMessage: "Усі перевірки на сьогодні виконано. Наступні орієнтири з’являться за вашим графіком.",
+      upcomingMessage: "Сьогодні все спокійно. Ось найближчі перевірки вашого саду.",
+      noPlan: "Додайте першу рослину до плану догляду — і важливе буде під рукою.",
+      addPlan: "Налаштувати план догляду",
+      checkSoil: "Перевірити ґрунт",
+      soilChecked: "Ґрунт перевірено сьогодні",
+      checkHumidity: "Перевірити вологість повітря",
+      humidityChecked: "Вологість перевірено сьогодні",
+      checkNote: "Поливайте, лише якщо ґрунт справді просох.",
+      relative: (days) => new Intl.RelativeTimeFormat("uk-UA", { numeric: "auto" }).format(days, "day"),
+      progressLabel: "Прогрес догляду за сьогодні",
+      intervalUnset: "Інтервал перевірки не задано",
+      overdue: (days) => `Час перевірити · прострочено на ${days}`,
+      checkToday: "Час перевірити сьогодні",
+      nextCheck: (days, interval) => `Наступна перевірка через ${days} · інтервал ${interval}`,
+      unknownLocation: "Місце не вказано",
+      dryAir: "😟 Сухе повітря (стрес)",
+      wateringStress: "😟 Стрес: перевірте полив",
+      resting: "😊 Відпочиває",
+      bothRisks: "Прострочено перевірку ґрунту, а зволоження давно не позначали.",
+      noWatering: "Полив ще не позначено",
+      lastWatering: (date) => `Останній полив: ${date}`,
+      soilNotChecked: "Перевірку ґрунту ще не позначено",
+      lastSoilCheck: (date) => `Остання перевірка ґрунту: ${date}`,
+      wateringMarks: (count) => `${count} ${count % 10 === 1 && count % 100 !== 11 ? "позначка поливу" : count % 10 >= 2 && count % 10 <= 4 && (count % 100 < 12 || count % 100 > 14) ? "позначки поливу" : "позначок поливу"}`,
+      humidityNoted: (date) => `Вологість не позначали · відлік від ${date}`,
+      humidityNotMarked: "Вологість ще не позначено",
+      lastHumidity: (date) => `Останню перевірку вологості позначено: ${date}`,
+      collectionEmpty: "У колекції поки немає рослин",
+      collectionOption: "Виберіть рослину…",
+      collectionDone: "Усі рослини з колекції вже додано до плану",
+      collectionUnavailable: "Не вдалося завантажити рослини з колекції.",
+      importAdded: "Дані рослини підставлено. Перевірте інтервал і додайте її до плану.",
+      importMissing: "Не вдалося знайти вибрану рослину в атласі. Оновіть сторінку й спробуйте ще раз.",
+      checkSaved: "Перевірку ґрунту позначено.",
+      humiditySaved: (name) => `Перевірку вологості для «${name}» позначено.`,
+      saveFailed: (error) => `Не вдалося зберегти позначку: ${error.message}`,
+      catalogGuidance: "Поради атласу",
+    },
+    en: {
+      dateLocale: "en",
+      checksDone: "care tasks done today",
+      progress: (done, total) => `${done} of ${total} care tasks complete`,
+      noTasks: "No checks are due today. Add plants to your plan and Silva will build your care list.",
+      dueMessage: "Check the soil and conditions first. A reminder is not an instruction to water.",
+      allDoneMessage: "All checks for today are complete. Your next reminders will follow your schedule.",
+      upcomingMessage: "Everything is calm today. Here are the next checks for your garden.",
+      noPlan: "Add your first plant to the care plan to keep important tasks close at hand.",
+      addPlan: "Set up a care plan",
+      checkSoil: "Check the soil",
+      soilChecked: "Soil checked today",
+      checkHumidity: "Check air humidity",
+      humidityChecked: "Humidity checked today",
+      checkNote: "Water only if the soil has actually dried out.",
+      relative: (days) => new Intl.RelativeTimeFormat("en", { numeric: "auto" }).format(days, "day"),
+      progressLabel: "Today's care progress",
+      intervalUnset: "Check interval not set",
+      overdue: (days) => `Check overdue by ${days}`,
+      checkToday: "Check due today",
+      nextCheck: (days, interval) => `Next check in ${days} · every ${interval}`,
+      unknownLocation: "Location not specified",
+      dryAir: "😟 Dry air (stress)",
+      wateringStress: "😟 Stress: check the soil",
+      resting: "😊 Resting",
+      bothRisks: "The soil check is overdue, and humidity has not been checked recently.",
+      noWatering: "Watering has not been recorded",
+      lastWatering: (date) => `Last watered: ${date}`,
+      soilNotChecked: "Soil check not recorded yet",
+      lastSoilCheck: (date) => `Last soil check: ${date}`,
+      wateringMarks: (count) => `${count} ${count === 1 ? "watering mark" : "watering marks"}`,
+      humidityNoted: (date) => `Humidity not checked · counting from ${date}`,
+      humidityNotMarked: "Humidity has not been checked",
+      lastHumidity: (date) => `Last humidity check: ${date}`,
+      collectionEmpty: "No plants in your collection yet",
+      collectionOption: "Choose a plant…",
+      collectionDone: "All plants in your collection are already in the plan",
+      collectionUnavailable: "Could not load plants from your collection.",
+      importAdded: "Plant details filled in. Review the interval and add it to your plan.",
+      importMissing: "Could not find that plant in the atlas. Refresh the page and try again.",
+      checkSaved: "Soil check recorded.",
+      humiditySaved: (name) => `Humidity check for “${name}” recorded.`,
+      saveFailed: (error) => `Could not save this check: ${error.message}`,
+      catalogGuidance: "Atlas guidance",
+    },
+  }[locale];
   const heatingSeasonDefault = () => [9, 10, 11, 0, 1, 2].includes(new Date().getMonth());
   const isHeatingSeasonEnabled = () => {
     try {
@@ -89,11 +230,16 @@
     element.dataset.state = isError ? "error" : "info";
   };
   const formatDayCount = (days) => {
+    if (locale === "en") return `${days} ${days === 1 ? "day" : "days"}`;
     const remainder = days % 100;
     const lastDigit = days % 10;
-    const unit = remainder >= 11 && remainder <= 14 ? "дней"
-      : lastDigit === 1 ? "день"
-        : lastDigit >= 2 && lastDigit <= 4 ? "дня" : "дней";
+    const unit = locale === "uk"
+      ? remainder >= 11 && remainder <= 14 ? "днів"
+        : lastDigit === 1 ? "день"
+          : lastDigit >= 2 && lastDigit <= 4 ? "дні" : "днів"
+      : remainder >= 11 && remainder <= 14 ? "дней"
+        : lastDigit === 1 ? "день"
+          : lastDigit >= 2 && lastDigit <= 4 ? "дня" : "дней";
     return `${days} ${unit}`;
   };
   const appendPhotoChatMessage = (role, content, { pending = false, error = false } = {}) => {
@@ -279,6 +425,57 @@
       detail: { key, value: localStorage.getItem(key) },
     }));
   };
+  const collectionIds = () => {
+    try {
+      const saved = JSON.parse(localStorage.getItem("flora-collection") || "[]");
+      if (!Array.isArray(saved)) throw new TypeError("Ожидался массив идентификаторов растений.");
+      return [...new Set(saved.filter((id) => typeof id === "string"))];
+    } catch (error) {
+      console.error("Не удалось прочитать коллекцию растений.", error);
+      return [];
+    }
+  };
+  const latestCareDate = (plan) => [plan.lastChecked, plan.lastWatered]
+    .filter((value) => typeof value === "string" && parseDate(value))
+    .sort()
+    .at(-1) || "";
+  const displayPlantName = (plan) => {
+    const catalogPlant = typeof plan.catalogId === "string" ? window.floraGetPlantById?.(plan.catalogId) : null;
+    return typeof catalogPlant?.name === "string" ? catalogPlant.name : plan.name;
+  };
+  const markCareChecked = (planId, action = "soil") => {
+    const plans = readArray(CARE_KEY);
+    try {
+      writeArray(CARE_KEY, plans.map((plan) => plan.id === planId
+        ? { ...plan, ...(action === "humidity" ? { lastHumidityCheck: dateToday() } : { lastChecked: dateToday() }) }
+        : plan));
+      const selectedPlan = plans.find((plan) => plan.id === planId);
+      const name = selectedPlan ? displayPlantName(selectedPlan) : "";
+      setStatus(careStatus, action === "humidity" ? messages.humiditySaved(name) : messages.checkSaved);
+    } catch (error) {
+      console.error("Не удалось сохранить отметку ухода.", error);
+      setStatus(careStatus, messages.saveFailed(error), true);
+    }
+  };
+  const refreshCareCollectionOptions = () => {
+    if (!careCollectionPlant) return;
+    const savedValue = careCollectionPlant.value;
+    const plans = readArray(CARE_KEY);
+    const plannedPlantIds = new Set(plans.map((plan) => plan.catalogId).filter((id) => typeof id === "string"));
+    const available = collectionIds()
+      .map((id) => window.floraGetPlantById?.(id))
+      .filter((plant) => plant && typeof plant.name === "string" && !plannedPlantIds.has(plant.id));
+    const options = [new Option(messages.collectionOption, "")];
+    available.forEach((plant) => options.push(new Option(plant.name, plant.id)));
+    if (!available.length) {
+      const emptyMessage = collectionIds().length ? messages.collectionDone : messages.collectionEmpty;
+      options.push(new Option(emptyMessage, "", true, true));
+    }
+    careCollectionPlant.replaceChildren(...options);
+    careCollectionPlant.disabled = available.length === 0;
+    if (careImportButton) careImportButton.disabled = available.length === 0;
+    if (available.some((plant) => plant.id === savedValue)) careCollectionPlant.value = savedValue;
+  };
   const renderCitizenObservations = () => {
     const list = document.querySelector("#citizen-observation-list");
     const count = document.querySelector("#citizen-observations-count");
@@ -361,78 +558,171 @@
   const parseDate = (value) => /^\d{4}-\d{2}-\d{2}$/.test(value) ? new Date(`${value}T12:00:00`) : null;
   const formatDate = (value) => {
     const date = parseDate(value);
-    return date ? new Intl.DateTimeFormat("ru-RU", { dateStyle: "long" }).format(date) : "Без даты";
+    return date ? new Intl.DateTimeFormat(messages.dateLocale, { dateStyle: "long" }).format(date)
+      : locale === "en" ? "No date" : locale === "uk" ? "Без дати" : "Без даты";
   };
   const renderToday = (plans, loading = false) => {
     const dateLabel = document.querySelector("#garden-today-date");
     const message = document.querySelector("#garden-today-message");
     const count = document.querySelector("#garden-today-count");
     const countLabel = document.querySelector("#garden-today-count-label");
+    const progress = document.querySelector(".garden-today-progress");
+    const progressFill = document.querySelector("#garden-today-progress-fill");
+    const progressLabel = document.querySelector("#garden-today-progress-label");
     const items = document.querySelector("#garden-today-items");
-    if (!dateLabel || !message || !count || !countLabel || !items) return;
+    if (!dateLabel || !message || !count || !countLabel || !progress || !progressFill || !progressLabel || !items) return;
 
-    dateLabel.textContent = new Intl.DateTimeFormat("ru-RU", {
+    dateLabel.textContent = new Intl.DateTimeFormat(messages.dateLocale, {
       weekday: "long",
       day: "numeric",
       month: "long",
     }).format(new Date());
     items.replaceChildren();
     if (loading) {
-      message.textContent = "Загружаем ваш план ухода…";
+      message.textContent = locale === "en" ? "Loading your care plan…" : locale === "uk" ? "Завантажуємо ваш план догляду…" : "Загружаем ваш план ухода…";
       count.textContent = "—";
-      countLabel.textContent = "проверок сегодня";
+      countLabel.textContent = messages.checksDone;
+      progress.setAttribute("aria-valuemax", "0");
+      progress.setAttribute("aria-valuenow", "0");
+      progressFill.style.width = "0%";
+      progressLabel.textContent = "";
       return;
     }
 
-    const today = parseDate(dateToday());
-    const upcoming = plans
-      .map((plan) => {
-        const intervalDays = Number(plan.intervalDays);
-        if (!Number.isInteger(intervalDays) || intervalDays < 1 || intervalDays > 90) return null;
-        const lastChecked = parseDate(typeof plan.lastWatered === "string" ? plan.lastWatered : "");
-        const dueDate = new Date(lastChecked || today);
-        if (lastChecked) dueDate.setDate(dueDate.getDate() + intervalDays);
-        return {
-          name: plan.name,
-          daysUntilDue: Math.round((dueDate - today) / 86400000),
-        };
-      })
-      .filter(Boolean)
-      .sort((left, right) => left.daysUntilDue - right.daysUntilDue);
-    const dueNow = upcoming.filter((plan) => plan.daysUntilDue <= 0);
-    count.textContent = String(dueNow.length);
-    countLabel.textContent = dueNow.length ? "нуждаются в проверке" : "проверок сегодня";
+    const today = dateToday();
+    const heatingActive = isHeatingSeasonEnabled();
+    const tasks = [];
+    plans.forEach((plan) => {
+      const intervalDays = Number(plan.intervalDays);
+      if (Number.isInteger(intervalDays) && intervalDays >= 1 && intervalDays <= 90) {
+        const baseline = parseDate(latestCareDate(plan));
+        const dueDate = new Date(baseline || parseDate(today));
+        if (baseline) dueDate.setDate(dueDate.getDate() + intervalDays);
+        const daysUntilDue = Math.round((dueDate - parseDate(today)) / 86400000);
+        if (daysUntilDue <= 0 || plan.lastChecked === today) {
+          tasks.push({
+            plan,
+            action: "soil",
+            daysUntilDue,
+            completed: plan.lastChecked === today,
+          });
+        }
+      }
 
-    if (!upcoming.length) {
-      message.textContent = "Добавьте первое растение в план ухода — и важное будет под рукой.";
+      if (heatingActive) {
+        const lastHumidityCheck = typeof plan.lastHumidityCheck === "string" && parseDate(plan.lastHumidityCheck)
+          ? plan.lastHumidityCheck
+          : "";
+        const createdAt = typeof plan.createdAt === "string" && parseDate(plan.createdAt)
+          ? plan.createdAt
+          : "";
+        const heatingStarted = readHeatingSeasonStarted() || today;
+        const humidityBaseline = lastHumidityCheck || (createdAt > heatingStarted ? createdAt : heatingStarted) || createdAt;
+        const humidityDays = humidityBaseline ? dayDifference(humidityBaseline) : null;
+        if (lastHumidityCheck === today || humidityDays !== null && humidityDays > 5) {
+          tasks.push({
+            plan,
+            action: "humidity",
+            daysUntilDue: 0,
+            completed: lastHumidityCheck === today,
+          });
+        }
+      }
+    });
+    tasks.sort((left, right) => left.daysUntilDue - right.daysUntilDue || left.plan.name.localeCompare(right.plan.name));
+    const completedCount = tasks.filter((task) => task.completed).length;
+    const pendingCount = tasks.length - completedCount;
+    count.textContent = tasks.length ? `${completedCount}/${tasks.length}` : "0";
+    countLabel.textContent = messages.checksDone;
+    progress.setAttribute("aria-valuemax", String(tasks.length));
+    progress.setAttribute("aria-valuenow", String(completedCount));
+    progressFill.style.width = `${tasks.length ? Math.round((completedCount / tasks.length) * 100) : 100}%`;
+    progressLabel.textContent = messages.progress(completedCount, tasks.length);
+
+    if (!plans.length) {
+      message.textContent = messages.noPlan;
       const addPlan = document.createElement("button");
       addPlan.type = "button";
       addPlan.className = "garden-today-link";
       addPlan.dataset.gardenScroll = "garden-care";
-      addPlan.textContent = "Настроить план ухода";
+      addPlan.textContent = messages.addPlan;
       items.append(addPlan);
       return;
     }
 
-    message.textContent = dueNow.length
-      ? "Небольшое напоминание: сначала проверьте почву и состояние растения."
-      : "Всё спокойно. Вот ближайшие ориентиры для вашего сада.";
-    const visiblePlans = (dueNow.length ? dueNow : upcoming).slice(0, 3);
-    visiblePlans.forEach((plan) => {
-      const item = document.createElement("button");
-      item.type = "button";
-      item.className = "garden-today-item";
-      item.dataset.gardenScroll = "garden-care";
-      const plant = document.createElement("span");
+    message.textContent = pendingCount
+      ? messages.dueMessage
+      : tasks.length ? messages.allDoneMessage : messages.upcomingMessage;
+    const renderTask = (task) => {
+      const item = document.createElement("article");
+      item.className = `garden-today-item${task.completed ? " is-complete" : ""}`;
+      const details = document.createElement("div");
+      details.className = "garden-today-task-copy";
+      const plant = document.createElement("strong");
       plant.className = "garden-today-plant";
-      plant.textContent = plan.name;
-      const timing = document.createElement("span");
-      timing.className = `garden-today-timing${plan.daysUntilDue <= 0 ? " is-due" : ""}`;
-      timing.textContent = plan.daysUntilDue < 0
-        ? `Проверить · ${Math.abs(plan.daysUntilDue)} дн. назад`
-        : plan.daysUntilDue === 0
-          ? "Проверить сегодня"
-          : `Через ${plan.daysUntilDue} дн.`;
+      plant.textContent = displayPlantName(task.plan);
+      const taskLabel = document.createElement("span");
+      taskLabel.className = "garden-today-task-label";
+      taskLabel.textContent = task.action === "humidity" ? messages.checkHumidity : messages.checkSoil;
+      const timing = document.createElement("small");
+      timing.className = `garden-today-timing${task.daysUntilDue < 0 ? " is-due" : ""}`;
+      timing.textContent = task.action === "humidity"
+        ? messages.checkNote
+        : task.daysUntilDue < 0
+          ? `${locale === "en" ? "Overdue" : locale === "uk" ? "Прострочено" : "Просрочено"} · ${messages.relative(task.daysUntilDue)}`
+          : messages.relative(task.daysUntilDue);
+      details.append(plant, taskLabel, timing);
+      const action = document.createElement("button");
+      action.type = "button";
+      action.className = "button secondary small garden-today-action";
+      action.disabled = task.completed;
+      action.textContent = task.completed
+        ? task.action === "humidity" ? messages.humidityChecked : messages.soilChecked
+        : task.action === "humidity" ? messages.checkHumidity : messages.checkSoil;
+      action.setAttribute("aria-label", `${action.textContent}: ${displayPlantName(task.plan)}`);
+      action.addEventListener("click", () => markCareChecked(task.plan.id, task.action));
+      item.append(details, action);
+      items.append(item);
+    };
+
+    if (tasks.length) {
+      tasks.slice(0, 6).forEach(renderTask);
+      if (tasks.length > 6) {
+        const more = document.createElement("button");
+        more.type = "button";
+        more.className = "garden-today-link";
+        more.dataset.gardenScroll = "garden-care";
+        more.textContent = locale === "en" ? "Open the full care plan" : locale === "uk" ? "Відкрити повний план догляду" : "Открыть полный план ухода";
+        items.append(more);
+      }
+      return;
+    }
+
+    const todayDate = parseDate(today);
+    const upcoming = plans
+      .map((plan) => {
+        const intervalDays = Number(plan.intervalDays);
+        if (!Number.isInteger(intervalDays) || intervalDays < 1 || intervalDays > 90) return null;
+        const dueDate = new Date(parseDate(latestCareDate(plan)) || todayDate);
+        dueDate.setDate(dueDate.getDate() + intervalDays);
+        return { plan, daysUntilDue: Math.max(0, Math.round((dueDate - todayDate) / 86400000)) };
+      })
+      .filter(Boolean)
+      .sort((left, right) => left.daysUntilDue - right.daysUntilDue)
+      .slice(0, 3);
+    if (!upcoming.length) {
+      message.textContent = messages.noTasks;
+      return;
+    }
+    upcoming.forEach(({ plan, daysUntilDue }) => {
+      const item = document.createElement("div");
+      item.className = "garden-today-item is-upcoming";
+      const plant = document.createElement("strong");
+      plant.className = "garden-today-plant";
+      plant.textContent = displayPlantName(plan);
+      const timing = document.createElement("small");
+      timing.className = "garden-today-timing";
+      timing.textContent = messages.relative(daysUntilDue);
       item.append(plant, timing);
       items.append(item);
     });
@@ -558,6 +848,7 @@
     const dataOwner = localStorage.getItem("flora-data-owner");
     if (accountUser && dataOwner && dataOwner !== accountUser.id) {
       renderToday([], true);
+      if (careCollectionPlant) careCollectionPlant.disabled = true;
       const loading = document.createElement("p");
       loading.className = "garden-empty";
       loading.textContent = "Загружаем график ухода этого аккаунта…";
@@ -566,6 +857,7 @@
     }
     const plans = readArray(CARE_KEY)
       .filter((plan) => plan && typeof plan.id === "string" && typeof plan.name === "string");
+    refreshCareCollectionOptions();
     renderToday(plans);
     const heatingActive = isHeatingSeasonEnabled();
     let heatingStarted = readHeatingSeasonStarted();
@@ -588,15 +880,16 @@
     plans.forEach((plan) => {
       const card = document.createElement("article");
       card.className = "garden-care-item";
+      const catalogPlant = typeof plan.catalogId === "string" ? window.floraGetPlantById?.(plan.catalogId) : null;
       const title = document.createElement("strong");
-      title.textContent = escapeText(plan.name);
+      title.textContent = escapeText(displayPlantName(plan));
       const location = document.createElement("span");
       location.className = "garden-care-location";
       location.textContent = typeof plan.location === "string" && plan.location.trim()
         ? plan.location.trim()
-        : "Место не указано";
+        : messages.unknownLocation;
       const intervalDays = Number(plan.intervalDays);
-      const lastChecked = parseDate(typeof plan.lastWatered === "string" ? plan.lastWatered : "");
+      const lastChecked = parseDate(latestCareDate(plan));
       const nextCheck = new Date(lastChecked || parseDate(dateToday()));
       const hasValidInterval = Number.isInteger(intervalDays) && intervalDays >= 1 && intervalDays <= 90;
       if (lastChecked && hasValidInterval) {
@@ -608,12 +901,12 @@
       const interval = document.createElement("span");
       interval.className = `garden-care-schedule${daysUntilCheck < 0 ? " is-overdue" : daysUntilCheck === 0 ? " is-due" : ""}`;
       interval.textContent = daysUntilCheck === null
-        ? "Интервал ухода не задан"
+        ? messages.intervalUnset
         : daysUntilCheck < 0
-          ? `Пора проверить · просрочено на ${formatDayCount(Math.abs(daysUntilCheck))}`
+          ? messages.overdue(formatDayCount(Math.abs(daysUntilCheck)))
           : daysUntilCheck === 0
-            ? "Пора проверить сегодня"
-            : `Следующая проверка через ${formatDayCount(daysUntilCheck)} · интервал ${formatDayCount(intervalDays)}`;
+            ? messages.checkToday
+            : messages.nextCheck(formatDayCount(daysUntilCheck), formatDayCount(intervalDays));
       const lastHumidityCheck = typeof plan.lastHumidityCheck === "string" && parseDate(plan.lastHumidityCheck)
         ? plan.lastHumidityCheck
         : "";
@@ -629,10 +922,10 @@
       health.className = `garden-care-health${stressLevel ? " is-stressed" : ""}${humidityNeedsAttention ? " is-dry-air" : ""}`;
       const healthLabel = document.createElement("strong");
       healthLabel.textContent = humidityNeedsAttention
-        ? "😟 Сухой воздух (стресс)"
+        ? messages.dryAir
         : wateringOverdue
-          ? "😟 Стресс: проверьте полив"
-          : "😊 Отдыхает";
+          ? messages.wateringStress
+          : messages.resting;
       const stressMeter = document.createElement("span");
       stressMeter.className = "garden-care-stress-meter";
       stressMeter.setAttribute("role", "progressbar");
@@ -646,7 +939,7 @@
       health.append(healthLabel, stressMeter);
       if (wateringOverdue && humidityNeedsAttention) {
         const healthDetail = document.createElement("small");
-        healthDetail.textContent = "Просрочена проверка грунта и давно не отмечалось увлажнение воздуха.";
+        healthDetail.textContent = messages.bothRisks;
         health.append(healthDetail);
       }
       const history = Array.isArray(plan.wateringHistory)
@@ -657,16 +950,17 @@
         : history.length || (plan.lastWatered ? 1 : 0);
       const lastWatered = document.createElement("small");
       lastWatered.textContent = wateringCount > 0 && plan.lastWatered
-        ? `Последний полив: ${formatDate(plan.lastWatered)}`
-        : "Полив пока не отмечен";
+        ? messages.lastWatering(formatDate(plan.lastWatered))
+        : messages.noWatering;
+      const checkedToday = plan.lastChecked === dateToday();
+      const lastCareCheck = document.createElement("small");
+      lastCareCheck.className = "garden-care-check-history";
+      lastCareCheck.textContent = plan.lastChecked
+        ? messages.lastSoilCheck(formatDate(plan.lastChecked))
+        : messages.soilNotChecked;
       const historyLabel = document.createElement("small");
       historyLabel.className = "garden-care-history-label";
-      const remainder = wateringCount % 100;
-      const lastDigit = wateringCount % 10;
-      const plural = remainder >= 11 && remainder <= 14 ? "отметок полива"
-        : lastDigit === 1 ? "отметка полива"
-          : lastDigit >= 2 && lastDigit <= 4 ? "отметки полива" : "отметок полива";
-      historyLabel.textContent = `${wateringCount} ${plural}`;
+      historyLabel.textContent = messages.wateringMarks(wateringCount);
       const historyList = document.createElement("div");
       historyList.className = "garden-care-history";
       history.slice(-3).reverse().forEach((date) => {
@@ -680,13 +974,32 @@
         note.textContent = plan.note.trim();
         card.append(note);
       }
+      const catalogWatering = catalogPlant?.care?.watering;
+      if (typeof catalogWatering === "string" && catalogWatering.trim()) {
+        const guidance = document.createElement("p");
+        guidance.className = "garden-care-guidance";
+        const guidanceLabel = document.createElement("strong");
+        guidanceLabel.textContent = `${messages.catalogGuidance}: `;
+        guidance.append(guidanceLabel, document.createTextNode(catalogWatering));
+        card.append(guidance);
+      }
       const actions = document.createElement("div");
       actions.className = "garden-care-actions";
+      const checked = document.createElement("button");
+      checked.type = "button";
+      checked.className = "button secondary small";
+      checked.textContent = checkedToday
+        ? locale === "en" ? "Soil checked today" : locale === "uk" ? "Ґрунт перевірено сьогодні" : "Почва проверена сегодня"
+        : locale === "en" ? "Check soil" : locale === "uk" ? "Перевірити ґрунт" : "Проверить почву";
+      checked.disabled = checkedToday;
+      checked.addEventListener("click", () => markCareChecked(plan.id));
       const watered = document.createElement("button");
       watered.type = "button";
       watered.className = "button secondary small";
       const wateredToday = wateringCount > 0 && plan.lastWatered === dateToday();
-      watered.textContent = wateredToday ? "Полив отмечен сегодня" : "Отметить полив";
+      watered.textContent = wateredToday
+        ? locale === "en" ? "Watered today" : locale === "uk" ? "Полито сьогодні" : "Полив отмечен сегодня"
+        : locale === "en" ? "Mark as watered" : locale === "uk" ? "Позначити полив" : "Отметить полив";
       watered.disabled = wateredToday;
       watered.addEventListener("click", () => {
         if (wateringCount > 0 && plan.lastWatered === dateToday()) return;
@@ -696,7 +1009,7 @@
           : history.length || (plan.lastWatered ? 1 : 0);
         try {
           writeArray(CARE_KEY, plans.map((item) => item.id === plan.id
-            ? { ...item, lastWatered: dateToday(), wateringHistory: updatedHistory, wateringCount: previousCount + 1 }
+            ? { ...item, lastWatered: dateToday(), lastChecked: dateToday(), wateringHistory: updatedHistory, wateringCount: previousCount + 1 }
             : item));
           window.dispatchEvent(new CustomEvent("flora:care-action", { detail: { plantId: plan.id, action: "water" } }));
         } catch (error) {
@@ -708,27 +1021,27 @@
         const humidity = document.createElement("button");
         humidity.type = "button";
         humidity.className = "button ghost small";
-        humidity.textContent = "Отметить увлажнение воздуха";
-        humidity.title = "Отметить увлажнение воздуха рядом с растением. Не опрыскивайте виды, которым это вредно.";
+        const humidityCheckedToday = plan.lastHumidityCheck === dateToday();
+        humidity.textContent = humidityCheckedToday
+          ? locale === "en" ? "Humidity checked today" : locale === "uk" ? "Вологість перевірено сьогодні" : "Влажность проверена сегодня"
+          : locale === "en" ? "Check air humidity" : locale === "uk" ? "Перевірити вологість повітря" : "Проверить влажность воздуха";
+        humidity.disabled = humidityCheckedToday;
+        humidity.title = locale === "en"
+          ? "Check humidity near the plant. Do not mist species that should not be misted."
+          : locale === "uk"
+            ? "Перевірте вологість біля рослини. Не обприскуйте види, яким це шкодить."
+            : "Проверьте влажность рядом с растением. Не опрыскивайте виды, которым это вредно.";
         humidity.addEventListener("click", () => {
-          try {
-            writeArray(CARE_KEY, plans.map((item) => item.id === plan.id
-              ? { ...item, lastHumidityCheck: dateToday() }
-              : item));
-            setStatus(careStatus, `Увлажнение воздуха для «${plan.name}» отмечено.`);
-          } catch (error) {
-            console.error("Не удалось сохранить отметку увлажнения воздуха.", error);
-            setStatus(careStatus, `Не удалось сохранить отметку увлажнения: ${error.message}`, true);
-          }
+          markCareChecked(plan.id, "humidity");
         });
         actions.append(humidity);
         const humidityHistory = document.createElement("small");
         humidityHistory.className = "garden-care-humidity-history";
         humidityHistory.textContent = lastHumidityCheck
-          ? `Последнее увлажнение: ${formatDate(lastHumidityCheck)}`
+          ? messages.lastHumidity(formatDate(lastHumidityCheck))
           : humidityBaseline
-            ? `Увлажнение не отмечалось · отсчёт с ${formatDate(humidityBaseline)}`
-            : "Увлажнение ещё не отмечено";
+            ? messages.humidityNoted(formatDate(humidityBaseline))
+            : messages.humidityNotMarked;
         card.append(humidityHistory);
       }
       const remove = document.createElement("button");
@@ -744,8 +1057,8 @@
           setStatus(careStatus, `Не удалось удалить профиль: ${error.message}`, true);
         }
       });
-      actions.append(watered, remove);
-      card.prepend(title, location, interval, health, lastWatered, historyLabel);
+      actions.append(checked, watered, remove);
+      card.prepend(title, location, interval, health, lastCareCheck, lastWatered, historyLabel);
       if (historyList.childElementCount) card.append(historyList);
       card.append(actions);
       careList.append(card);
@@ -883,7 +1196,7 @@
       const tasks = ["Осмотреть листья и проверить, нет ли холодного сквозняка"];
       if (day === 1 || day % 7 === 0) tasks.push("Проверить грунт у растений и протереть пыль с листьев");
       plans.forEach((plan) => {
-        const baseline = parseDate(plan.lastWatered) ? plan.lastWatered : parseDate(plan.createdAt) ? plan.createdAt : "";
+        const baseline = latestCareDate(plan) || (parseDate(plan.createdAt) ? plan.createdAt : "");
         const elapsed = baseline ? dayDifference(baseline, dateKey) : null;
         if (elapsed === null || elapsed >= 0 && elapsed % Number(plan.intervalDays) === 0) {
           tasks.push(`Проверить грунт: ${plan.name} (поливать, только если грунт просох)`);
@@ -950,17 +1263,21 @@
     accountUser = event.detail?.user || null;
     client = event.detail?.client || window.floraGetSupabaseClient?.() || null;
     updateAccountAccess();
+    refreshCareCollectionOptions();
     void refreshPushState();
   });
   window.addEventListener("storage", (event) => {
     if (event.key === JOURNAL_KEY) void renderJournal();
     if (event.key === CARE_KEY) renderCare();
+    if (event.key === "flora-collection") refreshCareCollectionOptions();
     if (event.key === FIELD_OBSERVATIONS_KEY) renderCitizenObservations();
   });
   window.addEventListener("flora:local-data-change", (event) => {
     if (event.detail?.key === CARE_KEY) renderCare();
+    if (event.detail?.key === "flora-collection") refreshCareCollectionOptions();
     if (event.detail?.key === FIELD_OBSERVATIONS_KEY) renderCitizenObservations();
   });
+  window.addEventListener("flora:plant-saved", refreshCareCollectionOptions);
   window.addEventListener("flora:page-change", (event) => {
     if (event.detail?.page === "garden") {
       void renderJournal();
@@ -1194,15 +1511,33 @@
     const location = careLocation.value.trim();
     const note = careNote.value.trim();
     const intervalDays = Number(careInterval.value);
+    const catalogId = carePlant.dataset.catalogName === name ? carePlant.dataset.catalogId : "";
     if (!name || !Number.isInteger(intervalDays) || intervalDays < 1 || intervalDays > 90) {
       setStatus(careStatus, "Введите название растения и интервал от 1 до 90 дней.", true);
       return;
     }
     const plans = readArray(CARE_KEY);
-    plans.push({ id: crypto.randomUUID(), name, location, note, intervalDays, createdAt: dateToday(), lastWatered: dateToday(), wateringHistory: [], wateringCount: 0 });
+    if (catalogId && plans.some((plan) => plan.catalogId === catalogId)) {
+      careImportStatus.textContent = messages.collectionDone;
+      return;
+    }
+    plans.push({
+      id: catalogId ? `catalog-${catalogId}` : crypto.randomUUID(),
+      ...(catalogId ? { catalogId } : {}),
+      name,
+      location,
+      note,
+      intervalDays,
+      createdAt: dateToday(),
+      lastWatered: dateToday(),
+      wateringHistory: [],
+      wateringCount: 0,
+    });
     try {
       writeArray(CARE_KEY, plans.slice(-100));
       careForm.reset();
+      delete carePlant.dataset.catalogId;
+      delete carePlant.dataset.catalogName;
       careInterval.value = "7";
       setStatus(careStatus, accountUser
         ? "Профиль растения добавлен и синхронизируется с аккаунтом."
@@ -1212,6 +1547,26 @@
       setStatus(careStatus, `Не удалось сохранить профиль: ${error.message}`, true);
     }
   };
+  careImportButton?.addEventListener("click", () => {
+    const plant = window.floraGetPlantById?.(careCollectionPlant.value);
+    if (!plant) {
+      careImportStatus.textContent = messages.importMissing;
+      return;
+    }
+    carePlant.value = plant.name;
+    carePlant.dataset.catalogId = plant.id;
+    carePlant.dataset.catalogName = plant.name;
+    careInterval.value = "7";
+    careImportStatus.textContent = messages.importAdded;
+    carePlant.focus();
+  });
+  careCollectionPlant?.addEventListener("change", () => {
+    careImportStatus.textContent = locale === "en"
+      ? "The atlas guidance will appear in the plant's care card."
+      : locale === "uk"
+        ? "Поради атласу з’являться в картці догляду рослини."
+        : "Подсказки атласа появятся в карточке ухода за растением.";
+  });
   let pendingWinterCarePlan = null;
   careForm.addEventListener("submit", (event) => {
     event.preventDefault();

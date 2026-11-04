@@ -1,6 +1,11 @@
 (() => {
   const locale = window.FLORA_LOCALE;
-  for (const [language, hostname] of [["ru", "silvaquieta.com"], ["uk", "uk.silvaquieta.com"], ["en", "en.silvaquieta.com"]]) {
+  const localeUrls = {
+    ru: "https://silvaquieta.com/",
+    uk: "https://silvaquieta.com/?locale=uk",
+    en: "https://silvaquieta.com/?locale=en",
+  };
+  for (const language of ["ru", "uk", "en"]) {
     let alternate = document.querySelector(`link[rel="alternate"][hreflang="${language}"]`);
     if (!alternate) {
       alternate = document.createElement("link");
@@ -8,8 +13,54 @@
       alternate.hreflang = language;
       document.head.append(alternate);
     }
-    alternate.href = `https://${hostname}/`;
+    alternate.href = localeUrls[language];
   }
+  let defaultAlternate = document.querySelector('link[rel="alternate"][hreflang="x-default"]');
+  if (!defaultAlternate) {
+    defaultAlternate = document.createElement("link");
+    defaultAlternate.rel = "alternate";
+    defaultAlternate.hreflang = "x-default";
+    document.head.append(defaultAlternate);
+  }
+  defaultAlternate.href = localeUrls.ru;
+  const canonical = document.querySelector('link[rel="canonical"]');
+  if (canonical) canonical.href = localeUrls[locale];
+  const ogUrl = document.querySelector('meta[property="og:url"]');
+  if (ogUrl) ogUrl.content = localeUrls[locale];
+
+  const localeSelect = document.querySelector("#locale-select");
+  if (localeSelect) {
+    localeSelect.value = locale;
+    const labels = { ru: "Сменить язык", uk: "Змінити мову", en: "Change language" };
+    localeSelect.setAttribute("aria-label", labels[locale]);
+    localeSelect.title = labels[locale];
+    localeSelect.addEventListener("change", () => {
+      const selectedLocale = localeSelect.value;
+      if (!["ru", "uk", "en"].includes(selectedLocale) || selectedLocale === locale) return;
+      try {
+        localStorage.setItem("silva-locale-preference", selectedLocale);
+      } catch (error) {
+        console.error("Could not save the selected language.", error);
+      }
+      const target = new URL(location.href);
+      target.searchParams.set("locale", selectedLocale);
+      location.assign(target.href);
+    });
+  }
+
+  const visitorLabels = {
+    ru: { yesterday: "вчера", online: "сейчас", note: "Случайный ID; IP-адреса не сохраняются", label: "Анонимная статистика посетителей" },
+    uk: { yesterday: "учора", online: "зараз", note: "Випадковий ID; IP-адреси не зберігаються", label: "Анонімна статистика відвідувачів" },
+    en: { yesterday: "yesterday", online: "online now", note: "Random ID; IP addresses are not stored", label: "Anonymous visitor statistics" },
+  }[locale];
+  const yesterdayLabel = document.querySelector("#visitor-yesterday-label");
+  const onlineLabel = document.querySelector("#visitor-online-label");
+  const visitorsNote = document.querySelector("#visitors-note");
+  if (yesterdayLabel) yesterdayLabel.textContent = visitorLabels.yesterday;
+  if (onlineLabel) onlineLabel.textContent = visitorLabels.online;
+  if (visitorsNote) visitorsNote.textContent = visitorLabels.note;
+  document.querySelector(".visitor-fact")?.setAttribute("aria-label", visitorLabels.label);
+
   if (locale === "ru") {
     return;
   }
@@ -28,6 +79,12 @@
           "Включить светлое оформление": "Switch to light theme",
           "Подробнее": "Details",
           "Атлас растений": "Plant Atlas",
+          "Прогресс ухода за сегодня": "Today's care progress",
+          "Добавить растение из моей коллекции": "Add a plant from my collection",
+          "Выберите растение…": "Choose a plant…",
+          "Подставить данные": "Use plant details",
+          "Подсказки по уходу берутся из карточки вида. Интервал — частота проверки почвы, а не график полива.": "Care guidance comes from the plant profile. The interval is for checking soil, not a watering schedule.",
+          "Выберите, как часто проверять почву, и отдельно отмечайте полив. Напоминание — повод проверить грунт, а не призыв поливать вслепую.": "Choose how often to check the soil, and record watering separately. A reminder is a reason to check the soil, not an instruction to water blindly.",
           "Когда сад засыпает,": "When the garden falls asleep,",
           "открытия продолжаются": "discoveries continue.",
           "Светолюбивое": "Sun-loving",
@@ -88,6 +145,12 @@
           "Включить светлое оформление": "Увімкнути світлу тему",
           "Подробнее": "Детальніше",
           "Атлас растений": "Атлас рослин",
+          "Прогресс ухода за сегодня": "Прогрес догляду за сьогодні",
+          "Добавить растение из моей коллекции": "Додати рослину з моєї колекції",
+          "Выберите растение…": "Виберіть рослину…",
+          "Подставить данные": "Підставити дані рослини",
+          "Подсказки по уходу берутся из карточки вида. Интервал — частота проверки почвы, а не график полива.": "Поради щодо догляду беруться з картки виду. Інтервал — це частота перевірки ґрунту, а не графік поливу.",
+          "Выберите, как часто проверять почву, и отдельно отмечайте полив. Напоминание — повод проверить грунт, а не призыв поливать вслепую.": "Оберіть, як часто перевіряти ґрунт, а полив позначайте окремо. Нагадування — це привід перевірити ґрунт, а не заклик поливати навмання.",
           "Когда сад засыпает,": "Коли сад засинає,",
           "открытия продолжаются": "відкриття тривають.",
           "Светолюбивое": "Світлолюбне",
@@ -154,6 +217,104 @@
     const translatedTextNodes = new WeakMap();
     const translate = (value) => {
       const source = value.trim().replace(/\s+/g, " ");
+      const relicNames = {
+        "Лесной фонарик": { uk: "Лісовий ліхтарик", en: "Forest lantern" },
+        "Снежинка-гербарий": { uk: "Сніжинка-гербарій", en: "Herbarium snowflake" },
+        "Звезда календаря": { uk: "Зірка календаря", en: "Calendar star" },
+        "Звёздное семечко": { uk: "Зоряне зернятко", en: "Starry seed" },
+        "Ледяной колокольчик": { uk: "Крижаний дзвіночок", en: "Icy bell" },
+        "Праздничный жетон": { uk: "Святковий жетон", en: "Festive token" },
+        "Секрет снеговика": { uk: "Секрет сніговика", en: "Snowman secret" },
+        "зимняя находка": { uk: "зимова знахідка", en: "winter find" },
+      };
+      const translateRelic = (name) => relicNames[name]?.[locale] || name;
+      const secretCountWord = (count, singular, paucal, plural) => {
+        if (locale === "en") return count === 1 ? singular : plural;
+        const lastTwoDigits = count % 100;
+        if (lastTwoDigits >= 11 && lastTwoDigits <= 14) return plural;
+        const lastDigit = count % 10;
+        if (lastDigit === 1) return singular;
+        return lastDigit >= 2 && lastDigit <= 4 ? paucal : plural;
+      };
+      if (locale !== "ru") {
+        const winterFind = source.match(/^Найдено: (.+)\. Осталось (\d+) секретов\.$/);
+        if (winterFind) {
+          const [, name, rawCount] = winterFind;
+          const count = Number(rawCount);
+          return locale === "en"
+            ? `Found: ${translateRelic(name)}. ${count} ${secretCountWord(count, "secret", "secrets", "secrets")} left.`
+            : `Знайдено: ${translateRelic(name)}. Залишилося ${count} ${secretCountWord(count, "секрет", "секрети", "секретів")}.`;
+        }
+        const pineconeFind = source.match(/^Тайная шишка найдена! Осталось найти (\d+)\.$/);
+        if (pineconeFind) {
+          const count = Number(pineconeFind[1]);
+          return locale === "en"
+            ? `Secret pinecone found! ${count} ${secretCountWord(count, "pinecone", "pinecones", "pinecones")} left.`
+            : `Таємну шишку знайдено! Залишилося знайти ${count} ${secretCountWord(count, "шишку", "шишки", "шишок")}.`;
+        }
+        if (source === "Все семь шишек найдены! В саду вас ждёт зимний набор садовода.") {
+          return locale === "en"
+            ? "All seven secret pinecones found! A winter gardening kit is waiting for you in My Garden."
+            : "Усі сім таємних шишок знайдено! У саду на вас чекає зимовий набір садівника.";
+        }
+        if (source === "Все семь секретов найдены! Открыта тайная открытка Silva и получено 100 очков.") {
+          return locale === "en"
+            ? "All seven secrets found! Silva’s secret postcard is unlocked, and you earned 100 points."
+            : "Усі сім секретів знайдено! Таємну листівку Silva відкрито, ви отримали 100 балів.";
+        }
+        if (source === "Сюрприз! Открылась карта тайных троп — осталось найти два секрета.") {
+          return locale === "en"
+            ? "Surprise! The secret trail map is unlocked — two secrets left."
+            : "Сюрприз! Відкрито мапу таємних стежок — залишилося знайти два секрети.";
+        }
+        if (source === "Ты нашёл искру леса! Первый секретный подарок открыт.") {
+          return locale === "en"
+            ? "You found a spark in the forest! Your first secret gift is unlocked."
+            : "Ти знайшов іскру лісу! Перший таємний подарунок відкрито.";
+        }
+        const completedTask = source.match(/^Задание «(.+)» выполнено! Вы получили (\d+) очков\.$/);
+        if (completedTask) {
+          const [, name, points] = completedTask;
+          const taskNames = {
+            "Знакомство с растениями": { uk: "Знайомство з рослинами", en: "Getting to know plants" },
+            "Личная коллекция": { uk: "Особиста колекція", en: "Personal collection" },
+            "Забота о саде": { uk: "Турбота про сад", en: "Garden care" },
+            "Наблюдатель природы": { uk: "Спостерігач природи", en: "Nature observer" },
+            "Растительный знаток": { uk: "Знавець рослин", en: "Plant expert" },
+          };
+          return locale === "en"
+            ? `Task “${taskNames[name]?.en || name}” completed! You earned ${points} points.`
+            : `Завдання «${taskNames[name]?.uk || name}» виконано! Ви отримали ${points} балів.`;
+        }
+        if (source === "Маршрут завершён! Три полевых наблюдения сохранены. Вы получили 250 очков и звание «Хранитель полевого маршрута».") {
+          return locale === "en"
+            ? "Route complete! Three field observations have been saved. You earned 250 points and the Field Route Keeper title."
+            : "Маршрут завершено! Три польові спостереження збережено. Ви отримали 250 балів і звання «Охоронець польового маршруту».";
+        }
+        if (source === "Квест обновился: прежний прогресс сохранён в архиве, а шишки теперь спрятаны по всему сайту. Начинайте новую охоту!") {
+          return locale === "en"
+            ? "The quest has been updated: your previous progress is archived, and pinecones are now hidden throughout the site. Start a new hunt!"
+            : "Квест оновлено: попередній прогрес збережено в архіві, а шишки тепер заховані по всьому сайту. Починайте нове полювання!";
+        }
+        const wateringMarked = source.match(/^Полив (.+) отмечен на сегодня\.$/);
+        if (wateringMarked) {
+          return locale === "en"
+            ? `Watering for ${wateringMarked[1]} marked for today.`
+            : `Полив ${wateringMarked[1]} позначено на сьогодні.`;
+        }
+        const observationChanged = source.match(/^(.+) (добавлено|убрано) за выбранный месяц\.$/);
+        if (observationChanged) {
+          return locale === "en"
+            ? `${observationChanged[1]} ${observationChanged[2] === "добавлено" ? "added" : "removed"} for the selected month.`
+            : `${observationChanged[1]} ${observationChanged[2] === "добавлено" ? "додано" : "прибрано"} за вибраний місяць.`;
+        }
+        const savedPlant = source.match(/^«(.+)» (добавлено в коллекцию|убрано из коллекции)\.$/);
+        if (savedPlant) {
+          return locale === "en"
+            ? `“${savedPlant[1]}” ${savedPlant[2] === "добавлено в коллекцию" ? "added to" : "removed from"} your collection.`
+            : `«${savedPlant[1]}» ${savedPlant[2] === "добавлено в коллекцию" ? "додано до" : "прибрано з"} вашої колекції.`;
+        }
+      }
       const distributionNote = source.match(/^Данные указаны для группы (.+); ареал конкретного вида может отличаться\.$/);
       if (distributionNote) {
         const group = distributionNote[1].replace(/^рода /, locale === "en" ? "genus " : "роду ").replace(/^семейства /, locale === "en" ? "family " : "родини ");
@@ -229,6 +390,7 @@
         return translation;
       });
     };
+    window.floraTranslateText = translate;
     const applyToElement = (element) => {
       if (element.closest("script, style, noscript, code, .latin-name, [data-no-translate]")) return;
       const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
@@ -309,6 +471,7 @@
         const data = JSON.parse(structuredData.textContent);
         if (data["@type"] === "WebSite") {
           data.inLanguage = locale;
+          data.url = localeUrls[locale];
           data.description = translate(data.description);
           structuredData.textContent = JSON.stringify(data);
         }
@@ -317,10 +480,6 @@
       }
     }
 
-    const canonical = document.querySelector('link[rel="canonical"]');
-    if (canonical) canonical.href = `https://${location.host}/`;
-    const ogUrl = document.querySelector('meta[property="og:url"]');
-    if (ogUrl) ogUrl.content = `https://${location.host}/`;
   };
 
   fetch(`./localization/ui-${locale}.json?v=4`)

@@ -7,8 +7,11 @@
 - Избранное, заметки, полив, сезонные наблюдения, история Flora и настройки хранятся в `public.user_data`.
 - Для сохранённых растений сайт показывает внутрисайтовое напоминание о проверке полива, когда отмеченный интервал прошёл; это ориентир, не push-уведомление и не точный график полива.
 - Новый раздел «Мой сад» добавляет AI-анализ фото, синхронизируемый дневник с приватными фотографиями и персональные интервалы ухода.
+- В «Ритме ухода» можно добавить растение из коллекции вместе с подсказкой атласа, отмечать проверки почвы в ежедневном чек-листе и получать сезонные напоминания о влажности воздуха. Отметка проверки не считается поливом; прогресс хранится вместе с планом ухода и синхронизируется с аккаунтом.
 - Фото для AI-анализа отправляется Worker/Gemini только для обработки и не сохраняется автоматически. Фото дневника загружается в приватный Supabase Storage bucket только после явного сохранения записи.
+- Помощница Silva отвечает на языке сайта — русском, украинском или английском; история чата и черновики хранятся отдельно для каждого языка.
 - Браузерные push-напоминания требуют входа, разрешения браузера, VAPID-ключей и Worker Cron. Интервалы — повод проверить почву, а не автоматическое предписание полить растение.
+- Главная страница показывает анонимную оценку уникальных браузеров за вчера по UTC и активных за последние две минуты. В браузере хранится случайный ID; Worker передаёт в Supabase только его HMAC-хеш, IP-адреса не записываются, дневные записи удаляются через 35 дней.
 - Изменения коллекции, отметок полива и сезонных наблюдений можно отменить кнопкой «Отменить» в уведомлении в течение нескольких секунд.
 - Включены Row Level Security и политики, ограничивающие записи их владельцем.
 - Прямые INSERT/UPDATE в `user_data` закрыты; запись возможна только через ограниченную RPC с проверкой авторизации, размера данных и версии строки.
@@ -25,10 +28,11 @@
 4. Затем выполните [`supabase/migrations/20261030_concurrent_user_data_sync.sql`](./supabase/migrations/20261030_concurrent_user_data_sync.sql). Миграция безопасна для существующих данных: добавляет номер версии и атомарную RPC-функцию, не удаляя и не преобразуя записи аккаунтов.
 
 5. Выполните [`supabase/migrations/20261031_garden_journal_and_push.sql`](./supabase/migrations/20261031_garden_journal_and_push.sql). Она создаёт таблицу подписок с RLS и приватный Storage bucket `flora-journal` с ограничением фото 2 МБ и доступом только к папке владельца.
+6. Выполните [`supabase/migrations/20261104_public_visitor_stats.sql`](./supabase/migrations/20261104_public_visitor_stats.sql). Она создаёт защищённый от публичного чтения счётчик уникальных браузеров и RPC, доступную только роли `service_role`.
 
-   Если Supabase уже настроен, не запускайте повторно базовую схему: примените неприменённые миграции 20261030 и 20261031 по порядку. Миграция не удаляет записи пользователей.
-6. В **Project Settings → API** скопируйте Project URL и публичный `publishable` key (или legacy `anon` key) в [`supabase-config.js`](./supabase-config.js). Project URL должен выглядеть как `https://your-project.supabase.co` — без `/rest/v1/`. Не добавляйте `service_role` или `secret` key в сайт.
-7. Настройте Worker:
+   Если Supabase уже настроен, не запускайте повторно базовую схему: примените все неприменённые миграции по порядку — 20261030, 20261031, затем 20261104. Миграции не удаляют записи пользователей.
+7. В **Project Settings → API** скопируйте Project URL и публичный `publishable` key (или legacy `anon` key) в [`supabase-config.js`](./supabase-config.js). Project URL должен выглядеть как `https://your-project.supabase.co` — без `/rest/v1/`. Не добавляйте `service_role` или `secret` key в сайт.
+8. Настройте Worker:
 
    ```sh
    npm install
@@ -43,7 +47,7 @@
 
    Для фото-диагностики также должен быть задан существующий Worker secret `GEMINI_API_KEY`; не помещайте ключ Gemini или Supabase в HTML.
 
-8. Для push создайте отдельную VAPID-пару ключей в Node.js (приватный ключ не публикуйте):
+9. Для push создайте отдельную VAPID-пару ключей в Node.js (приватный ключ не публикуйте):
 
    ```sh
    node --input-type=module -e 'import { webcrypto } from "node:crypto"; const pair=await webcrypto.subtle.generateKey({name:"ECDSA",namedCurve:"P-256"},true,["sign","verify"]); console.log("VAPID_PUBLIC_KEY="+Buffer.from(await webcrypto.subtle.exportKey("raw",pair.publicKey)).toString("base64url")); console.log("VAPID_PRIVATE_JWK="+JSON.stringify(await webcrypto.subtle.exportKey("jwk",pair.privateKey)));'
@@ -58,7 +62,7 @@
    ```
 
    `SITE_ORIGIN` в `wrangler.toml` должен указывать на `https://silvaquieta.com`. После смены адреса сайта Worker нужно развернуть заново.
-9. В Supabase откройте **Authentication → URL Configuration** и задайте `https://silvaquieta.com/` как **Site URL**. Добавьте `https://silvaquieta.com/**` в **Redirect URLs**, если адрес ещё не указан.
+10. В Supabase откройте **Authentication → URL Configuration** и задайте `https://silvaquieta.com/` как **Site URL**. Добавьте `https://silvaquieta.com/**` в **Redirect URLs**, если адрес ещё не указан.
 
 ## Публикация сайта на GitHub Pages
 

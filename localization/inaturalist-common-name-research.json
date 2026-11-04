@@ -1,0 +1,1189 @@
+{
+  "source": "iNaturalist",
+  "results": {
+    "Acalypha herzogiana": {
+      "status": "common-name-found",
+      "commonName": "Dwarf Chenille Plant",
+      "source": "https://www.inaturalist.org/taxa/868716",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Acalypha wilkesiana": {
+      "status": "common-name-found",
+      "commonName": "Copperleaf",
+      "source": "https://www.inaturalist.org/taxa/281562",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Acantholimon armenum": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/830857",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Acantholimon caesareum": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/830926",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Acantholimon nuratavicum": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/831049",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Aconitum sukaczevii": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/1239578",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Actiniopteris radiata": {
+      "status": "common-name-found",
+      "commonName": "Fan-Leaved Fern",
+      "source": "https://www.inaturalist.org/taxa/180678",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Adlumia asiatica": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/859090",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Adromischus maculatus": {
+      "status": "common-name-found",
+      "commonName": "calico hearts",
+      "source": "https://www.inaturalist.org/taxa/568467",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Aglaonema modestum": {
+      "status": "common-name-found",
+      "commonName": "Chinese Evergreen",
+      "source": "https://www.inaturalist.org/taxa/464564",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Aichryson punctatum": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/844119",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Alnus cremastogyne": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/437250",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Alocasia micholitziana 'Frydek'": {
+      "status": "no-exact-match"
+    },
+    "Alocasia zebrina": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/243722",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Aloe africana": {
+      "status": "common-name-found",
+      "commonName": "Uitenhage aloe",
+      "source": "https://www.inaturalist.org/taxa/430630",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Althaea armeniaca": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/876351",
+      "ukrainianStatus": "common-name-found",
+      "ukrainianCommonName": "Алтея вірменська"
+    },
+    "Ammopiptanthus mongolicus": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/791039",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Anisomeles indica": {
+      "status": "common-name-found",
+      "commonName": "Indian catmint",
+      "source": "https://www.inaturalist.org/taxa/346175",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Anthurium scherzerianum": {
+      "status": "common-name-found",
+      "commonName": "Flamingo Flower",
+      "source": "https://www.inaturalist.org/taxa/430667",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Anthurium veitchii": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/430665",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Aquilegia borodinii": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/509384",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Arachniodes mutica": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/1038053",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Ariocarpus retusus": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/189455",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Asphodeline damascena": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/1471665",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Asphodelus ramosus": {
+      "status": "common-name-found",
+      "commonName": "Branched Asphodel",
+      "source": "https://www.inaturalist.org/taxa/82906",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Asplenium altajense": {
+      "status": "common-name-found",
+      "commonName": "Altaian spleenwort",
+      "source": "https://www.inaturalist.org/taxa/867790",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Asplenium anogrammoides": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/712371",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Asplenium antiquum": {
+      "status": "common-name-found",
+      "commonName": "Japanese bird's-nest fern",
+      "source": "https://www.inaturalist.org/taxa/363475",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Asyneuma virgatum": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/851113",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Athyrium angustum": {
+      "status": "common-name-found",
+      "commonName": "northern lady fern",
+      "source": "https://www.inaturalist.org/taxa/204143",
+      "ukrainianStatus": "common-name-found",
+      "ukrainianCommonName": "Безщитник звужений"
+    },
+    "Austrocylindropuntia cylindrica": {
+      "status": "common-name-found",
+      "commonName": "Cane Cactus",
+      "source": "https://www.inaturalist.org/taxa/320090",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Ballota philistaea": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/492767",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Begonia maculata": {
+      "status": "common-name-found",
+      "commonName": "Polka Dot Begonia",
+      "source": "https://www.inaturalist.org/taxa/284651",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Begonia rex": {
+      "status": "common-name-found",
+      "commonName": "king begonia",
+      "source": "https://www.inaturalist.org/taxa/327898",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Bejaria aestuans": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/284971",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Betula pendula": {
+      "status": "common-name-found",
+      "commonName": "silver birch",
+      "source": "https://www.inaturalist.org/taxa/83992",
+      "ukrainianStatus": "common-name-found",
+      "ukrainianCommonName": "Береза повисла"
+    },
+    "Bocconia arborea": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/283991",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Bombycilaena erecta": {
+      "status": "common-name-found",
+      "commonName": "Upright Cudweed",
+      "source": "https://www.inaturalist.org/taxa/543645",
+      "ukrainianStatus": "common-name-found",
+      "ukrainianCommonName": "Бомбіцилена пряма"
+    },
+    "Borzicactus strausii": {
+      "status": "no-exact-match"
+    },
+    "Brachychiton bidwillii": {
+      "status": "common-name-found",
+      "commonName": "Dwarf kurrajong",
+      "source": "https://www.inaturalist.org/taxa/135373",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Brunsvigia marginata": {
+      "status": "common-name-found",
+      "commonName": "Firelily Candelabra",
+      "source": "https://www.inaturalist.org/taxa/429915",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Bulbine frutescens": {
+      "status": "common-name-found",
+      "commonName": "Wild Kopieva",
+      "source": "https://www.inaturalist.org/taxa/428049",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Bulbinella nutans": {
+      "status": "common-name-found",
+      "commonName": "Water Catstail",
+      "source": "https://www.inaturalist.org/taxa/120055",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Campanula karakuschensis": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/1603779",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Capnoides sempervirens": {
+      "status": "common-name-found",
+      "commonName": "rock harlequin",
+      "source": "https://www.inaturalist.org/taxa/204148",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Caragana balchaschensis": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/899472",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Caragana bungei": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/556842",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Caragana buriatica": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/899475",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Caragana jubata": {
+      "status": "common-name-found",
+      "commonName": "Pea shrub",
+      "source": "https://www.inaturalist.org/taxa/802826",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Caragana leucophloea": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/1086594",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Cardiocrinum giganteum": {
+      "status": "common-name-found",
+      "commonName": "Giant Himalayan Lily",
+      "source": "https://www.inaturalist.org/taxa/400397",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Cattleya labiata": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/140837",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Cenchrus setaceus": {
+      "status": "common-name-found",
+      "commonName": "Fountain Grass",
+      "source": "https://www.inaturalist.org/taxa/430581",
+      "ukrainianStatus": "common-name-found",
+      "ukrainianCommonName": "Гострянка щетиняста"
+    },
+    "Centaurea tanaitica": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/971693",
+      "ukrainianStatus": "common-name-found",
+      "ukrainianCommonName": "Волошка донська"
+    },
+    "Circaea canadensis": {
+      "status": "common-name-found",
+      "commonName": "broadleaf enchanter's nightshade",
+      "source": "https://www.inaturalist.org/taxa/204271",
+      "ukrainianStatus": "common-name-found",
+      "ukrainianCommonName": "Відьмине зілля канадське"
+    },
+    "Cissus alata": {
+      "status": "common-name-found",
+      "commonName": "grape ivy",
+      "source": "https://www.inaturalist.org/taxa/577810",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Cochemiea grahamii": {
+      "status": "common-name-found",
+      "commonName": "Graham's nipple cactus",
+      "source": "https://www.inaturalist.org/taxa/1550566",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Cochemiea sheldonii": {
+      "status": "common-name-found",
+      "commonName": "Sheldon's pincushion",
+      "source": "https://www.inaturalist.org/taxa/1550569",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Coelogyne cristata": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/493634",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Copiapoa fiedleriana": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/438350",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Crotalaria grahamiana": {
+      "status": "common-name-found",
+      "commonName": "bushy rattlepod",
+      "source": "https://www.inaturalist.org/taxa/475684",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Ctenanthe setosa": {
+      "status": "common-name-found",
+      "commonName": "Never Never Plant",
+      "source": "https://www.inaturalist.org/taxa/327295",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Cumulopuntia sphaerica": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/438438",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Cynorkis buchananii": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/872150",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Cytisophyllum sessilifolium": {
+      "status": "common-name-found",
+      "commonName": "Sessile-leaved Broom",
+      "source": "https://www.inaturalist.org/taxa/336856",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Dicentra peregrina": {
+      "status": "common-name-found",
+      "commonName": "Komakusa",
+      "source": "https://www.inaturalist.org/taxa/764710",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Dipterocome pusilla": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/962352",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Dittrichia viscosa": {
+      "status": "common-name-found",
+      "commonName": "false yellowhead",
+      "source": "https://www.inaturalist.org/taxa/82646",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Dracaena reflexa": {
+      "status": "common-name-found",
+      "commonName": "Song of India",
+      "source": "https://www.inaturalist.org/taxa/126510",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Dracaena sanderiana": {
+      "status": "common-name-found",
+      "commonName": "Lucky Bamboo",
+      "source": "https://www.inaturalist.org/taxa/800897",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Drynaria delavayi": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/794179",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Dudleya arizonica": {
+      "status": "common-name-found",
+      "commonName": "Arizona chalk dudleya",
+      "source": "https://www.inaturalist.org/taxa/76723",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Echeveria elegans": {
+      "status": "common-name-found",
+      "commonName": "Mexican Snowball",
+      "source": "https://www.inaturalist.org/taxa/206749",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Echeveria shaviana": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/275985",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Echinocereus pectinatus": {
+      "status": "common-name-found",
+      "commonName": "Spiny Hedgehog Cactus",
+      "source": "https://www.inaturalist.org/taxa/162182",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Elaphoglossum piloselloides": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/275709",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Ennealophus euryandrus": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/1025295",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Epifagus virginiana": {
+      "status": "common-name-found",
+      "commonName": "Beechdrops",
+      "source": "https://www.inaturalist.org/taxa/62685",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Epipremnum aureum": {
+      "status": "common-name-found",
+      "commonName": "Golden Pothos",
+      "source": "https://www.inaturalist.org/taxa/69223",
+      "ukrainianStatus": "common-name-found",
+      "ukrainianCommonName": "Сциндапсус золотистий"
+    },
+    "Erigeron bonariensis": {
+      "status": "common-name-found",
+      "commonName": "Flax-leaved Horseweed",
+      "source": "https://www.inaturalist.org/taxa/76904",
+      "ukrainianStatus": "common-name-found",
+      "ukrainianCommonName": "Злинка буенос-айреська"
+    },
+    "Erigeron sumatrensis": {
+      "status": "common-name-found",
+      "commonName": "tropical horseweed",
+      "source": "https://www.inaturalist.org/taxa/76943",
+      "ukrainianStatus": "common-name-found",
+      "ukrainianCommonName": "Злинка суматранська"
+    },
+    "Ferocactus latispinus": {
+      "status": "common-name-found",
+      "commonName": "Devil's Tongue Barrel Cactus",
+      "source": "https://www.inaturalist.org/taxa/273944",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Ferocactus pilosus": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/192385",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Ficus triangularis": {
+      "status": "common-name-found",
+      "commonName": "Sweetheart Tree",
+      "source": "https://www.inaturalist.org/taxa/346406",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Filipendula glaberrima": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/1139304",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Fritillaria alfredae": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/565457",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Fumaria asepala": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/910331",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Fumariola turkestanica": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/1394861",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Gagea shmakoviana": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/565695",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Gasteria disticha": {
+      "status": "common-name-found",
+      "commonName": "Robertson Oxtongue",
+      "source": "https://www.inaturalist.org/taxa/586147",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Gasteria obliqua": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/246063",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Geohintonia mexicana": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/207207",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Gerbera jamesonii": {
+      "status": "common-name-found",
+      "commonName": "Barberton Daisy",
+      "source": "https://www.inaturalist.org/taxa/349270",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Globba leucantha": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/427731",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Goeppertia makoyana": {
+      "status": "common-name-found",
+      "commonName": "Peacock Plant",
+      "source": "https://www.inaturalist.org/taxa/1172810",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Goeppertia orbifolia": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/866988",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Goniolimon tauricum": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/931501",
+      "ukrainianStatus": "common-name-found",
+      "ukrainianCommonName": "Кермечник кримський"
+    },
+    "Goniophlebium percussum": {
+      "status": "common-name-found",
+      "commonName": "Percussed Angle-vein Fern",
+      "source": "https://www.inaturalist.org/taxa/425649",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Graptopetalum bellum": {
+      "status": "common-name-found",
+      "commonName": "Chihuahua Flower",
+      "source": "https://www.inaturalist.org/taxa/157227",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Gundelia rosea": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/898997",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Gymnocalycium mihanovichii": {
+      "status": "common-name-found",
+      "commonName": "moon cactus",
+      "source": "https://www.inaturalist.org/taxa/438961",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Haemanthus albiflos": {
+      "status": "common-name-found",
+      "commonName": "White Bloodlily",
+      "source": "https://www.inaturalist.org/taxa/431086",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Haworthia fasciata": {
+      "status": "no-exact-match"
+    },
+    "Haworthiopsis attenuata": {
+      "status": "common-name-found",
+      "commonName": "Zebra Haworthia",
+      "source": "https://www.inaturalist.org/taxa/577654",
+      "ukrainianStatus": "common-name-found",
+      "ukrainianCommonName": "Гавортія смугаста"
+    },
+    "Hepatica americana": {
+      "status": "common-name-found",
+      "commonName": "round-lobed hepatica",
+      "source": "https://www.inaturalist.org/taxa/741014",
+      "ukrainianStatus": "common-name-found",
+      "ukrainianCommonName": "Печіночниця американська"
+    },
+    "Heptapleurum arboricola": {
+      "status": "common-name-found",
+      "commonName": "Miniature umbrella tree",
+      "source": "https://www.inaturalist.org/taxa/1239449",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Hesperoxiphion herrerae": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/737537",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Hesperoxiphion peruvianum": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/701781",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Hippeastrum papilio": {
+      "status": "common-name-found",
+      "commonName": "Butterfly Amaryllis",
+      "source": "https://www.inaturalist.org/taxa/356263",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Hoya kerrii": {
+      "status": "common-name-found",
+      "commonName": "Heart Hoya",
+      "source": "https://www.inaturalist.org/taxa/426893",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Hylotelephium anacampseros": {
+      "status": "common-name-found",
+      "commonName": "Love-restoring Stonecrop",
+      "source": "https://www.inaturalist.org/taxa/507514",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Hymenasplenium obscurum": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/988508",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Hypogomphia turkestana": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/919251",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Jasione bulgarica": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/513540",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Keteleeria davidiana": {
+      "status": "common-name-found",
+      "commonName": "David's Keteleeria",
+      "source": "https://www.inaturalist.org/taxa/135906",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Kniphofia gracilis": {
+      "status": "common-name-found",
+      "commonName": "Graceful Poker",
+      "source": "https://www.inaturalist.org/taxa/410508",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Kroenleinia grusonii": {
+      "status": "common-name-found",
+      "commonName": "golden barrel cactus",
+      "source": "https://www.inaturalist.org/taxa/869962",
+      "ukrainianStatus": "common-name-found",
+      "ukrainianCommonName": "Ехінокактус Грузона"
+    },
+    "Legousia falcata": {
+      "status": "common-name-found",
+      "commonName": "Spicate Venus'-looking-glass",
+      "source": "https://www.inaturalist.org/taxa/492901",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Lilium albanicum": {
+      "status": "common-name-found",
+      "commonName": "Albanian Lily",
+      "source": "https://www.inaturalist.org/taxa/482294",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Lilium georgei": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/565747",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Lilium oxypetalum": {
+      "status": "common-name-found",
+      "commonName": "Royle's Lily",
+      "source": "https://www.inaturalist.org/taxa/565760",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Limbarda crithmoides": {
+      "status": "common-name-found",
+      "commonName": "Golden Samphire",
+      "source": "https://www.inaturalist.org/taxa/326880",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Limoniastrum monopetalum": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/354566",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Lobelia rhynchopetalum": {
+      "status": "common-name-found",
+      "commonName": "giant lobelia",
+      "source": "https://www.inaturalist.org/taxa/342789",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Lobivia ancistrophora": {
+      "status": "no-exact-match"
+    },
+    "Lobivia ferox": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/870009",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Lysimachia latifolia": {
+      "status": "common-name-found",
+      "commonName": "Western Starflower",
+      "source": "https://www.inaturalist.org/taxa/496537",
+      "ukrainianStatus": "common-name-found",
+      "ukrainianCommonName": "Вербозілля широколисте"
+    },
+    "Maihuenia poeppigii": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/440122",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Malus domestica": {
+      "status": "common-name-found",
+      "commonName": "apple",
+      "source": "https://www.inaturalist.org/taxa/469472",
+      "ukrainianStatus": "common-name-found",
+      "ukrainianCommonName": "Яблуня домашня"
+    },
+    "Mammillaria elongata": {
+      "status": "common-name-found",
+      "commonName": "Gold Lace Cactus",
+      "source": "https://www.inaturalist.org/taxa/273594",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Mammillaria hahniana": {
+      "status": "common-name-found",
+      "commonName": "old woman cactus",
+      "source": "https://www.inaturalist.org/taxa/206461",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Marah macrocarpa": {
+      "status": "common-name-found",
+      "commonName": "Chilicothe",
+      "source": "https://www.inaturalist.org/taxa/77959",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Melampyrum nemorosum": {
+      "status": "common-name-found",
+      "commonName": "Wood Cow-wheat",
+      "source": "https://www.inaturalist.org/taxa/57500",
+      "ukrainianStatus": "common-name-found",
+      "ukrainianCommonName": "Перестріч гайовий"
+    },
+    "Melicytus lanceolatus": {
+      "status": "common-name-found",
+      "commonName": "Māhoe Wao",
+      "source": "https://www.inaturalist.org/taxa/366618",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Melicytus macrophyllus": {
+      "status": "common-name-found",
+      "commonName": "large-leaved māhoe",
+      "source": "https://www.inaturalist.org/taxa/403830",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Melicytus ramiflorus": {
+      "status": "common-name-found",
+      "commonName": "Māhoe",
+      "source": "https://www.inaturalist.org/taxa/197063",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Miltonia spectabilis": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/429704",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Monstera karstenianum": {
+      "status": "no-exact-match"
+    },
+    "Monstera obliqua": {
+      "status": "common-name-found",
+      "commonName": "Window-Leaf Monstera",
+      "source": "https://www.inaturalist.org/taxa/327367",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Morus indica": {
+      "status": "common-name-found",
+      "commonName": "Korean mulberry",
+      "source": "https://www.inaturalist.org/taxa/773801",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Mundulea sericea": {
+      "status": "common-name-found",
+      "commonName": "Cork Bush",
+      "source": "https://www.inaturalist.org/taxa/427214",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Myrtillocactus cochal": {
+      "status": "common-name-found",
+      "commonName": "candelabra cactus",
+      "source": "https://www.inaturalist.org/taxa/274226",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Nephrolepis acutifolia": {
+      "status": "common-name-found",
+      "commonName": "Fishbone Fern",
+      "source": "https://www.inaturalist.org/taxa/425736",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Nephrolepis davallioides": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/735363",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Nephrolepis obliterata": {
+      "status": "common-name-found",
+      "commonName": "Australian sword fern",
+      "source": "https://www.inaturalist.org/taxa/369875",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Oncidium flexuosum": {
+      "status": "no-exact-match"
+    },
+    "Opuntia bravoana": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/207320",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Oreocereus leucotrichus": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/441437",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Oxalis articulata": {
+      "status": "common-name-found",
+      "commonName": "pink-sorrel",
+      "source": "https://www.inaturalist.org/taxa/57805",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Pachypodium geayi": {
+      "status": "common-name-found",
+      "commonName": "ghost-men",
+      "source": "https://www.inaturalist.org/taxa/372052",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Pachypodium lamerei": {
+      "status": "common-name-found",
+      "commonName": "Madagascar Palm",
+      "source": "https://www.inaturalist.org/taxa/320055",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Pancratium canariense": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/701162",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Pancratium sickenbergeri": {
+      "status": "common-name-found",
+      "commonName": "desert pancratium",
+      "source": "https://www.inaturalist.org/taxa/509827",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Parodia leninghausii": {
+      "status": "no-exact-match"
+    },
+    "Parodia magnifica": {
+      "status": "common-name-found",
+      "commonName": "balloon cactus",
+      "source": "https://www.inaturalist.org/taxa/347903",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Pellaea rotundifolia": {
+      "status": "common-name-found",
+      "commonName": "Button Fern",
+      "source": "https://www.inaturalist.org/taxa/198915",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Peperomia argyreia": {
+      "status": "no-exact-match"
+    },
+    "Peperomia caperata": {
+      "status": "common-name-found",
+      "commonName": "Emerald-Ripple Peperomia",
+      "source": "https://www.inaturalist.org/taxa/427352",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Petasites tricholobus": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/901408",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Phedimus ellacombeanus": {
+      "status": "common-name-found",
+      "commonName": "yellow stonecrop",
+      "source": "https://www.inaturalist.org/taxa/1181693",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Philodendron erubescens": {
+      "status": "common-name-found",
+      "commonName": "Blushing Philodendron",
+      "source": "https://www.inaturalist.org/taxa/327366",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Philodendron gloriosum": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/533391",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Philodendron verrucosum": {
+      "status": "common-name-found",
+      "commonName": "Ecuador philodendron",
+      "source": "https://www.inaturalist.org/taxa/543397",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Physocarpus amurensis": {
+      "status": "common-name-found",
+      "commonName": "Asian Ninebark",
+      "source": "https://www.inaturalist.org/taxa/803372",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Phyteuma betonicifolium": {
+      "status": "common-name-found",
+      "commonName": "Betony-leaved Rampion",
+      "source": "https://www.inaturalist.org/taxa/84953",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Pilea glauca": {
+      "status": "no-exact-match"
+    },
+    "Pilosocereus pachycladus": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/442108",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Platycerium alcicorne": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/533759",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Pleurosoriopsis makinoi": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/343475",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Polystichum andinum": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/465369",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Pseudarthria hookeri": {
+      "status": "common-name-found",
+      "commonName": "Pink Velvetbean",
+      "source": "https://www.inaturalist.org/taxa/447187",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Pseudosedum longidentatum": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/961932",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Pulmonaria obscura": {
+      "status": "common-name-found",
+      "commonName": "Suffolk Lungwort",
+      "source": "https://www.inaturalist.org/taxa/245677",
+      "ukrainianStatus": "common-name-found",
+      "ukrainianCommonName": "Медунка темна"
+    },
+    "Rebutia minuscula": {
+      "status": "common-name-found",
+      "commonName": "Red Crown Cactus",
+      "source": "https://www.inaturalist.org/taxa/442948",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Rhaphidophora tetrasperma": {
+      "status": "common-name-found",
+      "commonName": "mini monstera",
+      "source": "https://www.inaturalist.org/taxa/912388",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Rhaphiolepis indica": {
+      "status": "common-name-found",
+      "commonName": "Indian Hawthorn",
+      "source": "https://www.inaturalist.org/taxa/179305",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Rhododendron subulatum": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/860654",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Rubus bertramii": {
+      "status": "common-name-found",
+      "commonName": "Bertram's bramble",
+      "source": "https://www.inaturalist.org/taxa/699441",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Rubus caucasicus": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/929900",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Rubus scissus": {
+      "status": "common-name-found",
+      "commonName": "red-fruited bramble",
+      "source": "https://www.inaturalist.org/taxa/953438",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Ruscus aculeatus": {
+      "status": "common-name-found",
+      "commonName": "butcher's-broom",
+      "source": "https://www.inaturalist.org/taxa/82904",
+      "ukrainianStatus": "common-name-found",
+      "ukrainianCommonName": "Рускус колючий"
+    },
+    "Scindapsus treubii 'Moonlight'": {
+      "status": "no-exact-match"
+    },
+    "Scorzoneroides autumnalis": {
+      "status": "common-name-found",
+      "commonName": "Autumn Hawkbit",
+      "source": "https://www.inaturalist.org/taxa/204167",
+      "ukrainianStatus": "common-name-found",
+      "ukrainianCommonName": "Любочки осінні"
+    },
+    "Sedum anglicum": {
+      "status": "common-name-found",
+      "commonName": "English Stonecrop",
+      "source": "https://www.inaturalist.org/taxa/336113",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Sedum morganianum": {
+      "status": "common-name-found",
+      "commonName": "Burro's-tail",
+      "source": "https://www.inaturalist.org/taxa/276072",
+      "ukrainianStatus": "common-name-found",
+      "ukrainianCommonName": "Очиток Моргана"
+    },
+    "Sempervivum borissovae": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/743428",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Solanum emulans": {
+      "status": "common-name-found",
+      "commonName": "eastern black nightshade",
+      "source": "https://www.inaturalist.org/taxa/1038940",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Solidago rigida": {
+      "status": "common-name-found",
+      "commonName": "stiff-leaved goldenrod",
+      "source": "https://www.inaturalist.org/taxa/125721",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Sorbaronia arsenii": {
+      "status": "no-exact-match"
+    },
+    "Spathiphyllum cochlearispathum": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/277175",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Spathiphyllum wallisii": {
+      "status": "common-name-found",
+      "commonName": "Peace Lily",
+      "source": "https://www.inaturalist.org/taxa/284040",
+      "ukrainianStatus": "common-name-found",
+      "ukrainianCommonName": "Спатифілум звичайний"
+    },
+    "Stenocereus eruca": {
+      "status": "common-name-found",
+      "commonName": "Creeping Devil",
+      "source": "https://www.inaturalist.org/taxa/206501",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Streptocarpus ionanthus": {
+      "status": "common-name-found",
+      "commonName": "African Violet",
+      "source": "https://www.inaturalist.org/taxa/927983",
+      "ukrainianStatus": "common-name-found",
+      "ukrainianCommonName": "Фіалка африканська"
+    },
+    "Stromanthe sanguinea": {
+      "status": "no-exact-match"
+    },
+    "Stromanthe thalia 'Triostar'": {
+      "status": "no-exact-match"
+    },
+    "Suregada multiflora": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/345933",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Syngonium podophyllum 'Neon Robusta'": {
+      "status": "no-exact-match"
+    },
+    "Syngonium wendlandii": {
+      "status": "common-name-found",
+      "commonName": "silver goosefoot",
+      "source": "https://www.inaturalist.org/taxa/327365",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Tricyrtis formosana": {
+      "status": "common-name-found",
+      "commonName": "Formosan Toad Lily",
+      "source": "https://www.inaturalist.org/taxa/452309",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Tricyrtis latifolia": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/565805",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Trollius asiaticus": {
+      "status": "common-name-found",
+      "commonName": "Asian globeflower",
+      "source": "https://www.inaturalist.org/taxa/431703",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Umbilicus rupestris": {
+      "status": "common-name-found",
+      "commonName": "Wall Pennywort",
+      "source": "https://www.inaturalist.org/taxa/129454",
+      "ukrainianStatus": "common-name-found",
+      "ukrainianCommonName": "Умбілік скельний"
+    },
+    "Vachellia farnesiana": {
+      "status": "common-name-found",
+      "commonName": "Sweet acacia",
+      "source": "https://www.inaturalist.org/taxa/79472",
+      "ukrainianStatus": "common-name-found",
+      "ukrainianCommonName": "Вачелія Фарнеза"
+    },
+    "Vachellia karroo": {
+      "status": "common-name-found",
+      "commonName": "Sweet Thorn",
+      "source": "https://www.inaturalist.org/taxa/502780",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Vagaria parviflora": {
+      "status": "common-name-found",
+      "commonName": "Small-flowered Pancratium",
+      "source": "https://www.inaturalist.org/taxa/780682",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Viola alaica": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/1227548",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Viola albida": {
+      "status": "common-name-found",
+      "commonName": "Taebaek violet",
+      "source": "https://www.inaturalist.org/taxa/500890",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Viola alexandrowiana": {
+      "status": "common-name-found",
+      "commonName": "Alexandrov's violet",
+      "source": "https://www.inaturalist.org/taxa/501384",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Viola altaica": {
+      "status": "common-name-found",
+      "commonName": "Altaic Violet",
+      "source": "https://www.inaturalist.org/taxa/556830",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Viola amurica": {
+      "status": "no-common-name",
+      "source": "https://www.inaturalist.org/taxa/871319",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Wallisia cyanea": {
+      "status": "common-name-found",
+      "commonName": "Pink quill",
+      "source": "https://www.inaturalist.org/taxa/846492",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Xanthorrhoea australis": {
+      "status": "common-name-found",
+      "commonName": "Austral Grass-tree",
+      "source": "https://www.inaturalist.org/taxa/125125",
+      "ukrainianStatus": "no-common-name"
+    },
+    "Zephyranthes robusta": {
+      "status": "common-name-found",
+      "commonName": "pink rain lily",
+      "source": "https://www.inaturalist.org/taxa/1264664",
+      "ukrainianStatus": "no-common-name"
+    }
+  }
+}
