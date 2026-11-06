@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#08090c">
+  <meta name="description" content="Silva AI Lab — ботаническая ИИ-помощница Silva.">
+  <title>Silva AI Lab — Silva Quieta</title>
+  <link rel="icon" href="https://silvaquieta.com/favicon-48.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./style.css">
+  <script>
+    (() => {
+      const saved = localStorage.getItem("silva-ai-locale");
+      const query = new URLSearchParams(location.search).get("locale");
+      const locale = ["ru", "uk", "en"].includes(query) ? query : ["ru", "uk", "en"].includes(saved) ? saved : "ru";
+      document.documentElement.lang = locale;
+      window.SILVA_LOCALE = locale;
+    })();
+  </script>
+  <script defer src="./app.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="https://silvaquieta.com/" aria-label="Silva Quieta">
+      <span class="brand-mark" aria-hidden="true">✳</span>
+      <span>Silva <b>AI Lab</b></span>
+    </a>
+    <nav class="top-links" aria-label="Навигация">
+      <a href="https://silvaquieta.com/">Silva Quieta</a>
+      <a href="https://community.silvaquieta.com/">Silva Community</a>
+    </nav>
+    <label class="locale-label">
+      <span class="sr-only">Язык</span>
+      <select id="locale-select" aria-label="Язык">
+        <option value="ru">RU</option>
+        <option value="uk">UA</option>
+        <option value="en">EN</option>
+      </select>
+    </label>
+  </header>
+
+  <main class="lab-layout">
+    <section class="intro">
+      <p class="eyebrow" data-copy="eyebrow">БОТАНИЧЕСКИЙ ИИ · SILVA QUIETA</p>
+      <h1 data-copy="title">О чём поговорим<br><em>сегодня?</em></h1>
+      <p class="intro-text" data-copy="intro">Спроси Silva об уходе, выборе растения или о том, что происходит с его листьями. Спокойно, по делу и без осуждения.</p>
+      <div class="promise"><span class="status-dot" id="connection-dot"></span><span id="connection-status" data-copy="connecting">Подключаем Silva…</span></div>
+      <div class="privacy-note"><span aria-hidden="true">✦</span><span data-copy="privacy">Не отправляй личные данные. Ответы ИИ могут быть неточными.</span></div>
+    </section>
+
+    <section class="chat-card" aria-label="Чат с Silva">
+      <header class="chat-header">
+        <div class="silva-avatar" aria-hidden="true">✳</div>
+        <div class="silva-info">
+          <strong>Silva</strong>
+          <span id="chat-presence" data-copy="assistant">Ботаническая помощница</span>
+        </div>
+        <button class="clear-button" id="clear-chat" type="button" data-copy="clear">Новый диалог</button>
+      </header>
+      <div class="messages" id="messages" role="log" aria-live="polite" aria-relevant="additions text"></div>
+      <div class="suggestions" id="suggestions" aria-label="Примеры вопросов"></div>
+      <form class="composer" id="chat-form">
+        <label class="sr-only" for="chat-input" data-copy="inputLabel">Сообщение для Silva</label>
+        <textarea id="chat-input" name="message" rows="1" maxlength="1200" data-placeholder="placeholder" placeholder="Напиши свой вопрос…" required></textarea>
+        <button id="send-button" type="submit" aria-label="Отправить"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5m-6 6 6-6 6 6"/></svg></button>
+      </form>
+      <p class="chat-footnote" data-copy="footnote">История хранится в этом браузере. Не отправляй личные данные.</p>
+    </section>
+  </main>
+  <footer class="footer"><a href="https://silvaquieta.com/">← <span data-copy="back">На сайт Silva Quieta</span></a><span>Silva AI Lab</span></footer>
+</body>
+</html>

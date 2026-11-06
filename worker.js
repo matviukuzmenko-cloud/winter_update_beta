@@ -625,7 +625,7 @@ async function diagnosePlantImage(apiKey, image, question = "", history = [], an
 function isAllowedOrigin(origin, configuredOrigin) {
   if (!origin) return true;
   const configuredSiteOrigin = configuredOrigin ? new URL(configuredOrigin).origin : "";
-  if ([configuredSiteOrigin, "https://silvaquieta.com", "https://www.silvaquieta.com", "https://uk.silvaquieta.com", "https://en.silvaquieta.com", "https://matviukuzmenko-cloud.github.io"].includes(origin)) return true;
+  if ([configuredSiteOrigin, "https://silvaquieta.com", "https://www.silvaquieta.com", "https://uk.silvaquieta.com", "https://en.silvaquieta.com", "https://ailab.silvaquieta.com", "https://matviukuzmenko-cloud.github.io"].includes(origin)) return true;
   return /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin);
 }
 

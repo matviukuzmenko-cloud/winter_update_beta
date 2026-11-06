@@ -226,6 +226,19 @@
       <nav class="primary-nav" aria-label="Основные разделы">
         <button class="primary-nav-link primary-collection-link" type="button" data-go="collection">Моя коллекция <span class="primary-collection-count" id="collection-count" aria-label="0 растений">0</span></button>
         <button class="primary-nav-link" type="button" data-go="botanist">Игры</button>
+        <details class="site-switcher">
+          <summary class="primary-nav-link"><span id="site-switcher-label">Другие сайты</span><span class="site-switcher-chevron" aria-hidden="true">⌄</span></summary>
+          <div class="site-switcher-menu" id="site-switcher-menu">
+            <a href="https://ailab.silvaquieta.com/">
+              <span class="site-switcher-icon" aria-hidden="true">✦</span>
+              <span><strong>Silva AI Lab</strong><small id="site-switcher-ai-description">ИИ-помощница Silva</small></span>
+            </a>
+            <a href="https://community.silvaquieta.com/">
+              <span class="site-switcher-icon" aria-hidden="true">❋</span>
+              <span><strong>Silva Community</strong><small id="site-switcher-community-description">Сообщество о растениях</small></span>
+            </a>
+          </div>
+        </details>
       </nav>
       <div class="header-actions">
         <button class="icon-button command-open" id="command-open" type="button" aria-label="Быстрый поиск и команды" title="Быстрый поиск и команды (Ctrl/⌘ K)"><svg class="ui-icon" aria-hidden="true"><use href="#icon-search"></use></svg></button>
@@ -1043,6 +1056,10 @@
         <span class="brand-mark" aria-hidden="true"><svg class="ui-icon"><use href="#icon-flower"></use></svg></span>
         <strong>Silva Quieta</strong>
       </a>
+      <nav class="footer-links" aria-label="Проекты Silva Quieta">
+        <a href="https://ailab.silvaquieta.com/">Silva AI Lab</a>
+        <a href="https://community.silvaquieta.com/">Silva Community</a>
+      </nav>
     </div>
     <div class="footer-bottom">
       <span>Silva Quieta · Создатель: Кузьменко Матвей · Научные данные и фотографии: GBIF · iNaturalist · Wikimedia Commons</span>

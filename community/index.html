@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#08090c">
+  <meta name="description" content="Silva Community — спокойное сообщество людей, которым близок мир растений.">
+  <title>Silva Community — Silva Quieta</title>
+  <link rel="icon" href="https://silvaquieta.com/favicon-48.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://silvaquieta.com/supabase-config.js"></script>
+  <script defer src="./app.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="https://silvaquieta.com/" aria-label="Silva Quieta">
+      <span class="brand-mark" aria-hidden="true">✳</span><span>Silva <b>Community</b></span>
+    </a>
+    <nav class="top-links" aria-label="Навигация">
+      <a href="https://silvaquieta.com/">Silva Quieta</a>
+      <a href="https://ailab.silvaquieta.com/">Silva AI Lab</a>
+    </nav>
+    <div class="top-actions">
+      <label class="locale-label"><span class="sr-only">Язык</span><select id="locale-select" aria-label="Язык"><option value="ru">RU</option><option value="uk">UA</option><option value="en">EN</option></select></label>
+      <button class="account-button" id="account-open" type="button" data-copy="signIn">Войти</button>
+    </div>
+  </header>
+  <main class="layout">
+    <section class="community-heading">
+      <div>
+        <p class="eyebrow" data-copy="eyebrow">SILVA QUIETA · СООБЩЕСТВО</p>
+        <h1 data-copy="title">Растения объединяют.</h1>
+        <p class="subtitle" data-copy="subtitle">Делись открытиями, задавай вопросы и помогай другим растить своё.</p>
+      </div>
+      <button class="compose-button" id="compose-open" type="button"><span aria-hidden="true">＋</span><span data-copy="createPost">Новая публикация</span></button>
+    </section>
+
+    <section class="community-content">
+      <div class="feed-column">
+        <div class="feed-toolbar">
+          <div class="feed-tabs" role="tablist" aria-label="Сортировка публикаций">
+            <button type="button" class="feed-tab is-active" data-sort="new" role="tab" aria-selected="true" data-copy="newest">Новое</button>
+            <button type="button" class="feed-tab" data-sort="top" role="tab" aria-selected="false" data-copy="popular">Популярное</button>
+            <button type="button" class="feed-tab signed-in-only" data-sort="mine" role="tab" aria-selected="false" hidden data-copy="myPosts">Мои записи</button>
+            <button type="button" class="feed-tab signed-in-only" data-sort="saved" role="tab" aria-selected="false" hidden data-copy="savedPosts">Сохранённое</button>
+          </div>
+          <button type="button" class="refresh-button" id="refresh-feed" data-copy="refresh">Обновить</button>
+        </div>
+        <div class="feed-status" id="feed-status" role="status"></div>
+        <div class="feed" id="feed" aria-live="polite"></div>
+        <button class="load-more" id="load-more" type="button" hidden data-copy="loadMore">Показать ещё</button>
+      </div>
+      <aside class="about-card">
+        <span class="about-leaf" aria-hidden="true">✿</span>
+        <h2 data-copy="aboutTitle">Один общий сад.</h2>
+        <p data-copy="aboutText">Место для вопросов, наблюдений и маленьких побед. Публикуй о растениях, будь добр к другим и не делись личной информацией.</p>
+        <div class="community-rule"><span>01</span><p data-copy="ruleOne">Только о растениях и садоводстве</p></div>
+        <div class="community-rule"><span>02</span><p data-copy="ruleTwo">Уважение к людям и их опыту</p></div>
+        <div class="community-rule"><span>03</span><p data-copy="ruleThree">Сообщай о спаме и вредном контенте</p></div>
+        <a class="home-link" href="https://silvaquieta.com/">← <span data-copy="back">Вернуться на сайт</span></a>
+      </aside>
+    </section>
+  </main>
+  <footer class="footer"><span>Silva Community · Silva Quieta</span><span data-copy="publicNote">Публикации видны всем.</span></footer>
+
+  <dialog class="dialog" id="auth-dialog">
+    <form method="dialog" class="dialog-close-form"><button class="icon-close" aria-label="Закрыть">×</button></form>
+    <p class="eyebrow" data-copy="accountEyebrow">ВАШ АККАУНТ</p>
+    <h2 id="auth-title" data-copy="signInTitle">Рады видеть</h2>
+    <p class="dialog-description" data-copy="accountDescription">Войди или создай аккаунт Silva Quieta, чтобы участвовать в сообществе.</p>
+    <div class="auth-switch">
+      <button type="button" class="is-active" data-auth-mode="login" data-copy="signIn">Войти</button>
+      <button type="button" data-auth-mode="signup" data-copy="signUp">Создать аккаунт</button>
+    </div>
+    <form id="auth-form">
+      <label for="nickname" data-copy="nickname">Имя в сообществе</label>
+      <input id="nickname" autocomplete="username" minlength="3" maxlength="24" required>
+      <label for="password" data-copy="password">Пароль</label>
+      <input id="password" type="password" autocomplete="current-password" minlength="8" required>
+      <div class="signup-avatar-control" id="signup-avatar-control" hidden>
+        <div class="avatar-picker" id="signup-avatar-picker">
+          <label class="avatar-picker-trigger" for="signup-avatar-image">
+            <span class="signup-avatar-preview" id="signup-avatar-preview" aria-hidden="true">S</span>
+            <span class="avatar-picker-copy"><strong data-copy="signupAvatar">Выбрать фото</strong><small data-copy="avatarPickerHint">Нажми или перетащи изображение сюда</small></span>
+            <input id="signup-avatar-image" class="sr-only" type="file" accept="image/jpeg,image/png,image/webp">
+          </label>
+          <button class="text-button avatar-picker-remove" id="signup-avatar-remove" type="button" hidden data-copy="removeAvatar">Удалить аватар</button>
+        </div>
+      </div>
+      <p class="form-hint signup-avatar-hint" id="signup-avatar-hint" hidden data-copy="signupAvatarHint">Необязательно · JPG, PNG или WebP · до 2 МБ. Аватар будет общедоступным.</p>
+      <p class="form-hint" data-copy="passwordHint">Не менее 8 символов. Восстановление пароля по email недоступно.</p>
+      <button class="primary-button auth-submit" id="auth-submit" type="submit" data-copy="signIn">Войти</button>
+    </form>
+    <p class="form-status" id="auth-status" role="status"></p>
+  </dialog>
+
+  <dialog class="dialog profile-dialog" id="profile-dialog">
+    <form method="dialog" class="dialog-close-form"><button class="icon-close" aria-label="Закрыть">×</button></form>
+    <p class="eyebrow" data-copy="profileEyebrow">ВАШ ПРОФИЛЬ</p>
+    <h2 data-copy="profileTitle">Профиль сообщества</h2>
+    <form id="profile-form">
+      <div class="profile-avatar-editor">
+        <div class="avatar-picker" id="profile-avatar-picker">
+          <label class="avatar-picker-trigger" for="avatar-image">
+            <span class="profile-avatar" id="profile-avatar-preview" aria-hidden="true">S</span>
+            <span class="avatar-picker-copy"><strong data-copy="changeAvatar">Выбрать фото</strong><small data-copy="avatarPickerHint">Нажми или перетащи изображение сюда</small></span>
+            <input id="avatar-image" class="sr-only" type="file" accept="image/jpeg,image/png,image/webp">
+          </label>
+          <button class="text-button avatar-picker-remove" id="avatar-remove" type="button" data-copy="removeAvatar">Удалить аватар</button>
+        </div>
+      </div>
+      <label for="profile-nickname" data-copy="nickname">Имя в сообществе</label>
+      <input id="profile-nickname" minlength="3" maxlength="24" required>
+      <p class="form-hint" data-copy="avatarHint">JPG, PNG или WebP · до 2 МБ. Аватар будет общедоступным.</p>
+      <p class="form-status" id="profile-status" role="status"></p>
+      <button class="primary-button auth-submit" id="profile-submit" type="submit" data-copy="saveProfile">Сохранить профиль</button>
+    </form>
+    <button class="text-button sign-out-button" id="sign-out" type="button" data-copy="signOut">Выйти</button>
+  </dialog>
+
+  <dialog class="dialog post-dialog" id="post-dialog">
+    <form method="dialog" class="dialog-close-form"><button class="icon-close" aria-label="Закрыть">×</button></form>
+    <p class="eyebrow" data-copy="composeEyebrow">ПОДЕЛИСЬ СООБЩЕСТВОМ</p>
+    <h2 data-copy="composeTitle">Что растёт у тебя?</h2>
+    <form id="post-form">
+      <label for="post-body" data-copy="postLabel">Расскажи о растении, задай вопрос или поделись наблюдением</label>
+      <textarea id="post-body" maxlength="3000" rows="6" required></textarea>
+      <div class="post-form-bottom"><label class="upload-button" for="post-image"><span aria-hidden="true">＋</span><span data-copy="addPhoto">Добавить фото</span></label><span id="image-name" class="image-name"></span><button class="text-button" id="remove-post-image" type="button" hidden data-copy="removeImage">Удалить фото</button><input id="post-image" type="file" accept="image/jpeg,image/png,image/webp" hidden></div>
+      <p class="form-hint" data-copy="imageHint">JPG, PNG или WebP · до 5 МБ. Фото станет общедоступным.</p>
+      <p class="form-status" id="post-status" role="status"></p>
+      <button class="primary-button" id="post-submit" type="submit" data-copy="publish">Опубликовать</button>
+    </form>
+  </dialog>
+
+  <dialog class="dialog" id="comment-edit-dialog">
+    <form method="dialog" class="dialog-close-form"><button class="icon-close" aria-label="Закрыть">×</button></form>
+    <h2 data-copy="editComment">Редактировать ответ</h2>
+    <form id="comment-edit-form">
+      <label for="comment-edit-body" data-copy="commentPlaceholder">Напиши ответ…</label>
+      <textarea id="comment-edit-body" maxlength="1000" rows="5" required></textarea>
+      <p class="form-status" id="comment-edit-status" role="status"></p>
+      <button class="primary-button auth-submit" type="submit" data-copy="saveChanges">Сохранить изменения</button>
+    </form>
+  </dialog>
+</body>
+</html>

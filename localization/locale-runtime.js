@@ -47,6 +47,34 @@
       location.assign(target.href);
     });
   }
+  const projectSwitcherLabels = {
+    ru: {
+      trigger: "Другие сайты",
+      menu: "Другие сайты Silva Quieta",
+      ai: "ИИ-помощница Silva",
+      community: "Сообщество о растениях",
+    },
+    uk: {
+      trigger: "Інші сайти",
+      menu: "Інші сайти Silva Quieta",
+      ai: "ІІ-помічниця Silva",
+      community: "Спільнота про рослини",
+    },
+    en: {
+      trigger: "More sites",
+      menu: "More Silva Quieta sites",
+      ai: "Silva AI assistant",
+      community: "Plant community",
+    },
+  }[locale];
+  const projectSwitcher = document.querySelector("#site-switcher-menu");
+  if (projectSwitcher) projectSwitcher.setAttribute("aria-label", projectSwitcherLabels.menu);
+  const projectSwitcherTrigger = document.querySelector("#site-switcher-label");
+  if (projectSwitcherTrigger) projectSwitcherTrigger.textContent = projectSwitcherLabels.trigger;
+  const projectAiDescription = document.querySelector("#site-switcher-ai-description");
+  if (projectAiDescription) projectAiDescription.textContent = projectSwitcherLabels.ai;
+  const projectCommunityDescription = document.querySelector("#site-switcher-community-description");
+  if (projectCommunityDescription) projectCommunityDescription.textContent = projectSwitcherLabels.community;
 
   const visitorLabels = {
     ru: { yesterday: "вчера", online: "сейчас", note: "Случайный ID; IP-адреса не сохраняются", label: "Анонимная статистика посетителей" },
