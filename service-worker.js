@@ -1,8 +1,8 @@
-const CACHE_NAME = "flora-anotomy-shell-v297";
+const CACHE_NAME = "flora-anotomy-shell-v298";
 const APP_SHELL = [
   "./",
   "./index.html",
-  "./style.css?v=218",
+  "./style.css?v=219",
   "./script.js?v=155",
   "./ai-chat.js?v=120",
   "./ui-enhancements.js?v=7",
@@ -10,7 +10,7 @@ const APP_SHELL = [
   "./supabase-auth.js?v=25",
   "./garden.js?v=28",
   "./expeditions.js?v=17",
-  "./localization/locale-runtime.js?v=25",
+  "./localization/locale-runtime.js?v=26",
   "./visitor-counter.js?v=1",
   "./localization/catalog-uk.js?v=7",
   "./localization/catalog-en.js?v=7",

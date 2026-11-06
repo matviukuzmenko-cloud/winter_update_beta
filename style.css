@@ -3735,6 +3735,11 @@ body[data-design="glasshouse"] .garden-today {
   .site-switcher > summary { min-height: 34px; padding-inline: 6px; font-size: 10px; }
   .site-switcher-menu { right: 0; }
 }
+@media (max-width: 720px) {
+  .header-inner > .primary-nav.site-navigation-with-switcher {
+    display: flex;
+  }
+}
 
 @media (hover: none) and (pointer: coarse) {
   .flower-card:hover { transform: none; }
