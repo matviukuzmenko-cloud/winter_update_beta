@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#f5f6f1">
+    <meta name="description" content="Meet Silva OS: a quiet botanical workspace for your desktop and phone.">
+    <meta property="og:title" content="Silva OS — a quieter kind of workspace">
+    <meta property="og:description" content="Your botanical world, thoughtfully gathered in one place.">
+    <meta property="og:type" content="website">
+    <title>Silva OS — a quieter kind of workspace</title>
+    <link rel="icon" href="./icon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="./style.css?v=1">
+    <script src="./app.js?v=1" defer></script>
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="site-header">
+        <a class="brand" href="https://silvaquieta.com/" aria-label="Silva Quieta home">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 32 32"><path d="M16 27V15m0 7c-5.3 0-8-2.7-8-7.5 4.9 0 8 2.5 8 7.5Zm0-7c0-5.2 3.2-8 8-8 0 5.2-2.7 8-8 8Z"/></svg>
+          </span>
+          <span>silva <b>quieta</b></span>
+        </a>
+        <span class="header-caption">A botanical workspace</span>
+        <a class="header-link" href="https://silvaquieta.com/">Explore Silva Quieta <span aria-hidden="true">↗</span></a>
+      </header>
+
+      <main>
+        <section class="hero" aria-labelledby="hero-title">
+          <div class="hero-copy">
+            <p class="eyebrow"><span class="eyebrow-dot"></span> MEET YOUR NEW WORKSPACE</p>
+            <h1 id="hero-title">A quieter way<br>to <em>connect.</em></h1>
+            <p class="hero-description">
+              Your plants, garden, community and Silva AI — thoughtfully gathered in one calm,
+              beautifully simple space.
+            </p>
+            <div class="download-area" id="download">
+              <p class="download-label">GET SILVA OS</p>
+              <div class="download-actions" aria-label="Install Silva OS">
+                <a class="download-button download-primary" href="https://github.com/matviukuzmenko-cloud/silvaos/releases/latest" data-platform="macos">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.4 12.7c0-2 1.6-3 1.7-3.1a3.7 3.7 0 0 0-2.9-1.6c-1.2-.1-2.3.7-2.9.7s-1.5-.7-2.5-.7a3.9 3.9 0 0 0-3.3 2c-1.4 2.4-.4 5.9 1 7.8.7.9 1.4 1.9 2.4 1.9s1.3-.6 2.5-.6 1.6.6 2.6.6 1.7-.9 2.3-1.9a8 8 0 0 0 1.1-2.2 3.4 3.4 0 0 1-2-2.9ZM14.5 6.7a3.6 3.6 0 0 0 .8-2.5 3.8 3.8 0 0 0-2.4 1.2 3.4 3.4 0 0 0-.8 2.4 3.2 3.2 0 0 0 2.4-1.1Z"/></svg>
+                  <span>Download for macOS</span>
+                  <span class="button-arrow" aria-hidden="true">↗</span>
+                </a>
+                <a class="download-button" href="https://github.com/matviukuzmenko-cloud/silvaos/releases/latest" data-platform="windows">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 5.2 7.6-1v7.3H3V5.2Zm9.1-1.2L21 2.7v8.8h-8.9V4Zm-9.1 8.8h7.6v7.3L3 19.2v-6.4Zm9.1 0H21v8.8l-8.9-1.3v-7.5Z"/></svg>
+                  <span>Download for Windows</span>
+                  <span class="button-arrow" aria-hidden="true">↗</span>
+                </a>
+                <a class="download-button" href="https://os.silvaquieta.com/app/" data-platform="ios">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6.5" y="2.5" width="11" height="19" rx="2.2"/><path d="M10 5h4m-2 13.2h.01"/></svg>
+                  <span>Download for iOS</span>
+                  <span class="button-arrow" aria-hidden="true">↗</span>
+                </a>
+              </div>
+              <p class="install-hint" id="install-hint" aria-live="polite">
+                Opens Silva OS. On iPhone or iPad, use Safari’s Share menu and choose “Add to Home Screen”.
+              </p>
+            </div>
+            <a class="learn-link" href="#inside">A little more about Silva OS <span aria-hidden="true">↓</span></a>
+          </div>
+
+          <div class="hero-art" aria-label="Preview of the Silva OS workspace">
+            <div class="ambient ambient-one"></div>
+            <div class="ambient ambient-two"></div>
+            <div class="desktop-preview">
+              <div class="preview-topbar">
+                <div class="preview-brand">
+                  <span class="mini-mark" aria-hidden="true">
+                    <svg viewBox="0 0 32 32"><path d="M16 27V15m0 7c-5.3 0-8-2.7-8-7.5 4.9 0 8 2.5 8 7.5Zm0-7c0-5.2 3.2-8 8-8 0 5.2-2.7 8-8 8Z"/></svg>
+                  </span>
+                  silva <b>os</b>
+                </div>
+                <div class="preview-menu"><span>Atlas</span><span>Garden</span><span>Silva AI</span></div>
+                <span class="preview-time">10:24 <i></i></span>
+              </div>
+              <div class="preview-scene">
+                <div class="scene-copy">
+                  <span class="scene-kicker">YOUR BOTANICAL WORLD</span>
+                  <span class="scene-title">Grow at<br>your own pace.</span>
+                  <span class="scene-subtitle">A little space for what matters.</span>
+                </div>
+                <div class="plant-illustration" aria-hidden="true">
+                  <span class="plant-shadow"></span>
+                  <span class="stem stem-main"></span>
+                  <span class="stem stem-left"></span>
+                  <span class="stem stem-right"></span>
+                  <span class="leaf leaf-one"></span>
+                  <span class="leaf leaf-two"></span>
+                  <span class="leaf leaf-three"></span>
+                  <span class="leaf leaf-four"></span>
+                  <span class="leaf leaf-five"></span>
+                  <span class="pot"><i></i></span>
+                </div>
+                <div class="preview-shortcut shortcut-atlas"><span>✳</span> Atlas</div>
+                <div class="preview-shortcut shortcut-garden"><span>◷</span> My garden</div>
+                <div class="preview-shortcut shortcut-ai"><span>✦</span> Silva AI</div>
+                <div class="preview-dock">
+                  <span class="dock-glyph glyph-leaf">⌁</span>
+                  <span class="dock-glyph glyph-atlas">✳</span>
+                  <span class="dock-glyph glyph-ai">✦</span>
+                  <span class="dock-glyph glyph-garden">◷</span>
+                  <span class="dock-glyph glyph-community">◌</span>
+                </div>
+              </div>
+              <div class="preview-caption"><span><i></i> Silva OS</span><span>One calm place for your day</span></div>
+            </div>
+            <div class="floating-note note-top"><span class="note-icon">✦</span><span>Thoughtful by nature</span></div>
+            <div class="floating-note note-bottom"><span class="note-online"></span><span>Made for a little more calm</span></div>
+            <span class="art-caption">A considered space for everyday growth</span>
+          </div>
+        </section>
+
+        <section class="inside-section" id="inside" aria-labelledby="inside-title">
+          <div class="section-heading">
+            <p class="eyebrow"><span class="eyebrow-dot"></span> EVERYTHING IN ITS PLACE</p>
+            <h2 id="inside-title">A garden of useful things.</h2>
+          </div>
+          <div class="feature-grid">
+            <article class="feature-card">
+              <span class="feature-icon icon-atlas" aria-hidden="true">✳</span>
+              <h3>Explore</h3>
+              <p>Find your next favorite in the botanical atlas.</p>
+            </article>
+            <article class="feature-card">
+              <span class="feature-icon icon-garden" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M8 3v4m8-4v4M4 10h16"/></svg>
+              </span>
+              <h3>Care</h3>
+              <p>Keep your personal garden and care notes close.</p>
+            </article>
+            <article class="feature-card">
+              <span class="feature-icon icon-ai" aria-hidden="true">✦</span>
+              <h3>Ask</h3>
+              <p>Get a thoughtful hand with Silva AI.</p>
+            </article>
+            <article class="feature-card">
+              <span class="feature-icon icon-community" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M4 5h16v12h-9l-5 3v-3H4z"/><path d="M8 9h8m-8 4h5"/></svg>
+              </span>
+              <h3>Share</h3>
+              <p>Grow alongside a community of plant lovers.</p>
+            </article>
+          </div>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <a class="footer-brand" href="https://silvaquieta.com/">silva quieta</a>
+        <span>Made with care for the curious and the growing.</span>
+        <a href="https://silvaquieta.com/">silvaquieta.com <span aria-hidden="true">↗</span></a>
+      </footer>
+    </div>
+  </body>
+</html>

@@ -9,8 +9,8 @@
     <link rel="manifest" href="./manifest.webmanifest">
     <link rel="icon" href="../icon.svg" type="image/svg+xml">
     <script src="./theme-init.js?v=1"></script>
-    <link rel="stylesheet" href="./style.css?v=23">
-    <script type="module" src="./app.js?v=23"></script>
+    <link rel="stylesheet" href="./style.css?v=29">
+    <script type="module" src="./app.js?v=29"></script>
   </head>
   <body>
     <div class="os-shell" id="os-shell">
@@ -33,25 +33,12 @@
           <button type="button" class="menu-button" data-menu="applications" aria-haspopup="menu" aria-expanded="false" aria-controls="menu-popover">Приложения</button>
         </nav>
         <div class="system-status">
-          <button class="install-app" type="button" data-install-app hidden>Установить Silva OS</button>
+          <button class="install-app" type="button" data-install-app hidden>Установить отдельно</button>
           <span class="status-label"><span class="status-light"></span> Silva OS</span>
           <time id="system-clock" aria-label="Текущее время"></time>
           <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Переключить тему" aria-pressed="false" title="Переключить тему">
             <svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.7"/><path d="M12 2.5v2m0 15v2m9.5-9.5h-2m-15 0h-2m16.2-6.2-1.4 1.4m-10.6 10.6-1.4 1.4m13.4 0-1.4-1.4M6.7 6.7 5.3 5.3"/></svg>
             <svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M19.2 15.1A8 8 0 0 1 8.9 4.8 8.3 8.3 0 1 0 19.2 15.1Z"/></svg>
-          </button>
-        </div>
-        <div class="tauri-drag-region" data-tauri-drag-region aria-hidden="true"></div>
-        <div class="native-window-controls" data-native-window-controls hidden aria-label="Управление приложением">
-          <button type="button" class="native-window-control" data-native-window-action="minimize" aria-label="Свернуть приложение" title="Свернуть">
-            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10"/></svg>
-          </button>
-          <button type="button" class="native-window-control" data-native-window-action="maximize" aria-label="Развернуть приложение" title="Развернуть">
-            <svg class="native-maximize-icon" viewBox="0 0 16 16" aria-hidden="true"><rect x="3.5" y="3.5" width="9" height="9" rx="1"/></svg>
-            <svg class="native-restore-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 5V3.5h7.5V11H11M3.5 5h7.5v7.5H3.5z"/></svg>
-          </button>
-          <button type="button" class="native-window-control native-close-control" data-native-window-action="close" aria-label="Закрыть приложение" title="Закрыть">
-            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="m4 4 8 8m0-8-8 8"/></svg>
           </button>
         </div>
       </header>
@@ -66,7 +53,7 @@
           <div class="launchpad-heading">
             <p class="eyebrow">SILVA OS <span aria-hidden="true">/</span> WEB APPS</p>
             <h1 id="launchpad-title">Приложения</h1>
-            <p>Открывайте сайты Silva и системные инструменты на весь экран.</p>
+            <p>Работайте в окнах или разверните приложение на весь экран.</p>
           </div>
           <nav class="desktop-shortcuts" aria-label="Приложения Silva">
             <button class="desktop-shortcut" type="button" data-launch="atlas">
@@ -221,6 +208,24 @@
 
     <template id="window-template">
       <section class="os-window" role="dialog">
+        <header class="window-titlebar">
+          <span class="window-title">
+            <span class="window-app-mark" aria-hidden="true"></span>
+            <span class="window-title-text"></span>
+          </span>
+          <div class="window-controls" aria-label="Управление окном">
+            <button type="button" class="window-control" data-window-action="minimize" aria-label="Свернуть окно" title="Свернуть">
+              <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10"/></svg>
+            </button>
+            <button type="button" class="window-control" data-window-action="maximize" aria-label="Развернуть окно" title="Развернуть">
+              <svg class="window-maximize-icon" viewBox="0 0 16 16" aria-hidden="true"><rect x="3.5" y="3.5" width="9" height="9" rx="1"/></svg>
+              <svg class="window-restore-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 5V3.5h7.5V11H11M3.5 5h7.5v7.5H3.5z"/></svg>
+            </button>
+            <button type="button" class="window-control close-control" data-window-action="close" aria-label="Закрыть окно" title="Закрыть">
+              <svg viewBox="0 0 16 16" aria-hidden="true"><path d="m4 4 8 8m0-8-8 8"/></svg>
+            </button>
+          </div>
+        </header>
         <div class="window-content">
           <div class="app-loading" role="status">
             <span class="loading-mark" aria-hidden="true"></span>

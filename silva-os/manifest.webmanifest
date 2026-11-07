@@ -7,6 +7,7 @@
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
   "orientation": "any",
   "background_color": "#f9f9fb",
   "theme_color": "#f9f9fb",

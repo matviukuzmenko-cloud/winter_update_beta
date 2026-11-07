@@ -92,6 +92,63 @@ class FullscreenAppManager {
 
   bindEvents() {
     this.bindGeminiGlow();
+    this.layer.addEventListener("pointerdown", (event) => {
+      if (!event.isPrimary || event.button !== 0) return;
+      const element = event.target.closest(".os-window");
+      if (!element) return;
+      const appId = element.dataset.appId;
+      this.focus(appId);
+
+      const titlebar = event.target.closest(".window-titlebar");
+      if (!titlebar || event.target.closest(".window-controls") || element.classList.contains("is-maximized")) return;
+      const elementBounds = element.getBoundingClientRect();
+      const layerBounds = this.layer.getBoundingClientRect();
+      this.dragState = {
+        element,
+        pointerId: event.pointerId,
+        left: elementBounds.left - layerBounds.left,
+        top: elementBounds.top - layerBounds.top,
+        width: elementBounds.width,
+        height: elementBounds.height,
+        startX: event.clientX,
+        startY: event.clientY,
+      };
+      titlebar.setPointerCapture(event.pointerId);
+      event.preventDefault();
+    });
+    this.layer.addEventListener("pointermove", (event) => {
+      const drag = this.dragState;
+      if (!drag || drag.pointerId !== event.pointerId) return;
+      const bounds = this.layer.getBoundingClientRect();
+      const left = Math.max(0, Math.min(bounds.width - drag.width, drag.left + event.clientX - drag.startX));
+      const top = Math.max(0, Math.min(bounds.height - 48, drag.top + event.clientY - drag.startY));
+      drag.element.style.left = `${left}px`;
+      drag.element.style.top = `${top}px`;
+      drag.element.style.transform = "none";
+    });
+    const stopDragging = (event) => {
+      if (this.dragState?.pointerId === event.pointerId) this.dragState = null;
+    };
+    this.layer.addEventListener("pointerup", stopDragging);
+    this.layer.addEventListener("pointercancel", stopDragging);
+    this.layer.addEventListener("click", (event) => {
+      const control = event.target.closest("[data-window-action]");
+      if (control) {
+        const element = control.closest(".os-window");
+        const appId = element?.dataset.appId;
+        if (!appId) return;
+        if (control.dataset.windowAction === "minimize") this.minimize(appId);
+        if (control.dataset.windowAction === "maximize") this.toggleMaximize(appId);
+        if (control.dataset.windowAction === "close") this.close(appId);
+      }
+    });
+    this.layer.addEventListener("dblclick", (event) => {
+      if (event.target.closest(".window-controls")) return;
+      const element = event.target.closest(".os-window");
+      if (element && event.target.closest(".window-titlebar")) {
+        this.toggleMaximize(element.dataset.appId);
+      }
+    });
   }
 
   bindGeminiGlow() {
@@ -172,6 +229,7 @@ class FullscreenAppManager {
       element.setAttribute("aria-label", app.title);
       element.dataset.appId = appId;
       element.classList.add(`app-${appId}`);
+      element.querySelector(".window-title-text").textContent = app.title;
 
       const content = element.querySelector(".window-content");
       const externalLink = element.querySelector("[data-open-app]");
@@ -222,10 +280,11 @@ class FullscreenAppManager {
   syncShellState() {
     const active = this.activeApp ? this.windows.get(this.activeApp) : null;
     const hasActive = Boolean(active && !active.minimized);
+    const hasMaximizedApp = Boolean(hasActive && active.element.classList.contains("is-maximized"));
     this.desktop.classList.toggle("has-active-app", hasActive);
     this.shell.classList.toggle("has-active-app", hasActive);
-    this.desktop.classList.toggle("has-fullscreen-app", hasActive);
-    this.shell.classList.toggle("has-fullscreen-app", hasActive);
+    this.desktop.classList.toggle("has-maximized-app", hasMaximizedApp);
+    this.shell.classList.toggle("has-maximized-app", hasMaximizedApp);
   }
 
   hide(state) {
@@ -267,6 +326,33 @@ class FullscreenAppManager {
     if (!state) return;
     if (this.activeApp === appId) this.returnHome();
     else this.hide(state);
+  }
+
+  toggleMaximize(appId) {
+    const state = this.windows.get(appId);
+    if (!state) return;
+    const maximized = !state.element.classList.contains("is-maximized");
+    if (maximized) {
+      state.restoreGeometry = {
+        left: state.element.style.left,
+        top: state.element.style.top,
+        transform: state.element.style.transform,
+      };
+      state.element.style.left = "";
+      state.element.style.top = "";
+      state.element.style.transform = "";
+      state.element.classList.add("is-maximized");
+    } else {
+      state.element.classList.remove("is-maximized");
+      state.element.style.left = state.restoreGeometry?.left || "";
+      state.element.style.top = state.restoreGeometry?.top || "";
+      state.element.style.transform = state.restoreGeometry?.transform || "";
+      state.restoreGeometry = null;
+    }
+    const button = state.element.querySelector('[data-window-action="maximize"]');
+    button.setAttribute("aria-label", maximized ? "Восстановить размер окна" : "Развернуть окно");
+    button.title = maximized ? "Восстановить" : "Развернуть";
+    this.syncShellState();
   }
 
   close(appId) {
@@ -727,39 +813,14 @@ launcherSearch.addEventListener("keydown", (event) => {
   }
 });
 
-function initializeNativeWindowControls() {
-  const nativeWindow = window.__TAURI__?.window?.getCurrentWindow?.();
-  if (!nativeWindow) return;
-
-  const controls = document.querySelector("[data-native-window-controls]");
-  const maximizeButton = controls.querySelector('[data-native-window-action="maximize"]');
-  controls.hidden = false;
-
-  const syncMaximizeState = async () => {
-    const maximized = await nativeWindow.isMaximized();
-    controls.classList.toggle("is-maximized", maximized);
-    maximizeButton.setAttribute("aria-label", maximized ? "Восстановить размер приложения" : "Развернуть приложение");
-  };
-  controls.addEventListener("click", async (event) => {
-    const action = event.target.closest("[data-native-window-action]")?.dataset.nativeWindowAction;
-    try {
-      if (action === "minimize") await nativeWindow.minimize();
-      if (action === "maximize") {
-        await nativeWindow.toggleMaximize();
-        await syncMaximizeState();
-      }
-      if (action === "close") await nativeWindow.close();
-    } catch (error) {
-      console.error(`Could not ${action} the Silva OS window.`, error);
-      showToast("Не удалось выполнить действие с окном приложения.");
-    }
-  });
-  void syncMaximizeState().catch((error) => console.error("Could not read the Silva OS window state.", error));
-}
-
 document.addEventListener("keydown", (event) => {
   const modifier = event.metaKey || event.ctrlKey;
   const activeAppId = windowManager.activeAppId();
+  if (event.key === "F11" && activeAppId) {
+    event.preventDefault();
+    windowManager.toggleMaximize(activeAppId);
+    return;
+  }
   if (event.key === "Escape" && !launcher.hidden) {
     closeLauncher();
     return;
@@ -794,10 +855,27 @@ document.addEventListener("keydown", (event) => {
 
 updateClock();
 window.setInterval(updateClock, 1_000);
-initializeNativeWindowControls();
 
 const installButton = document.querySelector("[data-install-app]");
 let installPrompt = null;
+const isStandaloneApp = window.matchMedia("(display-mode: standalone)").matches ||
+  window.navigator.standalone === true;
+
+function showInstallInstructions() {
+  const userAgent = navigator.userAgent;
+  const isAppleMobile = /iPhone|iPad|iPod/.test(userAgent) ||
+    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  const isMac = /Macintosh|Mac OS X/.test(userAgent);
+  if (isAppleMobile) {
+    showToast("Чтобы открыть отдельным окном на iPhone/iPad: откройте сайт в Safari → «Поделиться» → «На экран Домой».");
+  } else if (isMac) {
+    showToast("Для отдельного окна в Safari выберите «Файл» → «Добавить в Dock». В Chrome или Edge используйте меню браузера → «Установить Silva OS».");
+  } else {
+    showToast("Для отдельного окна откройте меню Chrome или Edge и выберите «Установить Silva OS» или «Установить как приложение».");
+  }
+}
+
+if (!window.__TAURI__ && !isStandaloneApp) installButton.hidden = false;
 
 if ("serviceWorker" in navigator && !window.__TAURI__) {
   navigator.serviceWorker.register("./sw.js").catch((error) => {
@@ -809,20 +887,24 @@ if ("serviceWorker" in navigator && !window.__TAURI__) {
 window.addEventListener("beforeinstallprompt", (event) => {
   event.preventDefault();
   installPrompt = event;
+  installButton.textContent = "Установить отдельно";
   installButton.hidden = false;
 });
 
 installButton.addEventListener("click", async () => {
-  if (!installPrompt) return;
+  if (!installPrompt) {
+    showInstallInstructions();
+    return;
+  }
   try {
     await installPrompt.prompt();
-    await installPrompt.userChoice;
+    const choice = await installPrompt.userChoice;
+    if (choice.outcome === "accepted") installButton.hidden = true;
   } catch (error) {
     console.error("Could not prompt to install Silva OS.", error);
     showToast("Не удалось запустить установку Silva OS.");
   } finally {
     installPrompt = null;
-    installButton.hidden = true;
   }
 });
 

@@ -1,0 +1,50 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Silva OS",
+  "version": "1.0.0",
+  "identifier": "com.silvaos.desktop",
+  "build": {
+    "frontendDist": [
+      "../index.html",
+      "../style.css",
+      "../app.js",
+      "../theme-init.js",
+      "../manifest.webmanifest",
+      "../../icon.svg",
+      "../../icon-192.png",
+      "../../icon-512.png",
+      "../../apple-touch-icon.png"
+    ]
+  },
+  "app": {
+    "withGlobalTauri": true,
+    "windows": [
+      {
+        "label": "main",
+        "title": "Silva OS",
+        "width": 1440,
+        "height": 960,
+        "minWidth": 900,
+        "minHeight": 650,
+        "center": true,
+        "resizable": true,
+        "decorations": true,
+        "fullscreen": false,
+        "maximized": false
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; connect-src 'self' ipc: http://ipc.localhost; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; script-src 'self' 'wasm-unsafe-eval'; font-src 'self' data:; object-src 'none'; base-uri 'self'; frame-src https://silvaquieta.com https://ailab.silvaquieta.com https://community.silvaquieta.com; form-action 'self'"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "category": "Productivity",
+    "shortDescription": "A calm botanical workspace",
+    "icon": [
+      "../../icon-512.png",
+      "../../favicon.ico"
+    ]
+  }
+}

@@ -1,9 +1,9 @@
-const CACHE_NAME = "silva-os-shell-v23";
+const CACHE_NAME = "silva-os-shell-v29";
 const APP_SHELL = [
   "./",
   "./index.html",
-  "./style.css?v=23",
-  "./app.js?v=23",
+  "./style.css?v=29",
+  "./app.js?v=29",
   "./theme-init.js?v=1",
   "./manifest.webmanifest",
   "../icon-192.png",
