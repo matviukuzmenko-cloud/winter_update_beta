@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#f9f9fb">
+    <meta name="description" content="Silva OS — спокойная цифровая среда для изучения растений и заботы о саде.">
+    <title>Silva OS — botanical workspace</title>
+    <link rel="manifest" href="./manifest.webmanifest">
+    <link rel="icon" href="../icon.svg" type="image/svg+xml">
+    <script src="./theme-init.js?v=1"></script>
+    <link rel="stylesheet" href="./style.css?v=23">
+    <script type="module" src="./app.js?v=23"></script>
+  </head>
+  <body>
+    <div class="os-shell" id="os-shell">
+      <header class="menubar">
+        <div class="menu-brand" aria-label="Silva OS">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 32 32"><path d="M16 27V15m0 7c-5.3 0-8-2.7-8-7.5 4.9 0 8 2.5 8 7.5Zm0-7c0-5.2 3.2-8 8-8 0 5.2-2.7 8-8 8Z"/></svg>
+          </span>
+          <span>silva <b>os</b></span>
+        </div>
+        <button type="button" class="home-back-control" data-action="home" aria-label="Вернуться на рабочий стол" title="На рабочий стол">
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5M7.5 10H17"/></svg>
+          <span>На рабочий стол</span>
+        </button>
+        <span class="active-window-context" id="active-window-context" aria-live="polite">Рабочий стол</span>
+        <nav class="system-menu" aria-label="Системное меню">
+          <button type="button" class="menu-button" data-menu="file" aria-haspopup="menu" aria-expanded="false" aria-controls="menu-popover">Файл</button>
+          <button type="button" class="menu-button" data-menu="edit" aria-haspopup="menu" aria-expanded="false" aria-controls="menu-popover">Правка</button>
+          <button type="button" class="menu-button" data-menu="window" aria-haspopup="menu" aria-expanded="false" aria-controls="menu-popover">Окно</button>
+          <button type="button" class="menu-button" data-menu="applications" aria-haspopup="menu" aria-expanded="false" aria-controls="menu-popover">Приложения</button>
+        </nav>
+        <div class="system-status">
+          <button class="install-app" type="button" data-install-app hidden>Установить Silva OS</button>
+          <span class="status-label"><span class="status-light"></span> Silva OS</span>
+          <time id="system-clock" aria-label="Текущее время"></time>
+          <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Переключить тему" aria-pressed="false" title="Переключить тему">
+            <svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.7"/><path d="M12 2.5v2m0 15v2m9.5-9.5h-2m-15 0h-2m16.2-6.2-1.4 1.4m-10.6 10.6-1.4 1.4m13.4 0-1.4-1.4M6.7 6.7 5.3 5.3"/></svg>
+            <svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M19.2 15.1A8 8 0 0 1 8.9 4.8 8.3 8.3 0 1 0 19.2 15.1Z"/></svg>
+          </button>
+        </div>
+        <div class="tauri-drag-region" data-tauri-drag-region aria-hidden="true"></div>
+        <div class="native-window-controls" data-native-window-controls hidden aria-label="Управление приложением">
+          <button type="button" class="native-window-control" data-native-window-action="minimize" aria-label="Свернуть приложение" title="Свернуть">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10"/></svg>
+          </button>
+          <button type="button" class="native-window-control" data-native-window-action="maximize" aria-label="Развернуть приложение" title="Развернуть">
+            <svg class="native-maximize-icon" viewBox="0 0 16 16" aria-hidden="true"><rect x="3.5" y="3.5" width="9" height="9" rx="1"/></svg>
+            <svg class="native-restore-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 5V3.5h7.5V11H11M3.5 5h7.5v7.5H3.5z"/></svg>
+          </button>
+          <button type="button" class="native-window-control native-close-control" data-native-window-action="close" aria-label="Закрыть приложение" title="Закрыть">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="m4 4 8 8m0-8-8 8"/></svg>
+          </button>
+        </div>
+      </header>
+
+      <main class="workspace" id="desktop" aria-label="Рабочий стол Silva OS">
+        <div class="gemini-glow" aria-hidden="true">
+          <span class="glow-orb glow-orb-blue"></span>
+          <span class="glow-orb glow-orb-violet"></span>
+          <span class="glow-orb glow-orb-pink"></span>
+        </div>
+        <section class="launchpad" aria-labelledby="launchpad-title">
+          <div class="launchpad-heading">
+            <p class="eyebrow">SILVA OS <span aria-hidden="true">/</span> WEB APPS</p>
+            <h1 id="launchpad-title">Приложения</h1>
+            <p>Открывайте сайты Silva и системные инструменты на весь экран.</p>
+          </div>
+          <nav class="desktop-shortcuts" aria-label="Приложения Silva">
+            <button class="desktop-shortcut" type="button" data-launch="atlas">
+              <span class="shortcut-icon shortcut-icon-atlas" aria-hidden="true">
+                <svg viewBox="0 0 48 48"><path d="M24 39V20m0 13c-8.2 0-12.5-4.1-12.5-11.7C19.2 21.3 24 25.2 24 33Zm0-11c0-8 4.8-12.2 12.5-12.2C36.5 17.6 32.2 22 24 22Z"/></svg>
+              </span>
+              <span class="shortcut-copy"><b>Атлас</b><small>silvaquieta.com/#catalog</small></span>
+            </button>
+            <button class="desktop-shortcut" type="button" data-launch="assistant">
+              <span class="shortcut-icon shortcut-icon-assistant" aria-hidden="true">
+                <svg viewBox="0 0 48 48"><path d="M24 8c1.7 9 4.1 11.4 13 13-8.9 1.7-11.3 4.1-13 13-1.7-8.9-4.1-11.3-13-13 8.9-1.6 11.3-4 13-13Z"/><path d="M36 8v8m-4-4h8M11 31v7m-3.5-3.5h7"/></svg>
+              </span>
+              <span class="shortcut-copy"><b>Silva AI</b><small>ailab.silvaquieta.com</small></span>
+            </button>
+            <button class="desktop-shortcut" type="button" data-launch="garden">
+              <span class="shortcut-icon shortcut-icon-garden" aria-hidden="true">
+                <svg viewBox="0 0 48 48"><rect x="10" y="12" width="28" height="27" rx="5"/><path d="M17 9v7m14-7v7M10 21h28M17 28h5m5 0h4m-14 6h5"/></svg>
+              </span>
+              <span class="shortcut-copy"><b>Мой сад</b><small>silvaquieta.com/#garden</small></span>
+            </button>
+            <button class="desktop-shortcut" type="button" data-launch="community">
+              <span class="shortcut-icon shortcut-icon-community" aria-hidden="true">
+                <svg viewBox="0 0 48 48"><path d="M10 12h28v21H22l-8 6v-6h-4z"/><path d="M17 20h14m-14 6h9"/></svg>
+              </span>
+              <span class="shortcut-copy"><b>Сообщество</b><small>community.silvaquieta.com</small></span>
+            </button>
+            <button class="desktop-shortcut" type="button" data-launch="monitor">
+              <span class="shortcut-icon shortcut-icon-monitor" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M8 35V13m0 22h32M14 30l7-9 6 5 9-13"/></svg></span>
+              <span class="shortcut-copy"><b>Монитор системы</b><small>Демо-метрики Silva OS</small></span>
+            </button>
+            <button class="desktop-shortcut" type="button" data-launch="terminal">
+              <span class="shortcut-icon shortcut-icon-terminal" aria-hidden="true"><svg viewBox="0 0 48 48"><rect x="7" y="9" width="34" height="30" rx="6"/><path d="m15 19 6 5-6 5m10 1h8"/></svg></span>
+              <span class="shortcut-copy"><b>Терминал</b><small>Команды и настройки</small></span>
+            </button>
+          </nav>
+        </section>
+
+        <div class="window-layer" id="window-layer"></div>
+
+        <nav class="dock" aria-label="Панель приложений">
+          <span class="dock-ornament" aria-hidden="true"></span>
+          <button class="dock-app" type="button" data-launch="atlas" aria-label="Открыть ботанический атлас" title="Ботанический атлас">
+            <span class="dock-icon dock-icon-atlas" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M24 39V20m0 13c-8.2 0-12.5-4.1-12.5-11.7C19.2 21.3 24 25.2 24 33Zm0-11c0-8 4.8-12.2 12.5-12.2C36.5 17.6 32.2 22 24 22Z"/></svg></span>
+            <span class="dock-indicator" aria-hidden="true"></span>
+          </button>
+          <button class="dock-app" type="button" data-launch="assistant" aria-label="Открыть Silva AI" title="Silva AI">
+            <span class="dock-icon dock-icon-assistant" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M24 9v30M9 24h30M13.5 13.5l21 21m0-21-21 21"/></svg></span>
+            <span class="dock-indicator" aria-hidden="true"></span>
+          </button>
+          <button class="dock-app" type="button" data-launch="garden" aria-label="Открыть мой сад" title="Мой сад">
+            <span class="dock-icon dock-icon-garden" aria-hidden="true"><svg viewBox="0 0 48 48"><rect x="10" y="12" width="28" height="27" rx="5"/><path d="M17 9v7m14-7v7M10 21h28M17 28h5m5 0h4m-14 6h5"/></svg></span>
+            <span class="dock-indicator" aria-hidden="true"></span>
+          </button>
+          <button class="dock-app" type="button" data-launch="community" aria-label="Открыть Silva Community" title="Silva Community">
+            <span class="dock-icon dock-icon-community" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M10 12h28v21H22l-8 6v-6h-4z"/><path d="M17 20h14m-14 6h9"/></svg></span>
+            <span class="dock-indicator" aria-hidden="true"></span>
+          </button>
+          <button class="dock-app" type="button" data-launch="monitor" aria-label="Открыть монитор системы" title="Монитор системы">
+            <span class="dock-icon dock-icon-monitor" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M8 35V13m0 22h32M14 30l7-9 6 5 9-13"/></svg></span>
+            <span class="dock-indicator" aria-hidden="true"></span>
+          </button>
+          <button class="dock-app" type="button" data-launch="terminal" aria-label="Открыть терминал" title="Терминал">
+            <span class="dock-icon dock-icon-terminal" aria-hidden="true"><svg viewBox="0 0 48 48"><rect x="7" y="9" width="34" height="30" rx="6"/><path d="m15 19 6 5-6 5m10 1h8"/></svg></span>
+            <span class="dock-indicator" aria-hidden="true"></span>
+          </button>
+          <span class="dock-divider" aria-hidden="true"></span>
+          <button class="dock-app dock-home" type="button" data-action="home" aria-label="Показать рабочий стол" title="Рабочий стол">
+            <span class="dock-icon" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M9 23 24 11l15 12M14 21v16h20V21M20 37V26h8v11"/></svg></span>
+          </button>
+        </nav>
+      </main>
+
+      <div class="menu-popover" id="menu-popover" role="menu" hidden></div>
+      <section class="launcher" id="launcher" role="dialog" aria-modal="true" aria-labelledby="launcher-title" hidden>
+        <div class="launcher-panel">
+          <div class="launcher-heading">
+            <span class="launcher-mark" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M12 20v-9m0 5c-4.1 0-6.2-2.1-6.2-5.8 3.8 0 6.2 1.9 6.2 5.8Zm0-5.2c0-4 2.5-6.2 6.2-6.2 0 4-2.1 6.2-6.2 6.2Z"/></svg>
+            </span>
+            <div><h2 id="launcher-title">Приложения Silva</h2><p>Все пространства бренда — в одном месте</p></div>
+            <button type="button" class="launcher-close" data-launcher-close aria-label="Закрыть список приложений">×</button>
+          </div>
+          <label class="launcher-search">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"/><path d="m13 13 4 4"/></svg>
+            <input id="launcher-search" type="search" placeholder="Найти приложение…" autocomplete="off">
+            <kbd>ESC</kbd>
+          </label>
+          <div class="launcher-apps">
+            <button type="button" class="launcher-app" data-launch="atlas" data-launcher-item>
+              <span class="launcher-app-icon launcher-atlas" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M24 39V20m0 13c-8.2 0-12.5-4.1-12.5-11.7C19.2 21.3 24 25.2 24 33Zm0-11c0-8 4.8-12.2 12.5-12.2C36.5 17.6 32.2 22 24 22Z"/></svg></span>
+              <span><b>Ботанический атлас</b><small>Коллекция растений и садовые инструменты</small></span><kbd>⌘ 1</kbd>
+            </button>
+            <button type="button" class="launcher-app" data-launch="assistant" data-launcher-item>
+              <span class="launcher-app-icon launcher-ai" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M24 9v30M9 24h30M13.5 13.5l21 21m0-21-21 21"/></svg></span>
+              <span><b>Silva AI</b><small>Ботанический AI-помощник Gemini</small></span><kbd>⌘ 2</kbd>
+            </button>
+            <button type="button" class="launcher-app" data-launch="garden" data-launcher-item>
+              <span class="launcher-app-icon launcher-garden" aria-hidden="true"><svg viewBox="0 0 48 48"><rect x="10" y="12" width="28" height="27" rx="5"/><path d="M17 9v7m14-7v7M10 21h28M17 28h5m5 0h4m-14 6h5"/></svg></span>
+              <span><b>Мой сад</b><small>Профиль сада и каталог ухода на сайте</small></span><kbd>⌘ 3</kbd>
+            </button>
+            <button type="button" class="launcher-app" data-launch="community" data-launcher-item>
+              <span class="launcher-app-icon launcher-community" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M10 12h28v21H22l-8 6v-6h-4z"/><path d="M17 20h14m-14 6h9"/></svg></span>
+              <span><b>Silva Community</b><small>Сообщество любителей растений</small></span><kbd>⌘ 4</kbd>
+            </button>
+            <button type="button" class="launcher-app" data-launch="monitor" data-launcher-item>
+              <span class="launcher-app-icon launcher-monitor" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M8 35V13m0 22h32M14 30l7-9 6 5 9-13"/></svg></span>
+              <span><b>Монитор системы</b><small>Демо-метрики Silva OS в реальном времени</small></span><kbd>⌘ 5</kbd>
+            </button>
+            <button type="button" class="launcher-app" data-launch="terminal" data-launcher-item>
+              <span class="launcher-app-icon launcher-terminal" aria-hidden="true"><svg viewBox="0 0 48 48"><rect x="7" y="9" width="34" height="30" rx="6"/><path d="m15 19 6 5-6 5m10 1h8"/></svg></span>
+              <span><b>Терминал / Настройки</b><small>Команды оболочки и настройки кэша</small></span><kbd>⌘ 6</kbd>
+            </button>
+          </div>
+          <div class="launcher-foot"><span>Открыть приложение</span><kbd>↵</kbd></div>
+        </div>
+      </section>
+      <div class="toast-region" id="toast-region" role="status" aria-live="polite"></div>
+    </div>
+
+    <template id="monitor-template">
+      <section class="system-app monitor-app" aria-label="Монитор системы">
+        <div class="system-app-heading">
+          <div><p class="eyebrow">SILVA OS <span aria-hidden="true">/</span> SYSTEM MONITOR</p><h2>Монитор системы</h2></div>
+          <span class="simulation-badge"><span></span> ДЕМО-МЕТРИКИ</span>
+        </div>
+        <p class="system-app-note">Показатели ниже сгенерированы для демонстрации интерфейса и не являются измерениями устройства или Silva Core.</p>
+        <div class="monitor-metrics">
+          <article class="metric-card"><div><span>CPU</span><strong><span data-metric-value="cpu">—</span>%</strong></div><div class="metric-track"><span data-metric-bar="cpu"></span></div><small>Симулированная нагрузка</small></article>
+          <article class="metric-card"><div><span>ПАМЯТЬ</span><strong><span data-metric-value="memory">—</span>%</strong></div><div class="metric-track"><span data-metric-bar="memory"></span></div><small>Демо-использование</small></article>
+          <article class="metric-card"><div><span>SILVA CORE</span><strong><span data-metric-value="core">—</span><small>ms</small></strong></div><div class="metric-track metric-track-core"><span data-metric-bar="core"></span></div><small>Синтетическая задержка</small></article>
+        </div>
+        <section class="monitor-chart-card">
+          <div class="monitor-chart-heading"><div><h3>Активность</h3><p>Демонстрационная нагрузка · последние 60 секунд</p></div><span class="monitor-live"><i></i> обновляется</span></div>
+          <canvas class="monitor-chart" aria-label="График демонстрационной нагрузки" role="img"></canvas>
+          <div class="monitor-chart-legend"><span><i class="legend-cpu"></i> CPU</span><span><i class="legend-memory"></i> Память</span></div>
+        </section>
+      </section>
+    </template>
+
+    <template id="terminal-template">
+      <section class="system-app terminal-app" aria-label="Терминал Silva OS">
+        <div class="terminal-heading"><div><p class="eyebrow">SILVA OS <span aria-hidden="true">/</span> TERMINAL</p><h2>Терминал <span>управления</span></h2></div><span class="terminal-state"><i></i> локальная оболочка</span></div>
+        <div class="terminal-screen" role="log" aria-live="polite" aria-relevant="additions text"></div>
+        <form class="terminal-form" autocomplete="off">
+          <label for="terminal-command"><span aria-hidden="true">silva&nbsp;›</span><span class="sr-only">Команда</span></label>
+          <input id="terminal-command" name="command" type="text" spellcheck="false" autocapitalize="off" placeholder="Введите help и нажмите Enter">
+          <button type="submit" aria-label="Выполнить команду">↵</button>
+        </form>
+        <p class="terminal-footnote">Команды выполняются только в этой оболочке. Содержимое окон сайтов не изменяется.</p>
+      </section>
+    </template>
+
+    <template id="window-template">
+      <section class="os-window" role="dialog">
+        <div class="window-content">
+          <div class="app-loading" role="status">
+            <span class="loading-mark" aria-hidden="true"></span>
+            <span class="app-loading-label">Открываем приложение…</span>
+            <a class="app-loading-fallback" data-open-app target="_blank" rel="noopener noreferrer" hidden>Открыть сайт отдельно</a>
+          </div>
+        </div>
+      </section>
+    </template>
+
+  </body>
+</html>

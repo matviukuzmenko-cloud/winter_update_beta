@@ -1,16 +1,16 @@
-const CACHE_NAME = "flora-anotomy-shell-v298";
+const CACHE_NAME = "flora-anotomy-shell-v306";
 const APP_SHELL = [
   "./",
   "./index.html",
-  "./style.css?v=219",
-  "./script.js?v=155",
+  "./style.css?v=224",
+  "./script.js?v=156",
   "./ai-chat.js?v=120",
   "./ui-enhancements.js?v=7",
   "./supabase-config.js?v=2",
   "./supabase-auth.js?v=25",
   "./garden.js?v=28",
   "./expeditions.js?v=17",
-  "./localization/locale-runtime.js?v=26",
+  "./localization/locale-runtime.js?v=27",
   "./visitor-counter.js?v=1",
   "./localization/catalog-uk.js?v=7",
   "./localization/catalog-en.js?v=7",
@@ -37,7 +37,13 @@ const APP_SHELL = [
   "./icon.svg?v=93",
   "./icon-192.png?v=93",
   "./icon-512.png?v=93",
-  "./apple-touch-icon.png?v=93"
+  "./apple-touch-icon.png?v=93",
+  "./silva-os/",
+  "./silva-os/index.html",
+  "./silva-os/style.css",
+  "./silva-os/app.js",
+  "./silva-os/manifest.webmanifest",
+  "./silva-os/sw.js"
 ];
 
 self.addEventListener("install", (event) => {
@@ -64,16 +70,22 @@ self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET" || requestURL.origin !== self.location.origin) return;
 
   if (event.request.mode === "navigate") {
+    const rootPath = new URL("./", self.location.href).pathname;
+    const isRootNavigation = requestURL.pathname === rootPath || requestURL.pathname === `${rootPath}index.html`;
+    const isSilvaOsNavigation = requestURL.pathname === `${rootPath}silva-os/` || requestURL.pathname === `${rootPath}silva-os/index.html`;
     event.respondWith(
       fetch(event.request)
         .then((response) => {
-          if (response.ok) {
+          if (response.ok && isRootNavigation) {
             const copy = response.clone();
             caches.open(CACHE_NAME).then((cache) => cache.put("./index.html", copy));
+          } else if (response.ok && isSilvaOsNavigation) {
+            const copy = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
           }
           return response;
         })
-        .catch(() => caches.match("./index.html"))
+        .catch(() => caches.match(event.request).then((cachedResponse) => cachedResponse || caches.match("./index.html")))
     );
     return;
   }

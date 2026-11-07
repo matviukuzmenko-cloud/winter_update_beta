@@ -22,11 +22,15 @@ button, select { cursor: pointer; }
 .topbar { width: min(1320px, calc(100% - 48px)); min-height: 68px; display: flex; align-items: center; gap: 30px; margin: auto; border-bottom: 1px solid #ffffff0b; }
 .brand { display: inline-flex; align-items: center; gap: 10px; font-size: 13px; letter-spacing: -.025em; }
 .brand b { color: #cac3db; font-weight: 500; }
-.brand-mark { width: 30px; height: 30px; display: grid; place-items: center; border: 1px solid #ffffff13; border-radius: 50%; color: #e4d9ff; background: #17151e; font-size: 17px; transition: transform .45s cubic-bezier(.2,.8,.2,1), border-color .3s, box-shadow .3s; }
+.brand-mark { width: 30px; height: 30px; display: grid; place-items: center; border: 1px solid #ffffff13; border-radius: 50%; color: #e4d9ff; background: #17151e; transition: transform .45s cubic-bezier(.2,.8,.2,1), border-color .3s, box-shadow .3s; }
+.brand-mark svg, .silva-avatar svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.5; }
 .brand:hover .brand-mark { transform: rotate(45deg) scale(1.08); border-color: #c4b5fd66; box-shadow: 0 0 22px #a78bfa28; }
 .top-links { display: flex; gap: 25px; margin-left: auto; color: #a4a4ae; font-size: 11px; }
 .top-links a:hover, .footer a:hover { color: #d3c4ff; }
 .locale-label select { min-width: 58px; padding: 8px; border: 1px solid #ffffff18; border-radius: 999px; color: #c8c8d0; background: #111216; font-size: 10px; }
+.install-pwa { border: 1px solid #ffffff24; border-radius: 999px; padding: 8px 11px; color: #e7e4ff; background: #171622; font-size: 10px; cursor: pointer; }
+.install-pwa:hover { border-color: #b6a8ff70; background: #211e34; }
+.install-pwa[hidden] { display: none; }
 .lab-layout { width: min(850px, calc(100% - 42px)); height: calc(100vh - 128px); height: calc(100svh - 128px); min-height: 530px; display: flex; flex-direction: column; justify-content: center; margin: auto; padding: 0 0 18px; }
 .intro { width: 100%; flex: 0 0 auto; text-align: center; }
 .eyebrow { margin: 0 0 19px; color: #aaa4b9; font-size: 9px; font-weight: 600; letter-spacing: .19em; }
@@ -38,9 +42,10 @@ h1 em { color: #c4b5fd; font-style: normal; font-weight: 500; }
 .status-dot.ready { background: #83b99a; box-shadow: 0 0 0 4px #83b99a19; }
 .status-dot.offline { background: #dd887d; box-shadow: 0 0 0 4px #dd887d19; }
 .privacy-note { display: none; }
+.privacy-note > svg { width: 14px; height: 14px; flex: 0 0 auto; fill: #c8b5ff; }
 .chat-card { position: relative; width: 100%; min-height: 0; flex: 1 1 400px; display: flex; flex-direction: column; overflow: hidden; margin-top: 27px; }
 .chat-header { min-height: 48px; display: flex; align-items: center; gap: 10px; }
-.silva-avatar { width: 27px; height: 27px; display: grid; place-items: center; border: 1px solid #ffffff15; border-radius: 50%; color: #e0d4ff; background: #17151e; font-size: 14px; transition: transform .4s cubic-bezier(.2,.8,.2,1), box-shadow .35s; }
+.silva-avatar { width: 27px; height: 27px; display: grid; place-items: center; border: 1px solid #ffffff15; border-radius: 50%; color: #e0d4ff; background: #17151e; transition: transform .4s cubic-bezier(.2,.8,.2,1), box-shadow .35s; }
 .is-ready .silva-avatar { animation: avatar-arrive .8s cubic-bezier(.2,.8,.2,1) .65s both; }
 .silva-info { display: grid; gap: 2px; }
 .silva-info strong { font-size: 11px; font-weight: 600; }
@@ -55,7 +60,7 @@ h1 em { color: #c4b5fd; font-style: normal; font-weight: 500; }
 .message.user p { border-color: transparent; border-radius: 16px 16px 5px 16px; color: #f8f6ff; background: #393449; }
 .message.error p { border-color: #8d544b66; color: #f0b5ac; background: #211715; }
 .welcome-message { max-width: min(100%, 620px); align-self: center; margin: auto; text-align: center; }
-.welcome-message::before { content: "✦"; align-self: center; margin-bottom: 8px; color: #c8b5ff; font-size: 23px; text-shadow: 0 0 25px #a579f1aa; }
+.welcome-message::before { width: 19px; height: 19px; align-self: center; margin-bottom: 12px; background: #c8b5ff; box-shadow: 0 0 25px #a579f1aa; clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%); content: ""; }
 .welcome-message p { padding: 0 12px; border: 0; color: #e6e3ed; background: transparent; font-size: clamp(17px, 2.2vw, 22px); line-height: 1.55; }
 .typing-message { width: max-content; }
 .typing-message p { display: flex; align-items: center; gap: 5px; min-width: 54px; padding: 13px 15px; }
@@ -89,6 +94,7 @@ h1 em { color: #c4b5fd; font-style: normal; font-weight: 500; }
   .topbar { min-height: 58px; gap: 10px; }
   .top-links { gap: 12px; font-size: 9px; }
   .top-links a:first-child { display: none; }
+  .install-pwa { padding: 7px 9px; font-size: 9px; }
   .brand { gap: 8px; font-size: 12px; }
   .brand-mark { width: 27px; height: 27px; }
   .lab-layout { height: calc(100vh - 116px); height: calc(100svh - 116px); min-height: 550px; justify-content: flex-start; padding: 0 0 14px; }
@@ -141,4 +147,47 @@ h1 em { color: #c4b5fd; font-style: normal; font-weight: 500; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
   body::before { animation: none; }
+}
+
+html { overflow-x: clip; }
+.composer::before { inset-inline: 0; }
+.composer::after { width: min(710px, 100%); }
+
+.lab-layout {
+  height: auto;
+  min-height: calc(100svh - 128px);
+}
+
+.chat-card {
+  min-height: 400px;
+  flex: 1 0 400px;
+  overflow: visible;
+}
+
+.messages { min-height: 112px; }
+
+@media (max-width: 760px) {
+  .lab-layout {
+    height: auto;
+    min-height: calc(100svh - 106px);
+    padding-block: 16px 14px;
+  }
+
+  .intro {
+    margin-top: 0;
+    padding-block: 20px 14px;
+  }
+
+  .chat-card {
+    height: auto;
+    min-height: 350px;
+    flex: 1 0 350px;
+    overflow: visible;
+  }
+
+  .composer::before { inset-inline: 0; }
+}
+
+@media (max-height: 680px) and (max-width: 760px) {
+  .chat-card { min-height: 300px; flex-basis: 300px; }
 }

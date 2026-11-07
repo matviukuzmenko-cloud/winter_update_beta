@@ -76,6 +76,83 @@
   const projectCommunityDescription = document.querySelector("#site-switcher-community-description");
   if (projectCommunityDescription) projectCommunityDescription.textContent = projectSwitcherLabels.community;
 
+  const headerPreferenceLabels = {
+    ru: {
+      trigger: "Настройки",
+      title: "Настройки оформления и звука",
+      design: "Стиль оформления",
+      designSelect: "Зимний стиль оформления",
+      designs: ["Снежная оранжерея", "Северное сияние", "Зимний лес"],
+      install: "Установить приложение",
+      sound: "Звуки интерфейса",
+      forestSound: "Звук зимнего леса",
+      theme: "Оформление",
+      controls: "Настройки оформления и звука",
+    },
+    uk: {
+      trigger: "Налаштування",
+      title: "Налаштування вигляду та звуку",
+      design: "Стиль оформлення",
+      designSelect: "Зимовий стиль оформлення",
+      designs: ["Сніжна оранжерея", "Північне сяйво", "Зимовий ліс"],
+      install: "Встановити застосунок",
+      sound: "Звуки інтерфейсу",
+      forestSound: "Звук зимового лісу",
+      theme: "Оформлення",
+      controls: "Налаштування вигляду та звуку",
+    },
+    en: {
+      trigger: "Settings",
+      title: "Appearance and sound settings",
+      design: "Appearance",
+      designSelect: "Winter appearance",
+      designs: ["Snow greenhouse", "Northern lights", "Winter forest"],
+      install: "Install app",
+      sound: "Interface sounds",
+      forestSound: "Winter forest sound",
+      theme: "Theme",
+      controls: "Appearance and sound settings",
+    },
+  }[locale];
+  const preferencesToggle = document.querySelector("#header-preferences-toggle");
+  if (preferencesToggle) {
+    preferencesToggle.setAttribute("aria-label", headerPreferenceLabels.trigger);
+    preferencesToggle.title = headerPreferenceLabels.title;
+  }
+  const preferencesLabel = document.querySelector("#header-preferences-label");
+  if (preferencesLabel) preferencesLabel.textContent = headerPreferenceLabels.trigger;
+  const designLabel = document.querySelector("#header-design-label");
+  if (designLabel) designLabel.textContent = headerPreferenceLabels.design;
+  const designSelect = document.querySelector("#design-select");
+  if (designSelect) {
+    designSelect.setAttribute("aria-label", headerPreferenceLabels.designSelect);
+    [...designSelect.options].forEach((option, index) => {
+      if (headerPreferenceLabels.designs[index]) option.textContent = headerPreferenceLabels.designs[index];
+    });
+  }
+  const preferencesControls = document.querySelector("#header-preferences-controls");
+  if (preferencesControls) preferencesControls.setAttribute("aria-label", headerPreferenceLabels.controls);
+  for (const [id, text] of [
+    ["header-install-label", headerPreferenceLabels.install],
+    ["header-sound-label", headerPreferenceLabels.sound],
+    ["header-forest-sound-label", headerPreferenceLabels.forestSound],
+    ["header-theme-label", headerPreferenceLabels.theme],
+  ]) {
+    const label = document.querySelector(`#${id}`);
+    if (label) label.textContent = text;
+  }
+  const headerPreferences = document.querySelector(".header-preferences");
+  if (headerPreferences) {
+    document.addEventListener("click", (event) => {
+      if (!headerPreferences.contains(event.target)) headerPreferences.open = false;
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key !== "Escape" || !headerPreferences.open) return;
+      headerPreferences.open = false;
+      preferencesToggle?.focus();
+    });
+  }
+
   const visitorLabels = {
     ru: { yesterday: "вчера", online: "сейчас", note: "Случайный ID; IP-адреса не сохраняются", label: "Анонимная статистика посетителей" },
     uk: { yesterday: "учора", online: "зараз", note: "Випадковий ID; IP-адреси не зберігаються", label: "Анонімна статистика відвідувачів" },

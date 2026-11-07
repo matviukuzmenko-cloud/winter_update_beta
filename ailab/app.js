@@ -7,7 +7,7 @@
       privacy: "Не отправляй личные данные. Ответы ИИ могут быть неточными.", connecting: "Подключаем Silva…",
       ready: "Silva на связи", offline: "Silva временно недоступна", assistant: "Ботаническая помощница",
       thinking: "Silva формулирует ответ",
-      clear: "Новый диалог", inputLabel: "Сообщение для Silva", placeholder: "Напиши свой вопрос…", send: "Отправить",
+      clear: "Новый диалог", inputLabel: "Сообщение для Silva", placeholder: "Напиши свой вопрос…", send: "Отправить", installApp: "Установить",
       footnote: "История хранится в этом браузере. Не отправляй личные данные.", back: "На сайт Silva Quieta",
       greeting: "Привет! Я Silva, ботаническая помощница. Спрашивай про уход, выбор растений или их особенности.",
       suggestions: ["Как понять, что монстеру пора поливать?", "Почему желтеют листья?", "Какое растение подойдёт для тени?"],
@@ -20,7 +20,7 @@
       privacy: "Не надсилай особисті дані. Відповіді ШІ можуть бути неточними.", connecting: "Підключаємо Silva…",
       ready: "Silva на зв’язку", offline: "Silva тимчасово недоступна", assistant: "Ботанічна помічниця",
       thinking: "Silva готує відповідь",
-      clear: "Нова розмова", inputLabel: "Повідомлення для Silva", placeholder: "Напиши своє запитання…", send: "Надіслати",
+      clear: "Нова розмова", inputLabel: "Повідомлення для Silva", placeholder: "Напиши своє запитання…", send: "Надіслати", installApp: "Встановити",
       footnote: "Історія зберігається у цьому браузері. Не надсилай особисті дані.", back: "На сайт Silva Quieta",
       greeting: "Привіт! Я Silva, ботанічна помічниця. Запитуй про догляд, вибір рослин чи їхні особливості.",
       suggestions: ["Як зрозуміти, що монстеру час поливати?", "Чому жовтіє листя?", "Яка рослина підійде для затінку?"],
@@ -33,7 +33,7 @@
       privacy: "Please don’t share personal information. AI answers may be inaccurate.", connecting: "Connecting to Silva…",
       ready: "Silva is here", offline: "Silva is temporarily unavailable", assistant: "Botanical assistant",
       thinking: "Silva is thinking",
-      clear: "New conversation", inputLabel: "Message for Silva", placeholder: "Ask your question…", send: "Send",
+      clear: "New conversation", inputLabel: "Message for Silva", placeholder: "Ask your question…", send: "Send", installApp: "Install",
       footnote: "Your conversation is stored in this browser. Don’t share personal information.", back: "Back to Silva Quieta",
       greeting: "Hello! I’m Silva, your botanical assistant. Ask me about plant care, choosing plants, or their needs.",
       suggestions: ["How do I know when to water a monstera?", "Why are the leaves turning yellow?", "Which plants do well in shade?"],
@@ -219,4 +219,33 @@
       setConnection("offline", copy.offline);
       console.error(copy.connectionError, error);
     });
+
+  const installButton = document.querySelector("[data-install-pwa]");
+  let installPrompt = null;
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("./sw.js").catch((error) => {
+      console.error("Could not register the Silva AI Lab service worker.", error);
+    });
+  }
+  window.addEventListener("beforeinstallprompt", (event) => {
+    event.preventDefault();
+    installPrompt = event;
+    installButton.hidden = false;
+  });
+  installButton.addEventListener("click", async () => {
+    if (!installPrompt) return;
+    try {
+      await installPrompt.prompt();
+      await installPrompt.userChoice;
+    } catch (error) {
+      console.error("Could not prompt to install Silva AI Lab.", error);
+    } finally {
+      installPrompt = null;
+      installButton.hidden = true;
+    }
+  });
+  window.addEventListener("appinstalled", () => {
+    installPrompt = null;
+    installButton.hidden = true;
+  });
 })();

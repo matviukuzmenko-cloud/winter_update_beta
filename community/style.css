@@ -20,10 +20,13 @@ button, select { cursor: pointer; }
 .topbar { width: min(1120px, calc(100% - 48px)); min-height: 76px; display: flex; align-items: center; gap: 30px; margin: auto; border-bottom: 1px solid rgba(38,55,45,.1); }
 .brand { display: inline-flex; align-items: center; gap: 10px; font-size: 15px; letter-spacing: -.03em; }
 .brand b { color: var(--green); font-weight: 500; }
-.brand-mark { width: 31px; height: 31px; display: grid; place-items: center; border-radius: 50%; color: #fff; background: var(--green); font-size: 18px; }
+.brand-mark { width: 31px; height: 31px; display: grid; place-items: center; border-radius: 50%; color: #fff; background: var(--green); }
+.brand-mark svg { width: 19px; height: 19px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.5; }
 .top-links { display: flex; gap: 25px; margin-left: auto; color: var(--muted); font-size: 12px; }
 .top-links a:hover, .home-link:hover { color: var(--green); }
 .top-actions { display: flex; align-items: center; gap: 10px; }
+.install-pwa { border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; color: var(--ink); background: var(--surface); font-size: 10px; }
+.install-pwa:hover { border-color: #cfc6fb; background: #f0edff; }
 .locale-label select { padding: 8px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); font-size: 11px; }
 .account-button, .compose-button, .primary-button { border: 0; color: #fff; background: var(--green); }
 .account-button { padding: 9px 14px; border-radius: 10px; font-size: 11px; }
@@ -68,7 +71,8 @@ h1 { margin-bottom: 9px; font: 500 clamp(32px, 4vw, 46px)/1.15 var(--serif); let
 .comment-form input { width: 100%; min-width: 0; padding: 9px 11px; border: 1px solid var(--line); border-radius: 10px; background: #fff; font-size: 11px; }
 .comment-form button { padding: 0 12px; border: 0; border-radius: 10px; color: white; background: var(--green); font-size: 10px; }
 .about-card { align-self: start; padding: 20px; border: 1px solid var(--line); border-radius: 16px; background: rgba(255,254,250,.7); }
-.about-leaf { color: #73966f; font-size: 20px; }
+.about-leaf { display: inline-flex; color: #73966f; }
+.about-leaf svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.5; }
 .about-card h2 { margin: 11px 0 7px; font: 500 21px var(--serif); }
 .about-card > p { margin-bottom: 18px; color: var(--muted); font-size: 11px; line-height: 1.7; }
 .community-rule { display: flex; gap: 10px; padding: 10px 0; border-top: 1px solid var(--line); }
@@ -108,6 +112,8 @@ h1 { margin-bottom: 9px; font: 500 clamp(32px, 4vw, 46px)/1.15 var(--serif); let
   .top-links { gap: 12px; font-size: 10px; }
   .top-links a:first-child { display: none; }
   .top-actions { gap: 6px; }
+  .install-pwa { width: 32px; height: 32px; overflow: hidden; padding: 0; font-size: 0; }
+  .install-pwa::after { content: "↓"; font-size: 15px; }
   .account-button { padding: 8px 10px; font-size: 10px; }
   .community-heading { align-items: flex-start; flex-direction: column; gap: 18px; padding: 38px 0 25px; }
   h1 { font-size: 34px; }

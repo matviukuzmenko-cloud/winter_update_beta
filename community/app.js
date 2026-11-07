@@ -3,7 +3,7 @@
     ru: {
       eyebrow: "SILVA QUIETA · СООБЩЕСТВО", title: "Растения объединяют.",
       subtitle: "Делись открытиями, задавай вопросы и помогай другим растить своё.",
-      signIn: "Войти", signUp: "Создать аккаунт", signOut: "Выйти", createPost: "Новая публикация",
+      signIn: "Войти", signUp: "Создать аккаунт", signOut: "Выйти", createPost: "Новая публикация", installApp: "Установить",
       newest: "Новое", popular: "Популярное", refresh: "Обновить", loadMore: "Показать ещё",
       aboutTitle: "Один общий сад.", aboutText: "Место для вопросов, наблюдений и маленьких побед. Публикуй о растениях, будь добр к другим и не делись личной информацией.",
       ruleOne: "Только о растениях и садоводстве", ruleTwo: "Уважение к людям и их опыту",
@@ -60,7 +60,7 @@
     uk: {
       eyebrow: "SILVA QUIETA · СПІЛЬНОТА", title: "Рослини єднають.",
       subtitle: "Ділися відкриттями, став запитання й допомагай іншим вирощувати своє.",
-      signIn: "Увійти", signUp: "Створити обліковий запис", signOut: "Вийти", createPost: "Нова публікація",
+      signIn: "Увійти", signUp: "Створити обліковий запис", signOut: "Вийти", createPost: "Нова публікація", installApp: "Встановити",
       newest: "Нове", popular: "Популярне", refresh: "Оновити", loadMore: "Показати ще",
       aboutTitle: "Один спільний сад.", aboutText: "Місце для запитань, спостережень і маленьких перемог. Пиши про рослини, поважай інших і не ділися особистою інформацією.",
       ruleOne: "Лише про рослини й садівництво", ruleTwo: "Повага до людей та їхнього досвіду",
@@ -117,7 +117,7 @@
     en: {
       eyebrow: "SILVA QUIETA · COMMUNITY", title: "Plants bring us together.",
       subtitle: "Share discoveries, ask questions, and help each other grow.",
-      signIn: "Sign in", signUp: "Create account", signOut: "Sign out", createPost: "New post",
+      signIn: "Sign in", signUp: "Create account", signOut: "Sign out", createPost: "New post", installApp: "Install",
       newest: "New", popular: "Popular", refresh: "Refresh", loadMore: "Load more",
       aboutTitle: "One shared garden.", aboutText: "A place for questions, observations, and small wins. Post about plants, be kind to others, and keep personal information private.",
       ruleOne: "Plants and gardening only", ruleTwo: "Respect people and their experience",
@@ -1094,4 +1094,33 @@
       setStatus(status, text.profileFailed, true);
     });
   }
+
+  const installButton = document.querySelector("[data-install-pwa]");
+  let installPrompt = null;
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("./sw.js").catch((error) => {
+      console.error("Could not register the Silva Community service worker.", error);
+    });
+  }
+  window.addEventListener("beforeinstallprompt", (event) => {
+    event.preventDefault();
+    installPrompt = event;
+    installButton.hidden = false;
+  });
+  installButton.addEventListener("click", async () => {
+    if (!installPrompt) return;
+    try {
+      await installPrompt.prompt();
+      await installPrompt.userChoice;
+    } catch (error) {
+      console.error("Could not prompt to install Silva Community.", error);
+    } finally {
+      installPrompt = null;
+      installButton.hidden = true;
+    }
+  });
+  window.addEventListener("appinstalled", () => {
+    installPrompt = null;
+    installButton.hidden = true;
+  });
 })();

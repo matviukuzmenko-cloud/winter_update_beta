@@ -789,7 +789,7 @@
       return `<div class="microclimate" aria-label="Ориентиры ухода">
         <span class="microclimate-chip" title="${light.title}">${iconMarkup(light.icon)}<span>${light.label}</span></span>
         <span class="microclimate-chip" title="${water.title}">${iconMarkup(water.icon)}<span>${water.label}</span></span>
-      </div>${flower.winterRest ? `<span class="winter-rest-badge" title="В рекомендациях по уходу явно указано, что зимой полив нужно сократить">❄️ Зимой поливать реже</span>` : ""}`;
+      </div>${flower.winterRest ? `<span class="winter-rest-badge" title="В рекомендациях по уходу явно указано, что зимой полив нужно сократить"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5v19M3.8 7.25l16.4 9.5M20.2 7.25 3.8 16.75M8.5 4.5 12 7l3.5-2.5M8.5 19.5 12 17l3.5 2.5M3.8 12l4.3.8M20.2 12l-4.3.8"/></svg> Зимой поливать реже</span>` : ""}`;
     };
     const careDifficultyByGroup = {
       "Цветы": "Средняя",

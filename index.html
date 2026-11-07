@@ -86,7 +86,7 @@
   <link rel="preconnect" href="https://inaturalist-open-data.s3.amazonaws.com">
   <link rel="preconnect" href="https://images.unsplash.com">
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./style.css?v=219">
+  <link rel="stylesheet" href="./style.css?v=224">
 </head>
 <body data-season="winter" data-design="herbarium">
   <script>
@@ -109,7 +109,7 @@
   </script>
   <section class="language-choice-overlay" id="language-choice" role="dialog" aria-modal="true" aria-labelledby="language-choice-title" hidden>
     <div class="language-choice-card">
-      <div class="language-choice-mark" aria-hidden="true">🌲</div>
+      <div class="language-choice-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2 4.5 12h4L4 18h6v4h4v-4h6l-4.5-6h4L12 2Z"/></svg></div>
       <h1 id="language-choice-title" lang="ru">Выберите язык сайта</h1>
       <p class="language-choice-translation" lang="en">Choose your language</p>
       <div class="language-choice-options" role="group" aria-labelledby="language-choice-title">
@@ -172,6 +172,7 @@
     <symbol id="icon-spark" viewBox="0 0 24 24"><path d="m12 2 1.8 7.2L21 12l-7.2 1.8L12 21l-1.8-7.2L3 12l7.2-2.8L12 2Z"/><path d="m19 2 .8 2.2L22 5l-2.2.8L19 8l-.8-2.2L16 5l2.2-.8L19 2Z"/></symbol>
     <symbol id="icon-home" viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-6v-7h-4v7H4a1 1 0 0 1-1-1Z"/></symbol>
     <symbol id="icon-moon" viewBox="0 0 24 24"><path d="M20.5 15.5A8.5 8.5 0 0 1 8.5 3.5 8.7 8.7 0 1 0 20.5 15.5Z"/></symbol>
+    <symbol id="icon-settings" viewBox="0 0 24 24"><path d="M4 6h9m4 0h3M4 12h3m4 0h9M4 18h7m4 0h5"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="13" cy="18" r="2"/></symbol>
     <symbol id="icon-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
     <symbol id="icon-alert" viewBox="0 0 24 24"><path d="m12 3 10 18H2L12 3Z"/><path d="M12 9v5m0 3h.01"/></symbol>
     <symbol id="icon-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
@@ -230,7 +231,7 @@
           <summary class="primary-nav-link"><span id="site-switcher-label">Другие сайты</span><span class="site-switcher-chevron" aria-hidden="true">⌄</span></summary>
           <div class="site-switcher-menu" id="site-switcher-menu">
             <a href="https://ailab.silvaquieta.com/">
-              <span class="site-switcher-icon" aria-hidden="true">✦</span>
+              <span class="site-switcher-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2 14.2 9.8 22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2Z"/></svg></span>
               <span><strong>Silva AI Lab</strong><small id="site-switcher-ai-description">ИИ-помощница Silva</small></span>
             </a>
             <a href="https://community.silvaquieta.com/">
@@ -243,20 +244,45 @@
       <div class="header-actions">
         <button class="icon-button command-open" id="command-open" type="button" aria-label="Быстрый поиск и команды" title="Быстрый поиск и команды (Ctrl/⌘ K)"><svg class="ui-icon" aria-hidden="true"><use href="#icon-search"></use></svg></button>
         <select class="locale-select" id="locale-select" aria-label="Сменить язык" title="Сменить язык">
-          <option value="ru" lang="ru">RU · Русский</option>
-          <option value="uk" lang="uk">UK · Українська</option>
-          <option value="en" lang="en">EN · English</option>
+          <option value="ru" lang="ru">RU</option>
+          <option value="uk" lang="uk">UK</option>
+          <option value="en" lang="en">EN</option>
         </select>
-        <select class="design-select" id="design-select" aria-label="Зимний стиль оформления" title="Выбрать зимний стиль оформления">
-          <option value="herbarium">Снежная оранжерея</option>
-          <option value="glasshouse">Северное сияние</option>
-          <option value="editorial">Зимний лес</option>
-        </select>
-        <button class="icon-button install-app-button" id="install-app" type="button" aria-label="Установить приложение" title="Установить приложение"><svg class="ui-icon"><use href="#icon-download"></use></svg></button>
         <button class="account-cta account-open" id="account-open" type="button" aria-label="Создать аккаунт или войти" title="Аккаунт и синхронизация"><svg class="ui-icon" aria-hidden="true"><use href="#icon-user"></use></svg><span id="account-open-label">Создать аккаунт</span></button>
-        <button class="icon-button" id="sound-toggle" type="button" aria-label="Включить звуки интерфейса" title="Включить звуки интерфейса" aria-pressed="false"></button>
-        <button class="icon-button" id="forest-sound-toggle" type="button" aria-label="Включить звук зимнего леса" title="Включить тихий ветер в хвойном лесу" aria-pressed="false"><svg class="ui-icon" aria-hidden="true"><use href="#icon-spark"></use></svg></button>
-        <button class="icon-button" id="theme-toggle" type="button" aria-label="Включить тёмное оформление" title="Включить тёмное оформление"><svg class="ui-icon"><use href="#icon-moon"></use></svg></button>
+        <details class="header-preferences">
+          <summary class="icon-button" id="header-preferences-toggle" aria-label="Настройки" title="Настройки оформления и звука">
+            <svg class="ui-icon" aria-hidden="true"><use href="#icon-settings"></use></svg>
+            <span class="visually-hidden" id="header-preferences-label">Настройки</span>
+          </summary>
+          <div class="header-preferences-menu" id="header-preferences-menu">
+            <label class="header-preferences-design" for="design-select">
+              <span id="header-design-label">Стиль оформления</span>
+              <select class="design-select" id="design-select" aria-label="Зимний стиль оформления" title="Выбрать зимний стиль оформления">
+                <option value="herbarium">Снежная оранжерея</option>
+                <option value="glasshouse">Северное сияние</option>
+                <option value="editorial">Зимний лес</option>
+              </select>
+            </label>
+            <div class="header-preferences-controls" id="header-preferences-controls" role="group" aria-label="Настройки оформления и звука">
+              <div class="header-preference-option">
+                <button class="icon-button install-app-button" id="install-app" type="button" aria-label="Установить приложение" title="Установить приложение"><svg class="ui-icon"><use href="#icon-download"></use></svg></button>
+                <span id="header-install-label">Установить приложение</span>
+              </div>
+              <div class="header-preference-option">
+                <button class="icon-button" id="sound-toggle" type="button" aria-label="Включить звуки интерфейса" title="Включить звуки интерфейса" aria-pressed="false"></button>
+                <span id="header-sound-label">Звуки интерфейса</span>
+              </div>
+              <div class="header-preference-option">
+                <button class="icon-button" id="forest-sound-toggle" type="button" aria-label="Включить звук зимнего леса" title="Включить тихий ветер в хвойном лесу" aria-pressed="false"><svg class="ui-icon" aria-hidden="true"><use href="#icon-spark"></use></svg></button>
+                <span id="header-forest-sound-label">Звук зимнего леса</span>
+              </div>
+              <div class="header-preference-option">
+                <button class="icon-button" id="theme-toggle" type="button" aria-label="Включить тёмное оформление" title="Включить тёмное оформление"><svg class="ui-icon"><use href="#icon-moon"></use></svg></button>
+                <span id="header-theme-label">Оформление</span>
+              </div>
+            </div>
+          </div>
+        </details>
       </div>
     </div>
   </header>
@@ -279,8 +305,8 @@
       <div class="flora-ai-intro">
         <span class="flora-ai-eyebrow">БОТАНИЧЕСКИЙ ПОМОЩНИК</span>
         <p>Привет! Я Silva, ботанический помощник Silva Quieta. Помогу с уходом, выбором растения и вопросами о природе.</p>
-        <button class="winter-snowman-easter-egg" type="button" data-winter-easter="snowman" aria-label="Найти снеговика Silva">☃</button>
-        <button class="winter-hidden-pinecone winter-pinecone-chat" type="button" data-pinecone-hideout="silva-intro" aria-label="Найти тайную шишку в приветствии Silva">🌰</button>
+        <button class="winter-snowman-easter-egg" type="button" data-winter-easter="snowman" aria-label="Найти снеговика Silva"><svg viewBox="0 0 24 24"><circle cx="12" cy="16.5" r="5.5"/><circle cx="12" cy="7" r="3.5"/><path d="M8.5 3.5h7m-5-2h3v2"/></svg></button>
+        <button class="winter-hidden-pinecone winter-pinecone-chat" type="button" data-pinecone-hideout="silva-intro" aria-label="Найти тайную шишку в приветствии Silva"><svg viewBox="0 0 24 24"><path d="M12 2C8 5 5.5 9.5 5.5 14a6.5 6.5 0 0 0 13 0C18.5 9.5 16 5 12 2Z"/><path d="m8 8 8 8M7 12l5 5m3-8-4 4" class="pinecone-scales"/></svg></button>
       </div>
       <div class="flora-ai-messages" id="flora-ai-messages" role="log" aria-live="polite" aria-relevant="additions text">
         <article class="flora-ai-message flora-ai-message-assistant">
@@ -319,12 +345,12 @@
             <button class="button" type="button" data-go="catalog"><svg class="ui-icon"><use href="#icon-book"></use></svg> Исследовать атлас <span>→</span></button>
             <button class="button secondary" type="button" data-go="garden"><svg class="ui-icon"><use href="#icon-plant"></use></svg> Мой сад</button>
             <button class="button ghost" id="winter-prediction-pull" type="button"><svg class="ui-icon"><use href="#icon-spark"></use></svg> Зимнее предсказание</button>
-            <button class="winter-mini-charm" type="button" data-winter-easter="home" aria-label="Найти зимний сюрприз на главной странице">✦</button>
+            <button class="winter-mini-charm" type="button" data-winter-easter="home" aria-label="Найти зимний сюрприз на главной странице"><svg viewBox="0 0 24 24"><path d="M12 2 14.2 9.8 22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2Z"/></svg></button>
           </div>
         </div>
         <div class="hero-art">
           <img src="https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=1000&q=75" alt="Букет сезонных цветов" width="1000" height="750" fetchpriority="high" decoding="async">
-          <button class="winter-hidden-pinecone winter-pinecone-hero" type="button" data-pinecone-hideout="hero-art" aria-label="Найти тайную шишку в зимнем лесу">🌰</button>
+          <button class="winter-hidden-pinecone winter-pinecone-hero" type="button" data-pinecone-hideout="hero-art" aria-label="Найти тайную шишку в зимнем лесу"><svg viewBox="0 0 24 24"><path d="M12 2C8 5 5.5 9.5 5.5 14a6.5 6.5 0 0 0 13 0C18.5 9.5 16 5 12 2Z"/><path d="m8 8 8 8M7 12l5 5m3-8-4 4" class="pinecone-scales"/></svg></button>
           <svg class="hero-ice-frost" viewBox="0 0 1000 750" preserveAspectRatio="none" aria-hidden="true">
             <defs>
               <linearGradient id="hero-frost-ice" x1="0" y1="0" x2="1" y2="1">
@@ -366,7 +392,7 @@
       </div>
 
       <article class="winter-prediction-card" id="winter-prediction-card" aria-live="polite" hidden>
-        <span class="winter-prediction-icon" aria-hidden="true">❄</span>
+        <span class="winter-prediction-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2.5v19M3.8 7.25l16.4 9.5M20.2 7.25 3.8 16.75M8.5 4.5 12 7l3.5-2.5M8.5 19.5 12 17l3.5 2.5M3.8 12l4.3.8M20.2 12l-4.3.8"/></svg></span>
         <div><strong>Зимняя подсказка Silva</strong><p id="winter-prediction-text"></p></div>
       </article>
       <section class="winter-feature" aria-labelledby="winter-feature-title">
@@ -455,7 +481,7 @@
 
     <section class="page" id="page-catalog" data-page="catalog" aria-label="Каталог растений" hidden>
       <div class="page-title-row">
-        <div><div class="eyebrow">Ботаническая коллекция <button class="winter-mini-charm" type="button" data-winter-easter="catalog" aria-label="Найти зимний сюрприз в атласе">❄</button></div><h1>Атлас <span class="gradient-text">растений</span></h1><p class="muted" style="margin:0;font-size:12px">Цветы, кактусы, суккуленты, папоротники, хвойные, деревья и кустарники — найдите любимое растение.</p></div>
+        <div><div class="eyebrow">Ботаническая коллекция <button class="winter-mini-charm" type="button" data-winter-easter="catalog" aria-label="Найти зимний сюрприз в атласе"><svg viewBox="0 0 24 24"><path d="M12 2.5v19M3.8 7.25l16.4 9.5M20.2 7.25 3.8 16.75M8.5 4.5 12 7l3.5-2.5M8.5 19.5 12 17l3.5 2.5M3.8 12l4.3.8M20.2 12l-4.3.8"/></svg></button></div><h1>Атлас <span class="gradient-text">растений</span></h1><p class="muted" style="margin:0;font-size:12px">Цветы, кактусы, суккуленты, папоротники, хвойные, деревья и кустарники — найдите любимое растение.</p></div>
         <button class="button secondary season-open-button" type="button" data-go="season"><svg class="ui-icon"><use href="#icon-calendar"></use></svg> Сезонный трекер</button>
       </div>
       <aside class="section-winter-note atlas-winter-note" aria-label="Зимняя подборка атласа">
@@ -504,7 +530,7 @@
               <option value="moist">Частый / влажный грунт</option>
             </select>
           </label>
-          <p class="catalogue-note">«Зимняя полутень» показывает виды с рекомендацией по рассеянному свету или тени; зимой им всё равно нужен свет, а не тёмное место. Рекомендации по уходу ориентировочные и могут различаться у видов и сортов. <button class="winter-hidden-pinecone" type="button" data-pinecone-hideout="atlas-note" aria-label="Найти тайную шишку в заметке фильтров">🌰</button></p>
+          <p class="catalogue-note">«Зимняя полутень» показывает виды с рекомендацией по рассеянному свету или тени; зимой им всё равно нужен свет, а не тёмное место. Рекомендации по уходу ориентировочные и могут различаться у видов и сортов. <button class="winter-hidden-pinecone" type="button" data-pinecone-hideout="atlas-note" aria-label="Найти тайную шишку в заметке фильтров"><svg viewBox="0 0 24 24"><path d="M12 2C8 5 5.5 9.5 5.5 14a6.5 6.5 0 0 0 13 0C18.5 9.5 16 5 12 2Z"/><path d="m8 8 8 8M7 12l5 5m3-8-4 4" class="pinecone-scales"/></svg></button></p>
         </div>
       </details>
       <p class="catalog-count" id="catalog-count" aria-live="polite"></p>
@@ -536,7 +562,7 @@
 
     <section class="page" id="page-season" data-page="season" aria-label="Сезонный трекер" hidden>
       <div class="page-title-row">
-        <div><div class="eyebrow">Личные наблюдения <button class="winter-mini-charm" type="button" data-winter-easter="season" aria-label="Найти зимний сюрприз в сезонном трекере">❄</button></div><h1>Сезонный <span class="gradient-text">трекер</span></h1><p class="muted season-intro">Отмечайте, когда вы заметили цветение растений. Записи сохраняются только в этом браузере.</p></div>
+        <div><div class="eyebrow">Личные наблюдения <button class="winter-mini-charm" type="button" data-winter-easter="season" aria-label="Найти зимний сюрприз в сезонном трекере"><svg viewBox="0 0 24 24"><path d="M12 2.5v19M3.8 7.25l16.4 9.5M20.2 7.25 3.8 16.75M8.5 4.5 12 7l3.5-2.5M8.5 19.5 12 17l3.5 2.5M3.8 12l4.3.8M20.2 12l-4.3.8"/></svg></button></div><h1>Сезонный <span class="gradient-text">трекер</span></h1><p class="muted season-intro">Отмечайте, когда вы заметили цветение растений. Записи сохраняются только в этом браузере.</p></div>
         <button class="button secondary" type="button" data-go="catalog">← К атласу</button>
       </div>
       <section class="surface-card season-tracker">
@@ -562,7 +588,7 @@
             <button class="button secondary small observations-empty-action" id="observations-empty-action" type="button">Добавить наблюдение</button>
           </section>
         </div>
-        <p class="season-note">Периоды цветения зависят от вида, климата и места выращивания. Здесь отображаются ваши наблюдения, а не универсальный календарь цветения. <button class="winter-hidden-pinecone" type="button" data-pinecone-hideout="season-note" aria-label="Найти тайную шишку в заметке сезонного трекера">🌰</button></p>
+        <p class="season-note">Периоды цветения зависят от вида, климата и места выращивания. Здесь отображаются ваши наблюдения, а не универсальный календарь цветения. <button class="winter-hidden-pinecone" type="button" data-pinecone-hideout="season-note" aria-label="Найти тайную шишку в заметке сезонного трекера"><svg viewBox="0 0 24 24"><path d="M12 2C8 5 5.5 9.5 5.5 14a6.5 6.5 0 0 0 13 0C18.5 9.5 16 5 12 2Z"/><path d="m8 8 8 8M7 12l5 5m3-8-4 4" class="pinecone-scales"/></svg></button></p>
         <section class="citizen-observations" aria-labelledby="citizen-observations-title">
           <div class="citizen-observations-heading">
             <div><span class="eyebrow">ЗИМНИЙ ПОЛЕВОЙ МАРШРУТ</span><h2 id="citizen-observations-title">Наблюдения из природы</h2></div>
@@ -613,7 +639,7 @@
         <button class="section-winter-note-action" type="button" data-garden-scroll="garden-care">К плану ухода <span aria-hidden="true">→</span></button>
       </aside>
       <aside class="winter-gardener-gift" id="winter-gardener-gift" aria-labelledby="winter-gardener-gift-title" hidden>
-        <div class="winter-gift-icon" aria-hidden="true">🎁</div>
+        <div class="winter-gift-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 9h18v12H3zM2 5h20v4H2zm10 0v16M12 5c-1-3-7-4-7-1 0 2 4 2 7 1Zm0 0c1-3 7-4 7-1 0 2-4 2-7 1Z"/></svg></div>
         <div class="winter-gift-copy">
           <span class="eyebrow">ПОДАРОК ЗА ПОИСК</span>
           <h2 id="winter-gardener-gift-title">Зимний набор садовода</h2>
@@ -694,11 +720,11 @@
         <section class="surface-card garden-panel garden-care-panel" id="garden-care" aria-labelledby="garden-care-title">
           <div class="garden-panel-heading">
             <span class="garden-panel-icon"><svg class="ui-icon"><use href="#icon-calendar"></use></svg></span>
-            <div><div class="eyebrow">МЯГКИЕ НАПОМИНАНИЯ <button class="winter-mini-charm" type="button" data-winter-easter="care" aria-label="Найти зимний сюрприз в ритме ухода">❄</button></div><h2 id="garden-care-title">Ритм ухода</h2></div>
+            <div><div class="eyebrow">МЯГКИЕ НАПОМИНАНИЯ <button class="winter-mini-charm" type="button" data-winter-easter="care" aria-label="Найти зимний сюрприз в ритме ухода"><svg viewBox="0 0 24 24"><path d="M12 2.5v19M3.8 7.25l16.4 9.5M20.2 7.25 3.8 16.75M8.5 4.5 12 7l3.5-2.5M8.5 19.5 12 17l3.5 2.5M3.8 12l4.3.8M20.2 12l-4.3.8"/></svg></button></div><h2 id="garden-care-title">Ритм ухода</h2></div>
             <button class="button secondary small garden-checklist-export" id="garden-checklist-export" type="button">Чек-лист на месяц · PDF</button>
           </div>
           <p>Выберите, как часто проверять почву, и отдельно отмечайте полив. Напоминание — повод проверить грунт, а не призыв поливать вслепую.</p>
-          <aside class="winter-care-tip" aria-label="Зимний совет по уходу"><strong>Зимой меняются условия дома</strong><span>Отопление сушит воздух: проверьте влажность и отодвиньте растения от горячей батареи. Перед поливом проверяйте грунт: некоторым кактусам и суккулентам зимой нужно меньше воды, но точный ритм зависит от вида и условий. <button class="winter-hidden-pinecone" type="button" data-pinecone-hideout="garden-winter-tip" aria-label="Найти тайную шишку в зимней памятке сада">🌰</button></span></aside>
+          <aside class="winter-care-tip" aria-label="Зимний совет по уходу"><strong>Зимой меняются условия дома</strong><span>Отопление сушит воздух: проверьте влажность и отодвиньте растения от горячей батареи. Перед поливом проверяйте грунт: некоторым кактусам и суккулентам зимой нужно меньше воды, но точный ритм зависит от вида и условий. <button class="winter-hidden-pinecone" type="button" data-pinecone-hideout="garden-winter-tip" aria-label="Найти тайную шишку в зимней памятке сада"><svg viewBox="0 0 24 24"><path d="M12 2C8 5 5.5 9.5 5.5 14a6.5 6.5 0 0 0 13 0C18.5 9.5 16 5 12 2Z"/><path d="m8 8 8 8M7 12l5 5m3-8-4 4" class="pinecone-scales"/></svg></button></span></aside>
           <label class="heating-season-switch" for="heating-season-toggle">
             <input id="heating-season-toggle" type="checkbox">
             <span><strong>Отопительный сезон</strong><small>Учитывать сухой воздух и напоминать об увлажнении каждые 5 дней.</small></span>
@@ -743,7 +769,7 @@
 
     <section class="page" id="page-collection" data-page="collection" aria-label="Моя коллекция" hidden>
       <div class="page-title-row">
-        <div><div class="eyebrow">Личный гербарий <button class="winter-mini-charm" type="button" data-winter-easter="collection" aria-label="Найти зимний сюрприз в коллекции">✧</button></div><h1>Моя <span class="gradient-text">коллекция</span></h1><p class="muted" style="margin:0;font-size:12px">Сохранённые растения — ваша личная подборка из ботанического атласа. <button class="winter-hidden-pinecone" type="button" data-pinecone-hideout="collection-note" aria-label="Найти тайную шишку в описании коллекции">🌰</button></p></div>
+        <div><div class="eyebrow">Личный гербарий <button class="winter-mini-charm" type="button" data-winter-easter="collection" aria-label="Найти зимний сюрприз в коллекции"><svg viewBox="0 0 24 24"><path d="M12 2 14.2 9.8 22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2Z"/></svg></button></div><h1>Моя <span class="gradient-text">коллекция</span></h1><p class="muted" style="margin:0;font-size:12px">Сохранённые растения — ваша личная подборка из ботанического атласа. <button class="winter-hidden-pinecone" type="button" data-pinecone-hideout="collection-note" aria-label="Найти тайную шишку в описании коллекции"><svg viewBox="0 0 24 24"><path d="M12 2C8 5 5.5 9.5 5.5 14a6.5 6.5 0 0 0 13 0C18.5 9.5 16 5 12 2Z"/><path d="m8 8 8 8M7 12l5 5m3-8-4 4" class="pinecone-scales"/></svg></button></p></div>
         <div class="page-title-actions">
           <button class="button secondary small" id="collection-export-csv" type="button">Скачать коллекцию CSV</button>
           <button class="button secondary" type="button" data-go="catalog">← Вернуться в атлас</button>
@@ -764,14 +790,14 @@
     </section>
 
     <section class="page" id="page-botanist" data-page="botanist" aria-label="Игры и задания" hidden>
-      <div class="page-title-row"><div><div class="eyebrow">Учимся, играя <button class="winter-mini-charm" type="button" data-winter-easter="games" aria-label="Найти зимний сюрприз в играх">✦</button></div><h1>Игры и <span class="gradient-text">задания</span></h1><p class="muted" style="margin:0;font-size:12px">Угадай растение, выполняй задания и выходи на зимний полевой маршрут.</p></div></div>
+      <div class="page-title-row"><div><div class="eyebrow">Учимся, играя <button class="winter-mini-charm" type="button" data-winter-easter="games" aria-label="Найти зимний сюрприз в играх"><svg viewBox="0 0 24 24"><path d="M12 2 14.2 9.8 22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2Z"/></svg></button></div><h1>Игры и <span class="gradient-text">задания</span></h1><p class="muted" style="margin:0;font-size:12px">Угадай растение, выполняй задания и выходи на зимний полевой маршрут.</p></div></div>
       <section class="surface-card botanist-game" aria-label="Викторина по растениям">
         <h2 class="activity-title">Угадай растение</h2>
         <p class="activity-intro">Посмотрите на фотографию и выберите правильное название.</p>
         <p class="botanist-score" id="botanist-score" aria-live="polite">Угадано: 0</p>
         <div class="botanist-photo-wrap">
           <img id="botanist-image" alt="Фотография растения для викторины" width="640" height="480" decoding="async">
-          <button class="winter-hidden-pinecone winter-pinecone-quiz" type="button" data-pinecone-hideout="quiz-photo" aria-label="Найти тайную шишку на фотографии викторины">🌰</button>
+          <button class="winter-hidden-pinecone winter-pinecone-quiz" type="button" data-pinecone-hideout="quiz-photo" aria-label="Найти тайную шишку на фотографии викторины"><svg viewBox="0 0 24 24"><path d="M12 2C8 5 5.5 9.5 5.5 14a6.5 6.5 0 0 0 13 0C18.5 9.5 16 5 12 2Z"/><path d="m8 8 8 8M7 12l5 5m3-8-4 4" class="pinecone-scales"/></svg></button>
         </div>
         <div class="botanist-answers" id="botanist-answers" role="group" aria-label="Выберите название растения"></div>
         <p class="botanist-feedback" id="botanist-feedback" role="status" aria-live="polite"></p>
@@ -783,7 +809,7 @@
             <h2 id="winter-field-route-title">Зимний <span class="gradient-text">полевой маршрут</span></h2>
             <p>Найдите в настоящем парке или лесу три хвойных либо вечнозелёных растения. Сфотографируйте каждое и попросите Silva оценить видимые признаки.</p>
           </div>
-          <div class="winter-field-route-emblem" aria-hidden="true">🌲</div>
+          <div class="winter-field-route-emblem" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2 4.5 12h4L4 18h6v4h4v-4h6l-4.5-6h4L12 2Z"/></svg></div>
         </div>
         <ol class="winter-field-route-steps">
           <li><strong>Выйдите на улицу</strong><span>Ищите живые растения в своём городе, не срывая ветви и шишки.</span></li>
@@ -1160,8 +1186,8 @@
       <div id="account-user" hidden>
         <p class="account-description">Вы вошли как <strong id="account-user-nickname"></strong>. Избранное, заметки, наблюдения, дневник сада и график ухода синхронизируются с вашим аккаунтом.</p>
         <p class="account-status" id="account-sync-status" role="status" aria-live="polite"></p>
-        <div class="polar-forest-badge" id="polar-forest-badge" hidden><span aria-hidden="true">🎁</span><span><strong>Зимний набор садовода</strong><small>Памятка по зимнему уходу открыта</small></span><button class="button ghost small" type="button" data-go="garden">Открыть подарок</button></div>
-        <div class="polar-forest-badge" id="winter-field-route-badge" hidden><span aria-hidden="true">🌲</span><span><strong>Хранитель полевого маршрута</strong><small>Три находки внесены в сезонный трекер</small></span></div>
+        <div class="polar-forest-badge" id="polar-forest-badge" hidden><span aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 9h18v12H3zM2 5h20v4H2zm10 0v16M12 5c-1-3-7-4-7-1 0 2 4 2 7 1Zm0 0c1-3 7-4 7-1 0 2-4 2-7 1Z"/></svg></span><span><strong>Зимний набор садовода</strong><small>Памятка по зимнему уходу открыта</small></span><button class="button ghost small" type="button" data-go="garden">Открыть подарок</button></div>
+        <div class="polar-forest-badge" id="winter-field-route-badge" hidden><span aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2 4.5 12h4L4 18h6v4h4v-4h6l-4.5-6h4L12 2Z"/></svg></span><span><strong>Хранитель полевого маршрута</strong><small>Три находки внесены в сезонный трекер</small></span></div>
         <button class="button ghost full" id="account-signout" type="button">Выйти из аккаунта</button>
       </div>
     </section>
@@ -1187,7 +1213,7 @@
       document.write(`<script src="./localization/catalog-${window.FLORA_LOCALE}.js?v=7"><\/script>`);
     }
   </script>
-  <script src="./script.js?v=155"></script>
+  <script src="./script.js?v=156"></script>
   <script>window.FLORA_AI_ENDPOINT = "https://flora-anotomy-ai.ukrainman21012.workers.dev";</script>
   <script>window.FLORA_VISITOR_STATS_ENDPOINT = "https://flora-anotomy-ai.ukrainman21012.workers.dev/api/visitors";</script>
   <script src="./visitor-counter.js?v=1"></script>
@@ -1197,7 +1223,7 @@
   <script>window.FLORA_VAPID_PUBLIC_KEY = "BF7JygE9293jwgMccpvZbxBHqwhx4RhfTUHWLTldz_1BvklqB-403ReZqNOnSdqYnLvSxW_6X-TNOBvJClfjORw";</script>
   <script src="./garden.js?v=28"></script>
   <script src="./expeditions.js?v=17"></script>
-  <script src="./localization/locale-runtime.js?v=26"></script>
+  <script src="./localization/locale-runtime.js?v=27"></script>
   <script>
     (() => {
     document.querySelector("#observations-empty-action").addEventListener("click", () => {

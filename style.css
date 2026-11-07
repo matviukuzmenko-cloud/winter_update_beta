@@ -38,6 +38,7 @@
   --serif: "Playfair Display", Georgia, serif;
   --dock-h: 80px;
 }
+.site-switcher-icon svg { width: 19px; height: 19px; fill: currentColor; }
 
 * { box-sizing: border-box; }
 .icon-library { width: 0; height: 0; position: absolute; overflow: hidden; }
@@ -616,6 +617,7 @@ body.dark-theme .button.secondary > .ui-icon, body.dark-theme .button.ghost > .u
   font-size: 10px;
   font-weight: 700;
 }
+body[data-season="winter"] .winter-rest-badge svg { width: 13px; height: 13px; flex: 0 0 auto; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.6; }
 .season-month small { min-width: 18px; min-height: 18px; display: grid; place-items: center; border-radius: 50%; color: var(--muted); background: var(--surface-raised); font-size: 9px; }
 .season-month.is-selected { border-color: color-mix(in srgb, var(--blue) 48%, var(--line)); color: var(--blue); background: color-mix(in srgb, var(--blue) 9%, var(--surface)); }
 .season-month.is-selected small { color: #fff; background: var(--blue); }
@@ -659,7 +661,8 @@ body.dark-theme .button.secondary > .ui-icon, body.dark-theme .button.ghost > .u
 .winter-field-route-header > div:first-child { max-width: 700px; }
 .winter-field-route-header h2 { margin: 5px 0 7px; font-family: var(--serif); font-size: clamp(27px, 4vw, 40px); }
 .winter-field-route-header p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.7; }
-.winter-field-route-emblem { width: 82px; height: 82px; flex: 0 0 auto; display: grid; place-items: center; border: 1px solid color-mix(in srgb, var(--green) 25%, var(--line)); border-radius: 24px; background: color-mix(in srgb, var(--green) 7%, var(--surface)); font-size: 39px; }
+.winter-field-route-emblem { width: 82px; height: 82px; flex: 0 0 auto; display: grid; place-items: center; border: 1px solid color-mix(in srgb, var(--green) 25%, var(--line)); border-radius: 24px; background: color-mix(in srgb, var(--green) 7%, var(--surface)); }
+.winter-field-route-emblem svg { width: 42px; height: 42px; fill: currentColor; }
 .winter-field-route-steps { position: relative; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; margin: 18px 0 14px; padding: 0; list-style: none; counter-reset: field-step; }
 .winter-field-route-steps li { min-width: 0; display: grid; grid-template-columns: 28px minmax(0, 1fr); column-gap: 9px; padding: 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-raised); counter-increment: field-step; }
 .winter-field-route-steps li::before { width: 27px; height: 27px; grid-row: span 2; display: grid; place-items: center; border-radius: 9px; color: var(--green); background: color-mix(in srgb, var(--green) 11%, var(--surface)); content: counter(field-step); font-size: 10px; font-weight: 850; }
@@ -825,8 +828,8 @@ html.silva-language-pending body > :not(.language-choice-overlay) {
   border-radius: 18px;
   color: white;
   background: var(--gradient);
-  font-size: 26px;
 }
+.language-choice-mark svg { width: 31px; height: 36px; fill: currentColor; }
 .language-choice-card h1 {
   margin: 0;
   font-family: var(--serif);
@@ -1583,7 +1586,8 @@ dialog#flower-dialog { border-radius: var(--radius-lg); }
 }
 @media (max-width: 520px) {
   .winter-field-route-header { align-items: flex-start; }
-  .winter-field-route-emblem { width: 58px; height: 58px; border-radius: 17px; font-size: 29px; }
+  .winter-field-route-emblem { width: 58px; height: 58px; border-radius: 17px; }
+  .winter-field-route-emblem svg { width: 32px; height: 32px; }
   .winter-field-route-steps { grid-template-columns: minmax(0, 1fr); }
   .citizen-observations-heading { align-items: flex-start; flex-direction: column; gap: 5px; }
   .expedition-toggle { min-height: 66px; gap: 8px; padding: 10px; }
@@ -3897,9 +3901,11 @@ body[data-season="winter"].winter-flurry .winter-snowflake {
 }
 body[data-season="winter"] .topline::before,
 body[data-season="winter"] .topline::after {
-  color: #d7ecf8;
-  content: "✦";
-  font-size: 11px;
+  width: 8px;
+  height: 8px;
+  background: #d7ecf8;
+  clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
+  content: "";
 }
 body[data-season="winter"] .hero-copy .eyebrow,
 body[data-season="winter"] .garden-hero-kicker {
@@ -4120,10 +4126,10 @@ body[data-season="winter"] .winter-mini-charm {
   background: linear-gradient(145deg, rgba(255, 255, 255, .95), rgba(218, 237, 247, .8));
   box-shadow: 0 2px 8px rgba(60, 106, 130, .12);
   cursor: pointer;
-  font-size: 14px;
   vertical-align: middle;
   transition: transform .2s ease, box-shadow .2s ease;
 }
+body[data-season="winter"] .winter-mini-charm svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.6; }
 body[data-season="winter"] .winter-mini-charm:hover,
 body[data-season="winter"] .winter-mini-charm.is-found {
   transform: translateY(-2px) rotate(12deg);
@@ -4141,9 +4147,9 @@ body[data-season="winter"] .winter-snowman-easter-egg {
   color: #466d82;
   background: linear-gradient(145deg, #fff, #e1f1f7);
   cursor: pointer;
-  font-size: 21px;
   vertical-align: middle;
 }
+body[data-season="winter"] .winter-snowman-easter-egg svg { width: 23px; height: 23px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.4; }
 body[data-season="winter"] .winter-snowman-easter-egg.is-found {
   box-shadow: 0 0 0 4px rgba(149, 205, 225, .25), 0 4px 12px rgba(60, 106, 130, .18);
   animation: winter-snowman-found .5s ease-out;
@@ -4355,36 +4361,50 @@ body[data-season="winter"] #page-collection .page-title-row::after,
 body[data-season="winter"] #page-botanist .page-title-row::after {
   position: absolute;
   color: rgba(107, 151, 174, .72);
-  font-size: 21px;
   pointer-events: none;
 }
 body[data-season="winter"] #page-home .hero-card::after {
   top: 20px;
   right: 24px;
-  content: "❄";
+  width: 18px;
+  height: 18px;
+  background: linear-gradient(0deg, transparent 45%, currentColor 46% 54%, transparent 55%), linear-gradient(60deg, transparent 45%, currentColor 46% 54%, transparent 55%), linear-gradient(120deg, transparent 45%, currentColor 46% 54%, transparent 55%);
+  content: "";
 }
 body[data-season="winter"] #page-catalog .page-title-row::after {
   top: 6px;
   right: 10px;
-  content: "🌲";
-  font-size: 18px;
+  width: 16px;
+  height: 21px;
+  background: currentColor;
+  clip-path: polygon(50% 0, 63% 28%, 83% 27%, 68% 46%, 92% 46%, 71% 64%, 100% 66%, 62% 82%, 62% 100%, 38% 100%, 38% 82%, 0 66%, 29% 64%, 8% 46%, 32% 46%, 17% 27%, 37% 28%);
+  content: "";
 }
 body[data-season="winter"] #page-season .page-title-row::after {
   top: 6px;
   right: 10px;
-  content: "✧";
+  width: 16px;
+  height: 16px;
+  background: currentColor;
+  clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
+  content: "";
 }
 body[data-season="winter"] #page-collection .page-title-row::after {
   top: 6px;
   right: 10px;
-  content: "❄";
-  font-size: 17px;
+  width: 16px;
+  height: 16px;
+  background: linear-gradient(0deg, transparent 45%, currentColor 46% 54%, transparent 55%), linear-gradient(60deg, transparent 45%, currentColor 46% 54%, transparent 55%), linear-gradient(120deg, transparent 45%, currentColor 46% 54%, transparent 55%);
+  content: "";
 }
 body[data-season="winter"] #page-botanist .page-title-row::after {
   top: 6px;
   right: 10px;
-  content: "🌲";
-  font-size: 18px;
+  width: 16px;
+  height: 21px;
+  background: currentColor;
+  clip-path: polygon(50% 0, 63% 28%, 83% 27%, 68% 46%, 92% 46%, 71% 64%, 100% 66%, 62% 82%, 62% 100%, 38% 100%, 38% 82%, 0 66%, 29% 64%, 8% 46%, 32% 46%, 17% 27%, 37% 28%);
+  content: "";
 }
 body[data-season="winter"] #page-home .hero-card,
 body[data-season="winter"] #page-catalog .page-title-row,
@@ -4518,11 +4538,13 @@ body[data-season="winter"] .winter-site-snow i {
   z-index: 1;
   top: -12%;
   left: 6%;
-  color: rgba(255, 255, 255, .88);
+  display: block;
+  width: .62em;
+  height: .62em;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f5fcff' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.25'%3E%3Cg%3E%3Cpath d='M12 2v20M9.5 4.5 12 7l2.5-2.5M9.5 8.5 12 11l2.5-2.5M9.5 15.5 12 13l2.5 2.5M9.5 19.5 12 17l2.5 2.5'/%3E%3Cpath d='M12 2v20M9.5 4.5 12 7l2.5-2.5M9.5 8.5 12 11l2.5-2.5M9.5 15.5 12 13l2.5 2.5M9.5 19.5 12 17l2.5 2.5' transform='rotate(60 12 12)'/%3E%3Cpath d='M12 2v20M9.5 4.5 12 7l2.5-2.5M9.5 8.5 12 11l2.5-2.5M9.5 15.5 12 13l2.5 2.5M9.5 19.5 12 17l2.5 2.5' transform='rotate(120 12 12)'/%3E%3C/g%3E%3Ccircle cx='12' cy='12' r='1.1' fill='%23f5fcff' stroke='none'/%3E%3C/svg%3E") center / contain no-repeat;
+  filter: drop-shadow(0 0 2px rgba(205, 239, 255, .58));
   font-size: 19px;
-  font-style: normal;
-  line-height: 1;
-  text-shadow: 0 0 12px rgba(218, 241, 255, 1), 0 1px 4px rgba(27, 47, 64, .48);
+  opacity: .7;
   animation: winter-photo-snowfall 12s linear infinite;
 }
 @keyframes winter-global-aurora {
@@ -4545,7 +4567,6 @@ body[data-season="winter"] .winter-site-snow i {
   12% { opacity: 1; }
   100% { opacity: 0; transform: translateX(560%) skewX(-18deg); }
 }
-body[data-season="winter"] .winter-site-snow i::before { content: "❄"; }
 body[data-season="winter"] .winter-site-snow i:nth-of-type(2) { left: 16%; font-size: 11px; animation-delay: -7s; animation-duration: 15s; --snow-drift: 8px; }
 body[data-season="winter"] .winter-site-snow i:nth-of-type(3) { left: 25%; font-size: 24px; animation-delay: -3s; animation-duration: 18s; --snow-drift: 24px; }
 body[data-season="winter"] .winter-site-snow i:nth-of-type(4) { left: 34%; font-size: 13px; animation-delay: -11s; animation-duration: 13s; --snow-drift: 11px; }
@@ -4581,8 +4602,6 @@ body[data-season="winter"] .winter-site-snow i:nth-of-type(33) { left: 77%; font
 body[data-season="winter"] .winter-site-snow i:nth-of-type(34) { left: 86%; font-size: 27px; animation-delay: -15s; animation-duration: 23s; --snow-drift: 27px; }
 body[data-season="winter"] .winter-site-snow i:nth-of-type(35) { left: 93%; font-size: 10px; opacity: .58; filter: blur(.3px); animation-delay: -10s; animation-duration: 12s; --snow-drift: 7px; }
 body[data-season="winter"] .winter-site-snow i:nth-of-type(36) { left: 97%; font-size: 18px; animation-delay: -7s; animation-duration: 18s; --snow-drift: 18px; }
-body[data-season="winter"] .winter-site-snow i:nth-of-type(3n)::before { content: "❅"; }
-body[data-season="winter"] .winter-site-snow i:nth-of-type(4n)::before { content: "❆"; }
 body[data-season="winter"] .winter-feature {
   min-height: 300px;
   position: relative;
@@ -5071,7 +5090,8 @@ body[data-season="winter"] .hero-orbit {
   box-shadow: var(--shadow-soft);
 }
 .winter-prediction-card[hidden] { display: none; }
-.winter-prediction-icon { color: var(--blue); font-size: 20px; }
+.winter-prediction-icon { display: inline-flex; color: var(--blue); }
+.winter-prediction-icon svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.5; }
 .winter-prediction-card strong { display: block; margin-bottom: 4px; font-size: 12px; }
 .winter-prediction-card p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.65; }
 #winter-prediction-pull { min-height: 50px; border: 1px solid var(--line); }
@@ -5087,13 +5107,14 @@ body[data-season="winter"] .hero-orbit {
   color: #806344;
   background: transparent;
   cursor: pointer;
-  font-size: 10px;
   line-height: 1;
   opacity: .2;
   filter: saturate(.4);
   transition: opacity .2s ease, transform .2s ease, filter .2s ease;
   vertical-align: baseline;
 }
+.winter-hidden-pinecone svg { width: 100%; height: 100%; fill: currentColor; }
+.winter-hidden-pinecone .pinecone-scales { fill: none; stroke: var(--surface); stroke-linecap: round; stroke-width: 1.4; }
 .winter-hidden-pinecone:hover,
 .winter-hidden-pinecone:focus-visible,
 .winter-hidden-pinecone.is-found {
@@ -5127,7 +5148,7 @@ body[data-season="winter"] .hero-orbit {
   background: linear-gradient(125deg, color-mix(in srgb, var(--green) 9%, var(--surface)), color-mix(in srgb, var(--blue) 8%, var(--surface)));
 }
 .winter-gardener-gift[hidden] { display: none; }
-.winter-gift-icon { font-size: 30px; }
+.winter-gift-icon svg { width: 32px; height: 32px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.5; }
 .winter-gift-copy h2 { margin: 3px 0 4px; font-size: 17px; }
 .winter-gift-copy p { margin: 0 0 7px; color: var(--muted); font-size: 11px; }
 .winter-gift-copy ul { display: grid; gap: 4px; margin: 0 0 10px; padding-left: 18px; color: var(--ink); font-size: 10px; line-height: 1.5; }
@@ -5160,7 +5181,9 @@ body[data-season="winter"] .hero-orbit {
   background: linear-gradient(130deg, rgba(220, 239, 216, .7), rgba(225, 240, 249, .7));
 }
 .polar-forest-badge[hidden] { display: none; }
-.polar-forest-badge > span:first-child { font-size: 25px; }
+.polar-forest-badge > span:first-child { display: inline-flex; flex: 0 0 auto; }
+.polar-forest-badge > span:first-child svg { width: 25px; height: 25px; fill: currentColor; }
+#polar-forest-badge > span:first-child svg { fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.5; }
 .polar-forest-badge strong,
 .polar-forest-badge small { display: block; }
 .polar-forest-badge strong { font-size: 12px; }
@@ -5170,129 +5193,6 @@ body[data-season="winter"] .hero-orbit {
 @media (max-width: 640px) {
   #winter-prediction-pull { flex-basis: 100%; }
   .garden-checklist-export { width: 100%; margin: 8px 0 0; }
-}
-
-@media (max-width: 520px) {
-  .header-inner {
-    min-height: 0;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 4px 8px;
-    padding-block: 7px;
-  }
-  .header-inner > .brand {
-    order: 1;
-    flex: 0 0 auto;
-  }
-  .header-inner > .primary-nav {
-    width: auto;
-    order: 2;
-    flex: 1 1 auto;
-    justify-content: flex-end;
-    flex-wrap: nowrap;
-    gap: 2px;
-    padding: 0;
-  }
-  .header-inner > .primary-nav .primary-nav-link {
-    min-height: 34px;
-    flex: 0 1 auto;
-    padding-inline: 6px;
-    font-size: 10px;
-    white-space: nowrap;
-  }
-  .header-inner > .header-actions {
-    width: 100%;
-    order: 3;
-    flex: 0 0 100%;
-    justify-content: center;
-    gap: 4px;
-  }
-  .header-inner > .header-actions .icon-button {
-    width: 36px;
-    height: 36px;
-    min-height: 36px;
-    flex: 0 0 36px;
-  }
-  .header-inner > .header-actions .design-select {
-    min-height: 36px;
-    max-width: 108px;
-    padding-inline: 7px;
-    font-size: 9px;
-  }
-  .header-inner > .header-actions .account-cta {
-    min-height: 34px;
-    padding-inline: 8px;
-    font-size: 10px;
-  }
-  .header-inner > .header-actions #sound-toggle {
-    margin-left: 12px;
-  }
-}
-
-@media (max-width: 520px) {
-  .header-inner > .header-actions {
-    flex-wrap: nowrap;
-    gap: 4px;
-  }
-  .header-inner > .header-actions .icon-button {
-    width: 36px;
-    height: 36px;
-    min-height: 36px;
-    flex: 0 0 36px;
-  }
-  .header-inner > .header-actions .design-select {
-    width: 98px;
-    min-width: 0;
-    max-width: 98px;
-    min-height: 36px;
-    flex: 0 0 98px;
-  }
-  .header-inner > .header-actions .account-cta {
-    width: 36px;
-    min-width: 36px;
-    min-height: 36px;
-    flex: 0 0 36px;
-    justify-content: center;
-    padding-inline: 0;
-  }
-  .header-inner > .header-actions .account-cta > span {
-    display: none;
-  }
-  .header-inner > .header-actions #sound-toggle {
-    margin-left: 0;
-  }
-}
-
-@media (max-width: 380px) {
-  .header-inner > .header-actions {
-    gap: 3px;
-  }
-  .header-inner > .header-actions .icon-button {
-    width: 32px;
-    height: 32px;
-    min-height: 32px;
-    flex-basis: 32px;
-  }
-  .header-inner > .header-actions .design-select {
-    width: 82px;
-    min-height: 32px;
-    max-width: 82px;
-    flex-basis: 82px;
-    padding-inline: 5px;
-    font-size: 8px;
-  }
-  .header-inner > .header-actions .account-cta {
-    width: 32px;
-    min-width: 32px;
-    min-height: 32px;
-    flex-basis: 32px;
-  }
-}
-
-@media (max-width: 315px) {
-  .header-inner > .header-actions {
-    flex-wrap: wrap;
-  }
 }
 
 .locale-select {
@@ -5333,53 +5233,157 @@ body[data-season="winter"] .hero-orbit {
   .home-facts-community { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
-@media (max-width: 520px) {
-  .header-inner > .header-actions { gap: 3px; }
-  .header-inner > .header-actions .icon-button,
-  .header-inner > .header-actions .account-cta {
-    width: 32px;
-    min-width: 32px;
-    height: 32px;
-    min-height: 32px;
-    flex-basis: 32px;
+.header-preferences {
+  position: relative;
+  flex: 0 0 auto;
+}
+.header-preferences > summary {
+  list-style: none;
+  cursor: pointer;
+}
+.header-preferences > summary::-webkit-details-marker { display: none; }
+.header-preferences[open] > summary {
+  border-color: var(--blue);
+  color: var(--blue);
+}
+.header-preferences-menu {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 10px);
+  right: 0;
+  width: min(320px, calc(100vw - 24px));
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 17px;
+  color: var(--ink);
+  background: var(--surface);
+  box-shadow: var(--shadow-popover);
+}
+.header-preferences-design {
+  display: grid;
+  gap: 7px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+}
+.header-preferences-design .design-select {
+  width: 100%;
+  max-width: none;
+  min-height: 44px;
+  font-size: 12px;
+}
+.header-preferences-controls {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 13px;
+  padding-top: 13px;
+  border-top: 1px solid var(--line);
+}
+.header-preference-option {
+  display: grid;
+  align-content: start;
+  justify-items: center;
+  gap: 6px;
+  min-width: 0;
+  color: var(--muted);
+  font-size: 9px;
+  line-height: 1.35;
+  text-align: center;
+}
+.header-preference-option .icon-button {
+  width: 44px;
+  height: 44px;
+}
+
+@media (max-width: 720px) {
+  .topline { display: none; }
+  .header-inner {
+    min-height: 0;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 8px;
+    padding-block: 8px;
   }
-  .header-inner > .header-actions .design-select {
-    width: 82px;
-    max-width: 82px;
-    flex-basis: 82px;
+  .header-inner > .brand {
+    order: 1;
+    flex: 0 0 auto;
+    gap: 5px;
+    font-size: 13px;
   }
-  .header-inner > .header-actions .locale-select {
-    width: 60px;
-    min-height: 32px;
-    flex: 0 0 60px;
-    padding-inline: 5px;
-    font-size: 9px;
+  .header-inner > .brand .brand-mark { width: 32px; height: 32px; }
+  .header-inner > .primary-nav {
+    width: auto;
+    order: 2;
+    display: flex;
+    flex: 1 1 auto;
+    justify-content: flex-end;
+    flex-wrap: nowrap;
+    gap: 2px;
+    padding: 0;
+  }
+  .header-inner > .primary-nav > .primary-nav-link {
+    min-height: 44px;
+    flex: 0 1 auto;
+    padding-inline: 2px;
+    font-size: 10px;
+    white-space: nowrap;
+  }
+  .header-inner > .primary-nav .site-switcher > summary {
+    min-height: 44px;
+    padding-inline: 4px;
+  }
+  .header-inner > .header-actions {
+    width: 100%;
+    order: 3;
+    display: flex;
+    flex: 0 0 100%;
+    position: relative;
+    justify-content: center;
+    gap: 8px;
+    margin: 0;
+  }
+  .header-inner > .header-actions > .header-preferences { position: static; }
+  .header-inner > .header-actions > .icon-button,
+  .header-inner > .header-actions > .account-cta,
+  .header-preferences > summary {
+    width: 44px;
+    min-width: 44px;
+    height: 44px;
+    min-height: 44px;
+    flex: 0 0 44px;
+  }
+  .header-inner > .header-actions > .account-cta { padding-inline: 0; }
+  .header-inner > .header-actions > .account-cta > span { display: none; }
+  .header-inner > .header-actions > .locale-select {
+    width: 64px;
+    min-height: 44px;
+    flex: 0 0 64px;
+    font-size: 10px;
+  }
+  .header-preferences-menu {
+    top: calc(100% + 8px);
+    right: 0;
   }
 }
 
 @media (max-width: 380px) {
-  .header-inner > .header-actions { gap: 2px; }
-  .header-inner > .header-actions .icon-button,
-  .header-inner > .header-actions .account-cta {
-    width: 28px;
-    min-width: 28px;
-    height: 28px;
-    min-height: 28px;
-    flex-basis: 28px;
+  .header-inner > .primary-nav {
+    width: 100%;
+    order: 2;
+    position: relative;
+    flex: 0 0 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 4px;
   }
-  .header-inner > .header-actions .design-select {
-    width: 65px;
-    max-width: 65px;
-    min-height: 28px;
-    flex-basis: 65px;
-    padding-inline: 4px;
-    font-size: 8px;
+  .header-inner > .primary-nav .site-switcher { position: static; }
+  .header-inner > .primary-nav .site-switcher-menu { right: 0; }
+  .header-inner > .primary-nav > .primary-nav-link {
+    min-height: 44px;
+    flex: 0 1 auto;
+    padding-inline: 6px;
+    font-size: 10px;
   }
-  .header-inner > .header-actions .locale-select {
-    width: 44px;
-    min-height: 28px;
-    flex-basis: 44px;
-    padding-inline: 3px;
-    font-size: 8px;
-  }
+  .header-inner > .header-actions { order: 3; }
 }

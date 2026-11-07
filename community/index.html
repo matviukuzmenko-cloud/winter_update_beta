@@ -6,25 +6,28 @@
   <meta name="theme-color" content="#08090c">
   <meta name="description" content="Silva Community — спокойное сообщество людей, которым близок мир растений.">
   <title>Silva Community — Silva Quieta</title>
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="apple-touch-icon" href="./apple-touch-icon.png">
   <link rel="icon" href="https://silvaquieta.com/favicon-48.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="./style.css?v=3">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://silvaquieta.com/supabase-config.js"></script>
-  <script defer src="./app.js"></script>
+  <script defer src="./app.js?v=3"></script>
 </head>
 <body>
   <header class="topbar">
     <a class="brand" href="https://silvaquieta.com/" aria-label="Silva Quieta">
-      <span class="brand-mark" aria-hidden="true">✳</span><span>Silva <b>Community</b></span>
+      <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 20V11m0 4c-4.1 0-6.2-2-6.2-5.8C9.6 8.2 12 10.1 12 14Zm0-3c0-4 2.4-6.1 6.2-6.1 0 3.9-2.1 6.1-6.2 6.1Z"/></svg></span><span>Silva <b>Community</b></span>
     </a>
     <nav class="top-links" aria-label="Навигация">
       <a href="https://silvaquieta.com/">Silva Quieta</a>
       <a href="https://ailab.silvaquieta.com/">Silva AI Lab</a>
     </nav>
     <div class="top-actions">
+      <button class="install-pwa" type="button" data-install-pwa data-copy="installApp" aria-label="Установить Silva Community" hidden>Установить</button>
       <label class="locale-label"><span class="sr-only">Язык</span><select id="locale-select" aria-label="Язык"><option value="ru">RU</option><option value="uk">UA</option><option value="en">EN</option></select></label>
       <button class="account-button" id="account-open" type="button" data-copy="signIn">Войти</button>
     </div>
@@ -55,7 +58,7 @@
         <button class="load-more" id="load-more" type="button" hidden data-copy="loadMore">Показать ещё</button>
       </div>
       <aside class="about-card">
-        <span class="about-leaf" aria-hidden="true">✿</span>
+        <span class="about-leaf" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 21V12m0 4c-4.5 0-6.8-2.2-6.8-6.4 4.2 0 6.8 2.1 6.8 6.4Zm0-3.5c0-4.3 2.5-6.7 6.8-6.7 0 4.3-2.3 6.7-6.8 6.7Z"/></svg></span>
         <h2 data-copy="aboutTitle">Один общий сад.</h2>
         <p data-copy="aboutText">Место для вопросов, наблюдений и маленьких побед. Публикуй о растениях, будь добр к другим и не делись личной информацией.</p>
         <div class="community-rule"><span>01</span><p data-copy="ruleOne">Только о растениях и садоводстве</p></div>

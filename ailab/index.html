@@ -6,11 +6,13 @@
   <meta name="theme-color" content="#08090c">
   <meta name="description" content="Silva AI Lab — ботаническая ИИ-помощница Silva.">
   <title>Silva AI Lab — Silva Quieta</title>
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="apple-touch-icon" href="./apple-touch-icon.png">
   <link rel="icon" href="https://silvaquieta.com/favicon-48.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="./style.css?v=5">
   <script>
     (() => {
       const saved = localStorage.getItem("silva-ai-locale");
@@ -20,18 +22,19 @@
       window.SILVA_LOCALE = locale;
     })();
   </script>
-  <script defer src="./app.js"></script>
+  <script defer src="./app.js?v=3"></script>
 </head>
 <body>
   <header class="topbar">
     <a class="brand" href="https://silvaquieta.com/" aria-label="Silva Quieta">
-      <span class="brand-mark" aria-hidden="true">✳</span>
+      <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 20V11m0 4c-4.1 0-6.2-2-6.2-5.8C9.6 8.2 12 10.1 12 14Zm0-3c0-4 2.4-6.1 6.2-6.1 0 3.9-2.1 6.1-6.2 6.1Z"/></svg></span>
       <span>Silva <b>AI Lab</b></span>
     </a>
     <nav class="top-links" aria-label="Навигация">
       <a href="https://silvaquieta.com/">Silva Quieta</a>
       <a href="https://community.silvaquieta.com/">Silva Community</a>
     </nav>
+    <button class="install-pwa" type="button" data-install-pwa data-copy="installApp" aria-label="Установить Silva AI Lab" hidden>Установить</button>
     <label class="locale-label">
       <span class="sr-only">Язык</span>
       <select id="locale-select" aria-label="Язык">
@@ -48,12 +51,12 @@
       <h1 data-copy="title">О чём поговорим<br><em>сегодня?</em></h1>
       <p class="intro-text" data-copy="intro">Спроси Silva об уходе, выборе растения или о том, что происходит с его листьями. Спокойно, по делу и без осуждения.</p>
       <div class="promise"><span class="status-dot" id="connection-dot"></span><span id="connection-status" data-copy="connecting">Подключаем Silva…</span></div>
-      <div class="privacy-note"><span aria-hidden="true">✦</span><span data-copy="privacy">Не отправляй личные данные. Ответы ИИ могут быть неточными.</span></div>
+      <div class="privacy-note"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 14.2 9.8 22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2Z"/></svg><span data-copy="privacy">Не отправляй личные данные. Ответы ИИ могут быть неточными.</span></div>
     </section>
 
     <section class="chat-card" aria-label="Чат с Silva">
       <header class="chat-header">
-        <div class="silva-avatar" aria-hidden="true">✳</div>
+        <div class="silva-avatar" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 20V11m0 4c-4.1 0-6.2-2-6.2-5.8C9.6 8.2 12 10.1 12 14Zm0-3c0-4 2.4-6.1 6.2-6.1 0 3.9-2.1 6.1-6.2 6.1Z"/></svg></div>
         <div class="silva-info">
           <strong>Silva</strong>
           <span id="chat-presence" data-copy="assistant">Ботаническая помощница</span>
