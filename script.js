@@ -307,6 +307,9 @@
       return name.toLowerCase().replace(/sch|ch|ph|th|sh|ae|oe|qu|[a-z]/g, (part) => digraphs[part] || letters[part])
         .replace(/^([а-яё])/, (letter) => letter.toLocaleUpperCase("ru"));
     }
+    const capitalizePlantName = (name) => String(name).replace(/\p{L}/u, (letter) =>
+      letter.toLocaleUpperCase(window.FLORA_LOCALE || "ru")
+    );
     const plantGroupOf = (item) => {
       const group = item.group || item.plantGroup || "Цветы";
       if (group !== "Комнатные растения") return group;
@@ -359,7 +362,7 @@
         ? window.FLORA_CATALOG_LOCALIZATION?.[canonicalLatin(item.latin)]
         : null;
       const familyLabel = localized?.family || familyLabels[item.family] || familyAliases[item.family] || item.family;
-      const name = localized?.name || (item.native || item.nameSource ? item.name : transcribeScientificName(item.latin));
+      const name = capitalizePlantName(localized?.name || (item.native || item.nameSource ? item.name : transcribeScientificName(item.latin)));
       const careLabels = { watering: "Полив", lighting: "Освещение", humidity: "Влажность" };
       const defaults = plantGroupCare[plantGroup] || plantGroupCare["Цветы"];
       const care = Object.fromEntries(Object.keys(careLabels).map((key) => [
@@ -471,7 +474,7 @@
       const override = catalogOverrides[flower.id];
       if (!override || typeof override !== "object") return;
       if (typeof override.name === "string" && override.name.trim()) {
-        flower.name = override.name.trim();
+        flower.name = capitalizePlantName(override.name.trim());
         flower.nameBasis = "user-override";
       }
       if (typeof override.description === "string" && override.description.trim()) {
@@ -489,7 +492,7 @@
       const classKey = item.classKey && classLabels[item.classKey] ? item.classKey : "Magnoliopsida";
       flowers.push({
         id: item.id,
-        name: item.name,
+        name: capitalizePlantName(item.name),
         latin: item.latin,
         family: item.family,
         familyLabel,
@@ -500,7 +503,7 @@
         kindLabel: familyLabel,
         plantGroup: item.plantGroup,
         nameLanguage: "Русское название добавлено через CSV",
-        description: item.description || `${item.name} — запись, добавленная в атлас пользователем.`,
+        description: item.description || `${capitalizePlantName(item.name)} — запись, добавленная в атлас пользователем.`,
         photo: "",
         photoCredit: "",
         photoLicense: "",
@@ -1900,6 +1903,7 @@
           const groupCare = microclimateByGroup[update.plantGroup];
           const added = {
             ...update,
+            name: capitalizePlantName(update.name),
             familyLabel,
             classKey: "Magnoliopsida",
             classLabel: classLabels.Magnoliopsida,
@@ -1937,7 +1941,7 @@
           flowerById.set(id, { flower: added, index: flowers.length - 1 });
           return;
         }
-        flower.name = update.name;
+        flower.name = capitalizePlantName(update.name);
         flower.description = update.description;
         flower.descriptionProvided = flower.description.length >= 40;
         flower.lifeForm = update.lifeForm || flower.lifeForm;
