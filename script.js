@@ -2889,6 +2889,21 @@
       if (!window.floraSetPalette(design)) designSelect.value = document.body.dataset.design || "herbarium";
     });
 
+    const snowToggle = document.querySelector("#snow-toggle");
+    const applySnowPreference = (enabled) => {
+      document.body.dataset.snow = enabled ? "on" : "off";
+      snowToggle.checked = enabled;
+    };
+    const savedSnow = storage.get("flora-snow", "on");
+    applySnowPreference(savedSnow !== "off");
+    snowToggle.addEventListener("change", () => {
+      if (!storage.set("flora-snow", snowToggle.checked ? "on" : "off")) {
+        snowToggle.checked = document.body.dataset.snow !== "off";
+        return;
+      }
+      applySnowPreference(snowToggle.checked);
+    });
+
     document.querySelectorAll("[data-winter-easter]").forEach((button) => {
       button.addEventListener("click", () => {
         if (button.getAttribute("aria-pressed") === "true") return;

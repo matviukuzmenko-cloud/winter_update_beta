@@ -77,6 +77,14 @@ const apps = {
   },
 };
 
+function getLocalizedAppUrl(appUrl) {
+  const url = new URL(appUrl);
+  if (["silvaquieta.com", "ailab.silvaquieta.com", "community.silvaquieta.com"].includes(url.hostname)) {
+    url.searchParams.set("locale", window.silvaI18n.locale);
+  }
+  return url.href;
+}
+
 class FullscreenAppManager {
   constructor(desktop, layer) {
     this.desktop = desktop;
@@ -91,7 +99,7 @@ class FullscreenAppManager {
   }
 
   bindEvents() {
-    this.bindGeminiGlow();
+    this.bindBackgroundCanvas();
     this.layer.addEventListener("pointerdown", (event) => {
       if (!event.isPrimary || event.button !== 0) return;
       const element = event.target.closest(".os-window");
@@ -151,65 +159,8 @@ class FullscreenAppManager {
     });
   }
 
-  bindGeminiGlow() {
-    const glow = this.desktop.querySelector(".gemini-glow");
-    const orbs = [...glow.querySelectorAll(".glow-orb")];
-    if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches ||
-        window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-    const pointer = { x: this.desktop.clientWidth / 2, y: this.desktop.clientHeight / 2 };
-    const current = orbs.map((_, index) => ({
-      x: this.desktop.clientWidth * [0.2, 0.72, 0.5][index],
-      y: this.desktop.clientHeight * [0.24, 0.28, 0.77][index],
-    }));
-    let frame = 0;
-    let tracking = false;
-
-    const animate = () => {
-      let unsettled = false;
-      const bounds = this.desktop.getBoundingClientRect();
-      const destinations = tracking
-        ? [
-            { x: pointer.x - 100, y: pointer.y - 65 },
-            { x: pointer.x + 115, y: pointer.y + 45 },
-            { x: pointer.x - 25, y: pointer.y + 125 },
-          ]
-        : [
-            { x: bounds.width * 0.2, y: bounds.height * 0.24 },
-            { x: bounds.width * 0.72, y: bounds.height * 0.28 },
-            { x: bounds.width * 0.5, y: bounds.height * 0.77 },
-          ];
-
-      current.forEach((point, index) => {
-        const destination = destinations[index];
-        point.x += (destination.x - point.x) * 0.055;
-        point.y += (destination.y - point.y) * 0.055;
-        orbs[index].style.transform = `translate3d(${point.x}px, ${point.y}px, 0) translate(-50%, -50%)`;
-        if (Math.abs(destination.x - point.x) > 0.35 || Math.abs(destination.y - point.y) > 0.35) {
-          unsettled = true;
-        }
-      });
-
-      if (unsettled) frame = window.requestAnimationFrame(animate);
-      else frame = 0;
-    };
-
-    const requestMotion = () => {
-      if (!frame) frame = window.requestAnimationFrame(animate);
-    };
-    this.desktop.addEventListener("pointermove", (event) => {
-      const bounds = this.desktop.getBoundingClientRect();
-      pointer.x = event.clientX - bounds.left;
-      pointer.y = event.clientY - bounds.top;
-      tracking = true;
-      requestMotion();
-    });
-    this.desktop.addEventListener("pointerleave", () => {
-      tracking = false;
-      requestMotion();
-    });
-    window.addEventListener("resize", requestMotion);
-    requestMotion();
+  bindBackgroundCanvas() {
+    initializeBackgroundCanvas();
   }
 
   open(appId) {
@@ -233,6 +184,7 @@ class FullscreenAppManager {
 
       const content = element.querySelector(".window-content");
       const externalLink = element.querySelector("[data-open-app]");
+      const appUrl = app.url ? getLocalizedAppUrl(app.url) : null;
       let frame = null;
       let cleanup = null;
       if (app.kind === "monitor") {
@@ -250,9 +202,9 @@ class FullscreenAppManager {
       } else {
         frame = document.createElement("iframe");
         frame.className = "app-frame";
-        frame.src = app.url;
+        frame.src = appUrl;
         frame.title = `${app.title} — Silva OS`;
-        frame.loading = "eager";
+        frame.loading = "lazy";
         frame.referrerPolicy = "strict-origin-when-cross-origin";
         frame.allow = "clipboard-read; clipboard-write";
         frame.addEventListener("load", () => {
@@ -264,12 +216,12 @@ class FullscreenAppManager {
         });
         content.append(frame);
         element.querySelectorAll("[data-open-app]").forEach((link) => {
-          link.href = app.url;
+          link.href = appUrl;
         });
       }
 
       this.layer.append(element);
-      const state = { element, minimized: true, frame, cleanup, hideTimeout: 0 };
+      const state = { element, minimized: true, frame, appUrl, cleanup, hideTimeout: 0 };
       this.windows.set(appId, state);
       if (frame) this.startLoadingTimeout(state);
     }
@@ -388,6 +340,26 @@ class FullscreenAppManager {
 
   activeAppId() {
     return this.activeApp || null;
+  }
+
+  updateLocale(locale) {
+    this.windows.forEach((state, appId) => {
+      if (!state.frame) return;
+      const appUrl = new URL(apps[appId].url);
+      appUrl.searchParams.set("locale", locale);
+      const nextUrl = appUrl.href;
+      if (state.appUrl === nextUrl) return;
+      state.appUrl = nextUrl;
+      state.frame.src = nextUrl;
+      state.element.classList.remove("is-loaded");
+      state.element.querySelector(".app-loading").setAttribute("aria-hidden", "false");
+      state.element.querySelector(".app-loading-label").textContent = "Открываем приложение…";
+      state.element.querySelector(".app-loading-fallback").hidden = true;
+      this.startLoadingTimeout(state);
+      state.element.querySelectorAll("[data-open-app]").forEach((link) => {
+        link.href = nextUrl;
+      });
+    });
   }
 
   reload(appId) {
@@ -624,23 +596,196 @@ function showToast(message) {
   window.setTimeout(() => toast.remove(), 4200);
 }
 
-const clockFormatter = new Intl.DateTimeFormat("ru-RU", {
-  day: "numeric",
-  month: "short",
-  hour: "2-digit",
-  minute: "2-digit",
-  second: "2-digit",
-});
-
 function updateClock() {
   const clock = document.querySelector("#system-clock");
   const now = new Date();
   clock.dateTime = now.toISOString();
-  clock.textContent = clockFormatter.format(now);
+  clock.textContent = window.silvaI18n.formatDate(now);
+}
+
+function initializeBackgroundCanvas() {
+  const canvas = document.querySelector("#bg-canvas");
+  const context = canvas?.getContext("2d", { alpha: false });
+  if (!canvas || !context) {
+    console.error("Could not initialize the Silva OS background canvas.");
+    return;
+  }
+
+  const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const pointer = { x: window.innerWidth / 2, y: window.innerHeight / 2, active: false, pressed: false, strength: 0 };
+  const ripples = [];
+  const orbs = [
+    { x: window.innerWidth * 0.22, y: window.innerHeight * 0.3, phase: 0.2, radius: 0.62, color: "moss" },
+    { x: window.innerWidth * 0.76, y: window.innerHeight * 0.34, phase: 2.4, radius: 0.68, color: "violet" },
+    { x: window.innerWidth * 0.48, y: window.innerHeight * 0.8, phase: 4.1, radius: 0.54, color: "moss" },
+  ];
+  let width = window.innerWidth;
+  let height = window.innerHeight;
+  let pixelRatio = 1;
+  let frame = 0;
+  let lastFrameTime = 0;
+  let elapsed = 0;
+  let inViewport = true;
+  let isDark = document.documentElement.dataset.theme === "dark";
+  let backgroundColor = getComputedStyle(document.documentElement).getPropertyValue("--surface-base").trim() ||
+    (isDark ? "#070b0e" : "#f9f9fb");
+
+  const isActive = () => document.visibilityState === "visible" && inViewport;
+  const requestFrame = () => {
+    if (isActive() && !frame) frame = window.requestAnimationFrame(draw);
+  };
+  const resize = () => {
+    width = Math.max(1, window.innerWidth);
+    height = Math.max(1, window.innerHeight);
+    pixelRatio = Math.min(
+      window.devicePixelRatio || 1,
+      2,
+      Math.sqrt(8_294_400 / (width * height)),
+    );
+    canvas.width = Math.round(width * pixelRatio);
+    canvas.height = Math.round(height * pixelRatio);
+    context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+    requestFrame();
+  };
+  const draw = (timestamp) => {
+    frame = 0;
+    if (!isActive()) return;
+
+    const delta = lastFrameTime ? Math.min(timestamp - lastFrameTime, 50) : 0;
+    lastFrameTime = timestamp;
+    if (!motionPreference.matches) elapsed += delta / 1000;
+
+    context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+    context.fillStyle = backgroundColor;
+    context.fillRect(0, 0, width, height);
+
+    const minDimension = Math.min(width, height);
+    pointer.strength += ((pointer.active ? (pointer.pressed ? 0.38 : 0.24) : 0) - pointer.strength) * 0.035;
+    orbs.forEach((orb, index) => {
+      const baseX = width * ([0.23, 0.76, 0.5][index] + Math.sin(elapsed * 0.16 + orb.phase) * 0.085);
+      const baseY = height * ([0.3, 0.35, 0.78][index] + Math.cos(elapsed * 0.13 + orb.phase) * 0.085);
+      const targetX = baseX + (pointer.x - baseX) * pointer.strength;
+      const targetY = baseY + (pointer.y - baseY) * pointer.strength;
+      orb.x += (targetX - orb.x) * 0.025;
+      orb.y += (targetY - orb.y) * 0.025;
+      const radius = minDimension * orb.radius;
+      const gradient = context.createRadialGradient(orb.x, orb.y, 0, orb.x, orb.y, radius);
+      if (orb.color === "violet") {
+        gradient.addColorStop(0, isDark ? "rgba(151, 111, 233, 0.3)" : "rgba(137, 98, 210, 0.13)");
+        gradient.addColorStop(0.42, isDark ? "rgba(135, 95, 220, 0.16)" : "rgba(137, 98, 210, 0.065)");
+      } else {
+        gradient.addColorStop(0, isDark ? "rgba(42, 139, 91, 0.32)" : "rgba(46, 135, 83, 0.14)");
+        gradient.addColorStop(0.42, isDark ? "rgba(38, 128, 83, 0.17)" : "rgba(46, 135, 83, 0.07)");
+      }
+      gradient.addColorStop(1, "rgba(0, 0, 0, 0)");
+      context.fillStyle = gradient;
+      context.fillRect(orb.x - radius, orb.y - radius, radius * 2, radius * 2);
+    });
+
+    if (pointer.strength > 0.01) {
+      const radius = minDimension * 0.32;
+      const gradient = context.createRadialGradient(pointer.x, pointer.y, 0, pointer.x, pointer.y, radius);
+      gradient.addColorStop(0, isDark ? `rgba(147, 112, 225, ${pointer.strength * 0.22})` : `rgba(102, 133, 186, ${pointer.strength * 0.09})`);
+      gradient.addColorStop(1, "rgba(0, 0, 0, 0)");
+      context.fillStyle = gradient;
+      context.fillRect(pointer.x - radius, pointer.y - radius, radius * 2, radius * 2);
+    }
+
+    for (let index = ripples.length - 1; index >= 0; index -= 1) {
+      const ripple = ripples[index];
+      const age = timestamp - ripple.startedAt;
+      if (!ripple.reduced && age >= 850) {
+        ripples.splice(index, 1);
+        continue;
+      }
+      const progress = ripple.reduced ? 0.58 : age / 850;
+      const radius = minDimension * (0.035 + progress * 0.4);
+      context.beginPath();
+      context.arc(ripple.x, ripple.y, radius, 0, Math.PI * 2);
+      context.lineWidth = Math.max(1, minDimension * 0.0016);
+      context.strokeStyle = isDark
+        ? `rgba(151, 196, 163, ${ripple.reduced ? 0.34 : (1 - progress) * 0.42})`
+        : `rgba(83, 132, 103, ${ripple.reduced ? 0.24 : (1 - progress) * 0.3})`;
+      context.shadowColor = isDark ? "rgba(123, 191, 145, 0.5)" : "rgba(93, 150, 112, 0.35)";
+      context.shadowBlur = minDimension * 0.012 * (1 - progress);
+      context.stroke();
+      context.shadowBlur = 0;
+    }
+
+    if (!motionPreference.matches) frame = window.requestAnimationFrame(draw);
+  };
+
+  const trackPointer = (event) => {
+    pointer.x = event.clientX;
+    pointer.y = event.clientY;
+    pointer.active = true;
+    requestFrame();
+  };
+  window.addEventListener("pointermove", trackPointer, { passive: true });
+  window.addEventListener("pointerdown", (event) => {
+    trackPointer(event);
+    pointer.pressed = true;
+    ripples.push({
+      x: event.clientX,
+      y: event.clientY,
+      startedAt: performance.now(),
+      reduced: motionPreference.matches,
+    });
+    if (ripples.length > 4) ripples.shift();
+    requestFrame();
+  }, { passive: true });
+  window.addEventListener("pointerup", () => { pointer.pressed = false; });
+  window.addEventListener("pointercancel", () => { pointer.pressed = false; });
+  window.addEventListener("pointerleave", () => {
+    pointer.active = false;
+    pointer.pressed = false;
+    requestFrame();
+  });
+  window.addEventListener("resize", resize, { passive: true });
+  window.visualViewport?.addEventListener("resize", resize, { passive: true });
+  if ("ResizeObserver" in window) {
+    new ResizeObserver(resize).observe(document.documentElement);
+  }
+  document.addEventListener("visibilitychange", () => {
+    if (isActive()) {
+      lastFrameTime = 0;
+      requestFrame();
+    } else if (frame) {
+      window.cancelAnimationFrame(frame);
+      frame = 0;
+    }
+  });
+  motionPreference.addEventListener("change", () => {
+    lastFrameTime = 0;
+    requestFrame();
+  });
+  new MutationObserver(() => {
+    isDark = document.documentElement.dataset.theme === "dark";
+    backgroundColor = getComputedStyle(document.documentElement).getPropertyValue("--surface-base").trim() ||
+      (isDark ? "#070b0e" : "#f9f9fb");
+    requestFrame();
+  }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+  if ("IntersectionObserver" in window) {
+    new IntersectionObserver(([entry]) => {
+      inViewport = entry.isIntersecting;
+      if (inViewport) {
+        lastFrameTime = 0;
+        requestFrame();
+      } else if (frame) {
+        window.cancelAnimationFrame(frame);
+        frame = 0;
+      }
+    }).observe(document.querySelector("#os-shell"));
+  }
+
+  resize();
 }
 
 const desktop = document.querySelector("#desktop");
 const windowManager = new FullscreenAppManager(desktop, document.querySelector("#window-layer"));
+window.addEventListener("silva-os-locale-change", (event) => {
+  windowManager.updateLocale(event.detail.locale);
+});
 
 document.addEventListener("click", (event) => {
   if (event.detail !== 0) return;
@@ -756,7 +901,7 @@ document.querySelector("#menu-popover").addEventListener("click", (event) => {
   if (action === "theme-dark") setThemePreference("dark");
   if (action === "theme-system") setThemePreference("system");
   if (action === "copy-url" && activeAppId) {
-    const url = apps[activeAppId].url;
+    const url = windowManager.windows.get(activeAppId)?.appUrl || apps[activeAppId].url;
     if (url && navigator.clipboard?.writeText) {
       navigator.clipboard.writeText(url).then(
         () => showToast("Адрес активного сайта скопирован."),

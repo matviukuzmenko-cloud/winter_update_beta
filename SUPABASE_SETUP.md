@@ -63,7 +63,81 @@
    ```
 
    `SITE_ORIGIN` в `wrangler.toml` должен указывать на `https://silvaquieta.com`. После смены адреса сайта Worker нужно развернуть заново.
+
+   Worker также публикует `/robots.txt` с запретом для honeypot-маршрута `/api/internal/catalog-export`. Обращения к этому маршруту отвечают обычным `404`, ограничиваются отдельным `HONEYPOT_RATE_LIMITER` и дают в журнале приложения только событие с HTTP-методом — без записи IP, User-Agent или тела запроса. IP используется только как ключ Cloudflare rate limiter. Для включения защиты разверните Worker после настройки binding в `wrangler.toml`.
 10. В Supabase откройте **Authentication → URL Configuration** и задайте `https://silvaquieta.com/` как **Site URL**. Добавьте `https://silvaquieta.com/**` и `https://community.silvaquieta.com/**` в **Redirect URLs**, если адреса ещё не указаны.
+
+## Дополнительные эшелоны защиты
+
+- **Доступ к аккаунтам и данным:** таблицы пользовательских данных, push-подписок, приватных фото и сообщества используют RLS. Не выдавайте `service_role` браузеру; для новых таблиц сначала включайте RLS и выдавайте только необходимые права. Публичные публикации, профили, комментарии и фото сообщества открыты по дизайну.
+- **API:** Worker применяет IP rate limits к чату, диагностике, passkey, статистике и honeypot, ограничивает тела запросов и проверяет формат и размеры данных. Ответы API отправляют `nosniff`, `no-referrer` и `X-Frame-Options: DENY`.
+- **WAF и бот-защита домена:** текущая публичная DNS-делегация использует `launch1.spaceship.net` и `launch2.spaceship.net`; Cloudflare WAF не управляет трафиком только потому, что приложение использует Cloudflare Worker. Настраивать WAF можно после перевода DNS/прокси к провайдеру с WAF. Перед сменой NS нужно перенести все существующие A/AAAA/CNAME, MX, TXT (включая почту и подтверждение домена), проверить записи и только затем включать проксирование. Не включайте блокировку по одному User-Agent: это легко обходится и может блокировать легитимных клиентов.
+- **Публичный контент:** community feed отдаётся постранично через `community_feed` (30 записей в UI, максимум 50 в RPC; offset ограничен 10 000). Публичные данные принципиально можно копировать; лимиты снижают нагрузку, но не делают контент секретным.
+- **Клиентский код:** JavaScript, который скачивает браузер, следует считать публичным. В клиенте должны оставаться только публичные ключи; секреты Gemini, Supabase `service_role` и приватные VAPID-ключи хранятся только в Worker secrets. Минификация/обфускация не заменяет авторизацию и RLS.
+
+## Запуск пяти эшелонов и публикация обновления
+
+Пункты 2, 3 и 5 можно публиковать из репозитория. Эшелон 1 требует активного Cloudflare proxy перед сайтами; honeypot из эшелона 4 также требует Worker route. Сейчас DNS домена делегирован на SpaceShip, поэтому пока не выполнен перенос NS и не включён proxy, WAF не защищает GitHub Pages, а Worker honeypot доступен только на адресе самого Worker.
+
+### 1. Периметр домена: DNS, HTTPS и WAF
+
+1. Создайте/откройте аккаунт Cloudflare и добавьте `silvaquieta.com`.
+2. Создайте в Cloudflare DNS восемь записей из раздела «Перенос DNS в Cloudflare» в [`SUBDOMAINS_SETUP.md`](./SUBDOMAINS_SETUP.md). Сначала оставьте все записи **DNS only**.
+3. До смены NS проверьте полный список в SpaceShip: в присланном снимке нет MX/TXT/CAA. Если используется почта или есть verification TXT, добавьте эти записи в Cloudflare тоже.
+4. Когда Cloudflare подтвердит импорт, возьмите **назначенные именно вашему домену** nameservers из Cloudflare и замените NS в SpaceShip. Не удаляйте старую зону, пока новая делегация не Active и сайт/поддомены не проверены.
+5. Проверьте `https://silvaquieta.com`, `www`, `ailab`, `community` и `os`. После успешной проверки включайте proxy сначала для одного hostname, перепроверяйте сертификат и GitHub Pages, затем переходите к следующему. Если HTTPS/GitHub Pages ломается — немедленно верните эту запись в DNS only и разберите origin TLS до повторной попытки.
+6. Только после включения proxy включайте доступные вашему тарифу Managed WAF/Bot правила. Начните с Managed Rules и постепенного Challenge для подозрительной частоты/API; не блокируйте поисковых ботов или всех клиентов по одному User-Agent.
+
+### 2. Защита аккаунтов и данных: Supabase
+
+1. В Supabase проверьте список применённых migrations. Применяйте **только отсутствующие** миграции по порядку, указанному в начале этого файла; не повторяйте базовую схему поверх настроенного проекта без необходимости.
+2. Убедитесь, что приватные таблицы и bucket `flora-journal` имеют RLS, а публичный `silva-community` содержит только контент, который пользователи явно публикуют для всех.
+3. Проверьте **Authentication → URL Configuration**: Site URL и Redirect URLs должны соответствовать реальным HTTPS-доменам. Не расширяйте redirect allowlist на произвольные домены.
+4. Не публикуйте `service_role` и не делайте приватные таблицы доступными роли `anon`. В Worker есть passkey API, но в этой рабочей копии нет SQL-миграции для таблиц `passkey_challenges` и `passkey_credentials`; не включайте passkey-вход в production до добавления и применения отдельной проверенной миграции и подключения UI.
+
+### 3. API: секреты, лимиты и размер запросов
+
+Из корня проекта:
+
+```sh
+npm install
+npx wrangler login
+npx wrangler secret put SUPABASE_SERVICE_ROLE_KEY
+npx wrangler secret put GEMINI_API_KEY
+npx wrangler secret put SERPER_API_KEY
+npx wrangler secret put VAPID_PRIVATE_JWK
+npx wrangler deploy
+```
+
+Для каждого `wrangler secret put` вводите только реальное значение соответствующего секрета; не сохраняйте его в HTML, JS, `wrangler.toml`, git или сообщениях. `SERPER_API_KEY` нужен для веб-поиска AI, `VAPID_PRIVATE_JWK` — для push; если функции не используются, их секреты можно не задавать. Проверьте, что Worker действительно привязан к уже объявленным `CHAT_RATE_LIMITER`, `DIAGNOSIS_RATE_LIMITER`, `VISITOR_RATE_LIMITER` и `HONEYPOT_RATE_LIMITER`. Ошибка настройки должна проявляться как `503`, а не как обход ограничения.
+
+После deploy проверьте `/api/health`, затем безопасно проверьте, что превышение лимита возвращает `429`, слишком большое тело — `413`, а неверный Origin — `403`. Не отправляйте реальные пользовательские данные для этих проверок.
+
+### 4. Honeypot и журналирование
+
+`robots.txt` только сообщает совместимым роботам не ходить на `/api/internal/catalog-export`; это не механизм блокировки. После того как зона в Cloudflare станет Active и Worker будет авторизован для зоны, добавьте в `wrangler.toml`:
+
+```toml
+[[routes]]
+pattern = "silvaquieta.com/api/internal/*"
+zone_name = "silvaquieta.com"
+```
+
+Затем повторно выполните `npx wrangler deploy`. Не назначайте Worker на весь домен: маршрут должен покрывать только `/api/internal/*`, чтобы статика продолжала обслуживаться GitHub Pages. Проверьте, что путь отвечает `404`, а превышение отдельного лимита не приводит к обращению к Supabase. В прикладной журнал пишется только метод; IP используется Cloudflare как ключ rate limiter.
+
+### 5. Клиент и публикация сайтов
+
+Публичный фронтенд не может скрыть HTML/JS или сделать опубликованные community-посты непригодными для копирования. Не добавляйте блокировку DevTools, принудительные циклические переходы, fingerprinting или бесконечные вычисления: они не защищают данные и могут ломать сайт посетителям. Текущий `security-monitor.js` — безвредное production-only уведомление; не считайте его границей безопасности.
+
+Опубликуйте соответствующие изменённые файлы в каждом отдельном GitHub Pages source/repository:
+
+- основной сайт: `index.html`, `security-monitor.js`, `robots.txt`;
+- AI Lab: `ailab/index.html` и `ailab/security-monitor.js`;
+- Community: `community/index.html` и `community/security-monitor.js`;
+- OS landing: `os-site/index.html` и `os-site/security-monitor.js`;
+- Silva OS web/PWA: `silva-os/index.html`, `silva-os/security-monitor.js`; для репозитория standalone-публикации — также `silva-os-github-upload/index.html`, `silva-os-github-upload/security-monitor.js` и содержимое `silva-os-github-upload/app/`.
+
+После публикации дождитесь завершения GitHub Pages deployment и проверьте HTTPS, основные сценарии приложений, AI API, вход/выход и чтение только собственных приватных данных. Локально `security-monitor.js` ничего не делает на `localhost`; `npm run tauri dev` не запускает production-проверку. Нативное приложение Silva OS публикуется отдельной Tauri release-сборкой, а не GitHub Pages.
 
 ## Публикация сайта на GitHub Pages
 

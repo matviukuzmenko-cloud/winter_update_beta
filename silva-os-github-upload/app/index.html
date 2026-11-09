@@ -9,10 +9,13 @@
     <link rel="manifest" href="./manifest.webmanifest">
     <link rel="icon" href="../icon.svg" type="image/svg+xml">
     <script src="./theme-init.js?v=1"></script>
-    <link rel="stylesheet" href="./style.css?v=29">
-    <script type="module" src="./app.js?v=29"></script>
+    <script src="../security-monitor.js" defer></script>
+    <script src="../locales.js?v=1" defer></script>
+    <link rel="stylesheet" href="./style.css?v=31">
+    <script type="module" src="./app.js?v=32"></script>
   </head>
   <body>
+    <canvas id="bg-canvas" aria-hidden="true"></canvas>
     <div class="os-shell" id="os-shell">
       <header class="menubar">
         <div class="menu-brand" aria-label="Silva OS">
@@ -35,6 +38,12 @@
         <div class="system-status">
           <button class="install-app" type="button" data-install-app hidden>Установить отдельно</button>
           <span class="status-label"><span class="status-light"></span> Silva OS</span>
+          <label class="sr-only" for="language-select">Язык интерфейса</label>
+          <select class="language-select" id="language-select" aria-label="Язык интерфейса">
+            <option value="ru">RU</option>
+            <option value="en">EN</option>
+            <option value="uk">UA</option>
+          </select>
           <time id="system-clock" aria-label="Текущее время"></time>
           <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Переключить тему" aria-pressed="false" title="Переключить тему">
             <svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.7"/><path d="M12 2.5v2m0 15v2m9.5-9.5h-2m-15 0h-2m16.2-6.2-1.4 1.4m-10.6 10.6-1.4 1.4m13.4 0-1.4-1.4M6.7 6.7 5.3 5.3"/></svg>
@@ -44,11 +53,6 @@
       </header>
 
       <main class="workspace" id="desktop" aria-label="Рабочий стол Silva OS">
-        <div class="gemini-glow" aria-hidden="true">
-          <span class="glow-orb glow-orb-blue"></span>
-          <span class="glow-orb glow-orb-violet"></span>
-          <span class="glow-orb glow-orb-pink"></span>
-        </div>
         <section class="launchpad" aria-labelledby="launchpad-title">
           <div class="launchpad-heading">
             <p class="eyebrow">SILVA OS <span aria-hidden="true">/</span> WEB APPS</p>

@@ -3222,6 +3222,7 @@ body.dark-theme[data-design="herbarium"] .flower-card { background-color: var(--
 body[data-design="glasshouse"] {
   --bg: #e7f0eb;
   --surface: rgba(250, 254, 250, .88);
+  --surface-solid: #f9fdfa;
   --surface-raised: #dfebe4;
   --surface-glass: rgba(246, 252, 248, .72);
   --hero-tint: #d2e8dd;
@@ -3290,6 +3291,7 @@ body[data-design="glasshouse"] .bottom-dock { background: color-mix(in srgb, var
 body.dark-theme[data-design="glasshouse"] {
   --bg: #101b18;
   --surface: rgba(26, 43, 37, .92);
+  --surface-solid: #1a2c25;
   --surface-raised: #263b32;
   --surface-glass: rgba(19, 39, 33, .9);
   --hero-tint: #214437;
@@ -4602,6 +4604,11 @@ body[data-season="winter"] .winter-site-snow i:nth-of-type(33) { left: 77%; font
 body[data-season="winter"] .winter-site-snow i:nth-of-type(34) { left: 86%; font-size: 27px; animation-delay: -15s; animation-duration: 23s; --snow-drift: 27px; }
 body[data-season="winter"] .winter-site-snow i:nth-of-type(35) { left: 93%; font-size: 10px; opacity: .58; filter: blur(.3px); animation-delay: -10s; animation-duration: 12s; --snow-drift: 7px; }
 body[data-season="winter"] .winter-site-snow i:nth-of-type(36) { left: 97%; font-size: 18px; animation-delay: -7s; animation-duration: 18s; --snow-drift: 18px; }
+body[data-season="winter"][data-snow="off"] .winter-site-snow::after,
+body[data-season="winter"][data-snow="off"] .winter-site-snow i,
+body[data-season="winter"][data-snow="off"] .winter-snowflake {
+  display: none;
+}
 body[data-season="winter"] .winter-feature {
   min-height: 300px;
   position: relative;
@@ -5295,6 +5302,24 @@ body[data-season="winter"] .hero-orbit {
   width: 44px;
   height: 44px;
 }
+.header-preference-snow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 13px;
+  padding-top: 13px;
+  border-top: 1px solid var(--line);
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.header-preference-snow input {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 auto;
+  accent-color: var(--blue);
+}
 
 @media (max-width: 720px) {
   .topline { display: none; }
@@ -5377,6 +5402,7 @@ body[data-season="winter"] .hero-orbit {
     flex-wrap: wrap;
     gap: 4px;
   }
+
   .header-inner > .primary-nav .site-switcher { position: static; }
   .header-inner > .primary-nav .site-switcher-menu { right: 0; }
   .header-inner > .primary-nav > .primary-nav-link {
@@ -5386,4 +5412,26 @@ body[data-season="winter"] .hero-orbit {
     font-size: 10px;
   }
   .header-inner > .header-actions { order: 3; }
+}
+
+@media (max-width: 720px) {
+  .header-inner {
+    font-family: Arial, "Helvetica Neue", sans-serif;
+  }
+  body[data-season="winter"][data-design="glasshouse"] .hero-card,
+  body[data-season="winter"][data-design="glasshouse"] .home-fact,
+  body[data-season="winter"][data-design="glasshouse"] .flower-card,
+  body[data-season="winter"][data-design="glasshouse"] .surface-card,
+  body[data-season="winter"][data-design="glasshouse"] .home-widget,
+  body[data-season="winter"][data-design="glasshouse"] .garden-panel,
+  body[data-season="winter"][data-design="glasshouse"] .season-panel,
+  body[data-season="winter"][data-design="glasshouse"] .catalog-filter-disclosure {
+    background: var(--surface-solid);
+    backdrop-filter: blur(14px);
+  }
+  body[data-design="editorial"] .header-inner > .brand {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 14px;
+    letter-spacing: -.035em;
+  }
 }

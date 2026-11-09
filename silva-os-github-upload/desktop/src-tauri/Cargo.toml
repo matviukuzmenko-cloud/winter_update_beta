@@ -1,6 +1,6 @@
 [package]
 name = "silva-os"
-version = "1.0.0"
+version = "1.0.1"
 description = "Silva OS botanical workspace"
 authors = ["Silva Quieta"]
 edition = "2021"

@@ -85,8 +85,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://inaturalist-open-data.s3.amazonaws.com">
   <link rel="preconnect" href="https://images.unsplash.com">
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./style.css?v=224">
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="./style.css?v=225">
+  <script src="./security-monitor.js" defer></script>
 </head>
 <body data-season="winter" data-design="herbarium">
   <script>
@@ -97,6 +99,8 @@
         const savedDesign = localStorage.getItem("flora-design");
         const design = designs.has(savedDesign) ? savedDesign : designAliases[savedDesign] || "herbarium";
         document.body.dataset.design = design;
+        const savedSnow = localStorage.getItem("flora-snow");
+        document.body.dataset.snow = savedSnow === "off" ? "off" : "on";
         const savedTheme = localStorage.getItem("flora-theme");
         const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
         document.body.classList.toggle("dark-theme", savedTheme === "dark" || (savedTheme === null && prefersDark));
@@ -281,6 +285,10 @@
                 <span id="header-theme-label">Оформление</span>
               </div>
             </div>
+            <label class="header-preference-snow" for="snow-toggle">
+              <input id="snow-toggle" type="checkbox" checked>
+              <span id="header-snow-label">Анимированный снег</span>
+            </label>
           </div>
         </details>
       </div>
@@ -1220,7 +1228,7 @@
       document.write(`<script src="./localization/catalog-${window.FLORA_LOCALE}.js?v=7"><\/script>`);
     }
   </script>
-  <script src="./script.js?v=157"></script>
+  <script src="./script.js?v=158"></script>
   <script>window.FLORA_AI_ENDPOINT = "https://flora-anotomy-ai.ukrainman21012.workers.dev";</script>
   <script>window.FLORA_VISITOR_STATS_ENDPOINT = "https://flora-anotomy-ai.ukrainman21012.workers.dev/api/visitors";</script>
   <script src="./visitor-counter.js?v=1"></script>
@@ -1230,7 +1238,7 @@
   <script>window.FLORA_VAPID_PUBLIC_KEY = "BF7JygE9293jwgMccpvZbxBHqwhx4RhfTUHWLTldz_1BvklqB-403ReZqNOnSdqYnLvSxW_6X-TNOBvJClfjORw";</script>
   <script src="./garden.js?v=28"></script>
   <script src="./expeditions.js?v=17"></script>
-  <script src="./localization/locale-runtime.js?v=28"></script>
+  <script src="./localization/locale-runtime.js?v=29"></script>
   <script>
     (() => {
     document.querySelector("#observations-empty-action").addEventListener("click", () => {

@@ -1,6 +1,12 @@
 name: Build Silva OS desktop apps
 
 on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Desktop release version (for example 1.0.1)
+        required: true
+        default: 1.0.1
   push:
     tags:
       - "v*"
@@ -20,14 +26,17 @@ jobs:
       - name: Check out source
         uses: actions/checkout@v4
 
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
       - name: Build and publish desktop installers
-        uses: tauri-apps/tauri-action@v0
+        uses: tauri-apps/tauri-action@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           projectPath: desktop
-          tagName: ${{ github.ref_name }}
-          releaseName: Silva OS ${{ github.ref_name }}
+          tagName: ${{ github.event_name == 'workflow_dispatch' && format('v{0}', inputs.version) || github.ref_name }}
+          releaseName: Silva OS ${{ github.event_name == 'workflow_dispatch' && format('v{0}', inputs.version) || github.ref_name }}
           releaseBody: Silva OS native desktop installers for macOS and Windows.
           releaseDraft: false
           prerelease: false

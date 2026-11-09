@@ -1043,9 +1043,14 @@ async function passkeyUserFromRequest(request, env) {
 }
 
 async function readPasskeyBody(request) {
-  const text = await request.text();
-  if (new TextEncoder().encode(text).byteLength > 20_000) {
-    throw new PasskeyRequestError("Запрос слишком большой.", 413);
+  let text;
+  try {
+    text = await readBoundedBody(request, 20_000);
+  } catch (error) {
+    if (error instanceof RangeError && error.message === "request_body_too_large") {
+      throw new PasskeyRequestError("Запрос слишком большой.", 413);
+    }
+    throw error;
   }
   try {
     const payload = JSON.parse(text);
@@ -1273,10 +1278,57 @@ async function handlePasskeyRequest(request, env, origin, configuredOrigin, path
   }
 }
 
+const HONEYPOT_PATH = "/api/internal/catalog-export";
+const HONEYPOT_ROBOTS = `User-agent: *
+Disallow: ${HONEYPOT_PATH}
+`;
+
+function honeypotResponse() {
+  return new Response(null, {
+    status: 404,
+    headers: {
+      "Cache-Control": "no-store",
+      "X-Robots-Tag": "noindex, nofollow",
+    },
+  });
+}
+
+async function handleHoneypotRequest(request, env) {
+  if (request.method !== "GET" && request.method !== "HEAD") {
+    return honeypotResponse();
+  }
+
+  const clientIp = request.headers.get("CF-Connecting-IP");
+  if (!clientIp || !env.HONEYPOT_RATE_LIMITER) {
+    console.error("Honeypot rate limiter is unavailable or client IP is missing.");
+    return new Response(null, {
+      status: 503,
+      headers: { "Cache-Control": "no-store" },
+    });
+  }
+
+  try {
+    const rateLimit = await env.HONEYPOT_RATE_LIMITER.limit({ key: clientIp });
+    if (!rateLimit.success) return honeypotResponse();
+    console.warn("Honeypot request received.", { method: request.method });
+  } catch (error) {
+    console.error("Honeypot rate limiter failed:", error?.name || "Error");
+    return new Response(null, {
+      status: 503,
+      headers: { "Cache-Control": "no-store" },
+    });
+  }
+
+  return honeypotResponse();
+}
+
 function jsonResponse(payload, status, origin, configuredOrigin) {
   const headers = new Headers({
     "Content-Type": "application/json; charset=utf-8",
     "Cache-Control": "no-store",
+    "X-Content-Type-Options": "nosniff",
+    "Referrer-Policy": "no-referrer",
+    "X-Frame-Options": "DENY",
   });
   if (origin && isAllowedOrigin(origin, configuredOrigin)) {
     headers.set("Access-Control-Allow-Origin", origin);
@@ -1291,6 +1343,23 @@ export default {
     const origin = request.headers.get("Origin") || "";
     const configuredOrigin = env.SITE_ORIGIN || "";
 
+    if (url.pathname === "/robots.txt" && (request.method === "GET" || request.method === "HEAD")) {
+      return new Response(request.method === "HEAD" ? null : HONEYPOT_ROBOTS, {
+        status: 200,
+        headers: {
+          "Content-Type": "text/plain; charset=utf-8",
+          "Cache-Control": "public, max-age=3600",
+          "X-Content-Type-Options": "nosniff",
+          "Referrer-Policy": "no-referrer",
+          "X-Frame-Options": "DENY",
+        },
+      });
+    }
+
+    if (url.pathname === HONEYPOT_PATH) {
+      return handleHoneypotRequest(request, env);
+    }
+
     if (request.method === "OPTIONS") {
       if (!isAllowedOrigin(origin, configuredOrigin)) {
         return jsonResponse({ error: "Запрос с этого сайта не разрешён." }, 403, origin, configuredOrigin);
@@ -1301,6 +1370,9 @@ export default {
       response.headers.set("Access-Control-Allow-Headers", "Authorization, Content-Type");
       response.headers.set("Access-Control-Max-Age", "86400");
       response.headers.set("Vary", "Origin");
+      response.headers.set("X-Content-Type-Options", "nosniff");
+      response.headers.set("Referrer-Policy", "no-referrer");
+      response.headers.set("X-Frame-Options", "DENY");
       return response;
     }
 
@@ -1451,12 +1523,12 @@ export default {
 
     let payload;
     try {
-      const body = await request.text();
-      if (new TextEncoder().encode(body).byteLength > MAX_BODY_SIZE) {
+      const body = await readBoundedBody(request, MAX_BODY_SIZE);
+      payload = JSON.parse(body);
+    } catch (error) {
+      if (error instanceof RangeError && error.message === "request_body_too_large") {
         return jsonResponse({ error: "Сообщение слишком большое." }, 413, origin, configuredOrigin);
       }
-      payload = JSON.parse(body);
-    } catch {
       return jsonResponse({ error: "Не удалось прочитать сообщение." }, 400, origin, configuredOrigin);
     }
     const locale = payload?.locale ?? "ru";

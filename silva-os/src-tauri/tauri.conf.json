@@ -9,6 +9,7 @@
       "../style.css",
       "../app.js",
       "../theme-init.js",
+      "../security-monitor.js",
       "../manifest.webmanifest",
       "../../icon.svg",
       "../../icon-192.png",

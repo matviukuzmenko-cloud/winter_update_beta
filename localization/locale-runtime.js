@@ -87,6 +87,7 @@
       sound: "Звуки интерфейса",
       forestSound: "Звук зимнего леса",
       theme: "Оформление",
+      snow: "Анимированный снег",
       controls: "Настройки оформления и звука",
     },
     uk: {
@@ -99,6 +100,7 @@
       sound: "Звуки інтерфейсу",
       forestSound: "Звук зимового лісу",
       theme: "Оформлення",
+      snow: "Анімований сніг",
       controls: "Налаштування вигляду та звуку",
     },
     en: {
@@ -111,6 +113,7 @@
       sound: "Interface sounds",
       forestSound: "Winter forest sound",
       theme: "Theme",
+      snow: "Animated snowfall",
       controls: "Appearance and sound settings",
     },
   }[locale];
@@ -137,6 +140,7 @@
     ["header-sound-label", headerPreferenceLabels.sound],
     ["header-forest-sound-label", headerPreferenceLabels.forestSound],
     ["header-theme-label", headerPreferenceLabels.theme],
+    ["header-snow-label", headerPreferenceLabels.snow],
   ]) {
     const label = document.querySelector(`#${id}`);
     if (label) label.textContent = text;
